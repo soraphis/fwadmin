@@ -8,9 +8,9 @@ class Owner(models.Model):
 
 class Host(models.Model):
     name = models.CharField(max_length=200)
-    ip = models.CharField(max_length=100)
-    owner = models.ForeignKey(Owner)
+    ip = models.IPAddressField(max_length=100)
     active_until = models.DateField()
+    owner = models.ForeignKey(Owner)
 
 
 class Port(models.Model):
