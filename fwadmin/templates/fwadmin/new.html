@@ -1,15 +1,22 @@
-{% load url from future %}
-<h1>New host request</h1>
+<html>
+<head>
+    <title>New Host</title>
+</head>
+<body>
+    <h1>New host</h1>
 
-{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+    {% if form.errors %}
+        <p style="color: red;">
+            Please correct the error{{ form.errors|pluralize }} below.
+        </p>
+    {% endif %}
 
-<!--- FIXME: use {\% url fwadmin:new' %} instead --->
-<form action="/fwadmin/new/" method="post">
-  {% csrf_token %}
-  <div>
-    Name
-    <input type="text" name="name" id="name" value="" />
-  </div>
-  <div>
-  <input type="submit" value="Request" />
-</form>
+    <form action="" method="post">
+       {% csrf_token %}
+        <table>
+            {{ form.as_table }}
+        </table>
+        <input type="submit" value="Submit">
+    </form>
+</body>
+</html>

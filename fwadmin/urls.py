@@ -1,12 +1,12 @@
 from django.conf.urls import patterns, url
 from django.views.generic import DetailView, ListView
 
-from fwadmin.models import HostPort
+from fwadmin.models import Host
 
 urlpatterns = patterns('fwadmin.views',
     url(r'^new/$', 'new', name="new"),
     url(r'^list/$', ListView.as_view(
-            queryset=HostPort.objects.all(),
+            queryset=Host.objects.all(),
             context_object_name='all_hosts',
             template_name='fwadmin/list.html'),
         name="list",

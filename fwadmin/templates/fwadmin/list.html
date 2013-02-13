@@ -1,9 +1,15 @@
 {% if all_hosts %}
     <ul>
-    {% for host_port in all_hosts  %}
-    <!-- <li><a href="/polls/{{ poll.id }}/">{{ poll.question }}</a></li>-->
-        <li>{{ host_port.Host.name }} {{ host_port.Port.number }}</li>
-    {% endfor %}
+      {% for host in all_hosts  %}
+        <!-- <li><a href="/polls/{{ poll.id }}/">{{ poll.question }}</a></li>-->
+        <li>{{ host.name }} - {{ host.ip }} 
+          <ul>
+            {% for port in host.open_ports.all %}
+              <li>{{ port.name }} ({{ port.number}})</li>
+            {% endfor %}
+          </ul>
+        </li>
+      {% endfor %}
     </ul>
 {% else %}
     <p>No data yet.</p>
