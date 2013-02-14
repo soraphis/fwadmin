@@ -5,6 +5,7 @@ from fwadmin.models import Host
 
 urlpatterns = patterns('fwadmin.views',
     url(r'^new/$', 'new', name="new"),
+    # XXX: add @login_required for this somehow
     url(r'^list/$', ListView.as_view(
             queryset=Host.objects.all(),
             context_object_name='all_hosts',

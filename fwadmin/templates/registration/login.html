@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% if form.errors %}
+<p style="color: red">
+  Your username and password didn't match. Please try again.
+</p>
+{% endif %}
+
+<!-- FIXME: use {% url 'django.contrib.auth.views.login'} -->
+<form method="post" action="/accounts/login/">
+{% csrf_token %}
+<table>
+  {{ form.as_table }}
+</table>
+
+<input type="submit" value="login" />
+<input type="hidden" name="next" value="{{ next }}" />
+</form>
+
+{% endblock %}
