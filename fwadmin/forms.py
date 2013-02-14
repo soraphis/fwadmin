@@ -5,3 +5,5 @@ from .models import Host
 class HostForm(ModelForm):
     class Meta:
         model = Host
+        # alternatively use "editable=False" in model.py
+        exclude = ('owner', )

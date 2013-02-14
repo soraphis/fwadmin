@@ -19,8 +19,11 @@ def new(request):
     if request.method == 'POST':
         form = HostForm(request.POST)
         if form.is_valid():
-            form.save()
-            return HttpResponseRedirect('fwadmin/list/')
+            host = form.save(commit=False)
+            # add owner as its not part of the form itself
+            host.owner = request.user
+            host.save()
+            return HttpResponseRedirect('/fwadmin/list/')
     else:
         form = HostForm()
     return render_to_response('fwadmin/new.html', {'form': form },

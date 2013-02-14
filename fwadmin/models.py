@@ -16,7 +16,8 @@ class Host(models.Model):
     owner = models.ForeignKey(User)
     open_ports = models.ManyToManyField(Port)
     def __unicode__(self):
-        return "%s (%s): %s: %s" % (self.name, self.ip, self.active_until,
-                                    self.open_ports)
+        return "%s (%s): %s: %s %s" % (self.name, self.ip, self.active_until,
+                                       self.owner, self.open_ports)
+
 
 
