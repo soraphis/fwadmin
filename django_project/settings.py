@@ -154,3 +154,22 @@ LOGGING = {
         },
     }
 }
+
+
+# LDAP/AD AUTH
+AUTHENTICATION_BACKENDS = (
+    'django_auth_ldap.backend.LDAPBackend',
+    'django.contrib.auth.backends.ModelBackend',
+)
+
+#AUTH_LDAP_SERVER_URI = "ldap://emailtest.uni-trier.de"
+#AUTH_LDAP_USER_DN_TEMPLATE = "cn=%(user)s,CN=Users,DC=emailtest,DC=uni-trier,DC=de"
+#import logging
+#logger = logging.getLogger('django_auth_ldap')
+#logger.addHandler(logging.StreamHandler())
+#logger.setLevel(logging.DEBUG)
+
+# FIXME: use round-robin or something
+AUTH_LDAP_SERVER_URI = "ldaps://saul.uni-trier.de:636"
+AUTH_LDAP_USER_DN_TEMPLATE = "cn=%(user)s,CN=Users,DC=uni-trier,DC=de"
+
