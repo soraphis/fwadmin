@@ -22,7 +22,7 @@ class Host(models.Model):
     # approved by a admin
     approved = models.BooleanField(default=False)
     # no longer active
-    active = models.BooleanField(default=False)
+    active = models.BooleanField(default=True)
     def __unicode__(self):
         return "%s (%s): %s: %s %s" % (self.name, self.ip, self.active_until,
                                        self.owner, self.open_ports)

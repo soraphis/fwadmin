@@ -1,3 +1,5 @@
+import datetime
+
 from django.http import (
     HttpResponse,
     HttpResponseRedirect, 
@@ -12,7 +14,6 @@ from django.contrib.auth.decorators import (
     login_required,
     user_passes_test,
 )
-
 
 from fwadmin.forms import (
     Host,
@@ -31,6 +32,8 @@ def new_or_edit(request, ip=None):
             host = form.save(commit=False)
             # add owner as its not part of the form itself
             host.owner = request.user
+            host.active_until = datetime.datetime.now() + datetime.timedelta(
+                days=365)
             host.save()
             return HttpResponseRedirect('/fwadmin/list/')
     else:
