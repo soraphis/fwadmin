@@ -44,7 +44,7 @@ def new(request, pk=None):
 
 
 @login_required
-def edit(request, pk=None):
+def edit(request, pk):
     host = Host.objects.filter(pk=pk)[0]
     if host.owner != request.user:
         return HttpResponseForbidden("you are not owner")
@@ -58,6 +58,18 @@ def edit(request, pk=None):
     return render_to_response('fwadmin/new.html', {'form': form },
                               context_instance=RequestContext(request))
 
+
+@login_required
+def renew(request, pk):
+    host = Host.objects.filter(pk=pk)[0]
+    if host.owner != request.user:
+        return HttpResponseForbidden("you are not owner")
+    active_until = datetime.date.today() + datetime.timedelta(365)
+    host.active_until = active_until
+    return render_to_response('fwadmin/renewed.html',
+                              { 'active_until': active_until},
+                              context_instance=RequestContext(request))
+    
 
 @login_required
 def list(request):
