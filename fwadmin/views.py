@@ -24,6 +24,8 @@ from fwadmin.forms import (
 @login_required
 def new_or_edit(request, ip=None):
     host = []
+    # XXX: UNTESTED!!!
+    max_active_until = datetime.date.today() + datetime.timedelta(365)
     if ip is not None:
         host = Host.objects.filter(ip=ip)
     if request.method == 'POST':
@@ -33,17 +35,19 @@ def new_or_edit(request, ip=None):
             host = form.save(commit=False)
             # add the auto calculated stuff
             host.owner = request.user
-            host.active_until = datetime.datetime.now() + datetime.timedelta(
-                days=365)
+            # ensure the user never goes beyond 1y
+            host.active_until = min(max_active_until, host.active_until)
             host.save()
             # see https://docs.djangoproject.com/en/dev/topics/forms/modelforms/#the-save-method
             form.save_m2m()
             return HttpResponseRedirect('/fwadmin/list/')
     else:
         if host:
+            host[0].active_until = max_active_until
             form = HostForm(instance=host[0])
+                            
         else:
-            form = HostForm()
+            form = HostForm({'active_until': max_active_until})
     return render_to_response('fwadmin/new.html', {'form': form },
                               context_instance=RequestContext(request))
 
