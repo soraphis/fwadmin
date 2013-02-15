@@ -1,0 +1,26 @@
+[ 
+ {"model": "fwadmin.port",
+   "pk": 1,
+   "fields": {
+     "name": "ssh",
+     "number": 22,
+     "type": "TCP"
+   }
+ },
+ {"model": "fwadmin.port",
+   "pk": 2,
+   "fields": {
+     "name": "http",
+     "number": 80,
+     "type": "TCP"
+   }
+ },
+ {"model": "fwadmin.port",
+   "pk": 3,
+   "fields": {
+     "name": "https",
+     "number": 431,
+     "type": "TCP"
+   }
+ }
+]
