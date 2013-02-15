@@ -17,39 +17,47 @@ from django.contrib.auth.decorators import (
 
 from fwadmin.forms import (
     Host,
-    HostForm,
+    NewHostForm,
+    EditHostForm,
 )
 
 
 @login_required
-def new_or_edit(request, ip=None):
-    host = []
-    # XXX: UNTESTED!!!
-    max_active_until = datetime.date.today() + datetime.timedelta(365)
-    if ip is not None:
-        host = Host.objects.filter(ip=ip)
+def new(request, pk=None):
     if request.method == 'POST':
-        form = HostForm(request.POST)
+        form = NewHostForm(request.POST)
         if form.is_valid():
             # do not commit just yet, its not yet done
             host = form.save(commit=False)
-            # add the auto calculated stuff
+            # add the stuff here that the user can't edit
             host.owner = request.user
-            # ensure the user never goes beyond 1y
-            host.active_until = min(max_active_until, host.active_until)
+            active_until = datetime.date.today() + datetime.timedelta(365)
+            host.active_until = active_until
+            # and really save
             host.save()
             # see https://docs.djangoproject.com/en/dev/topics/forms/modelforms/#the-save-method
             form.save_m2m()
             return HttpResponseRedirect('/fwadmin/list/')
-    else:
-        if host:
-            host[0].active_until = max_active_until
-            form = HostForm(instance=host[0])
-                            
-        else:
-            form = HostForm({'active_until': max_active_until})
+    form = NewHostForm()
     return render_to_response('fwadmin/new.html', {'form': form },
                               context_instance=RequestContext(request))
+
+
+@login_required
+def edit(request, pk=None):
+    host = Host.objects.filter(pk=pk)[0]
+    if host.owner != request.user:
+        return HttpResponseForbidden("you are not owner")
+    if request.method == 'POST':
+        form = EditHostForm(request.POST, instance=host)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('/fwadmin/list/')
+        return  HttpResponseRedirect('/fwadmin/list/')
+    form = EditHostForm(instance=host)
+    return render_to_response('fwadmin/new.html', {'form': form },
+                              context_instance=RequestContext(request))
+
 
 @login_required
 def list(request):

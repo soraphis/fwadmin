@@ -15,7 +15,7 @@ class Port(models.Model):
 class Host(models.Model):
     name = models.CharField(max_length=200)
     # can be ipv4,ipv6; not unique as it keeps a history
-    ip = models.GenericIPAddressField()
+    ip = models.GenericIPAddressField(unique=True)
     active_until = models.DateField()
     owner = models.ForeignKey(User)
     open_ports = models.ManyToManyField(Port)

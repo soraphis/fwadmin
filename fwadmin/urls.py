@@ -4,9 +4,9 @@ from django.views.generic import DetailView, ListView
 from fwadmin.models import Host
 
 urlpatterns = patterns('fwadmin.views',
-    url(r'^new/$', 'new_or_edit', name="new"),
+    url(r'^new/$', 'new', name="new"),
     url(r'^list/$', 'list', name='list'),
-    url(r'^edit/(?P<ip>\d+\.\d+\.\d+\.\d+)/$', 'new_or_edit', name='edit'),
+    url(r'^edit/(?P<pk>\d+)/$', 'edit', name='edit'),
     url(r'^list-unapproved/$', 'list_unapproved', name='list_unapproved'),
     #url(r'^(?P<detail_id>\d+)/$', 'detail'),
     #url(r'^(?P<poll_id>\d+)/results/$', 'results'),

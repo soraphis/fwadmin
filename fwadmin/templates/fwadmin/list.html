@@ -1,7 +1,7 @@
 {% if all_hosts %}
     <ul>
       {% for host in all_hosts  %}
-        <li><a href="/fwadmin/edit/{{ host.ip }}/">{{ host.ip }}</a> {{ host.name }} ({{ host.ip }}) {{ host.owner }} {{ host.approved }}
+        <li><a href="/fwadmin/edit/{{ host.pk }}/">{{ host.ip }}</a> {{ host.name }} ({{ host.ip }}) {{ host.owner }} {{ host.approved }}
           <ul>
             {% if host.open_ports.all %}
               {% for port in host.open_ports.all %}
