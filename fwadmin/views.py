@@ -66,6 +66,7 @@ def renew(request, pk):
         return HttpResponseForbidden("you are not owner")
     active_until = datetime.date.today() + datetime.timedelta(365)
     host.active_until = active_until
+    host.save()
     return render_to_response('fwadmin/renewed.html',
                               { 'active_until': active_until},
                               context_instance=RequestContext(request))
@@ -83,7 +84,14 @@ def list(request):
 def list_unapproved(request):
     queryset=Host.objects.filter(approved=False)
     # XXX: add a template for list
-    return render_to_response('fwadmin/list.html', 
+    return render_to_response('fwadmin/list-unapproved.html', 
                               { 'all_hosts': queryset },
                               context_instance=RequestContext(request))
 
+@user_passes_test(lambda u: u.is_superuser)
+def approve(request, pk):
+    host = Host.objects.filter(pk=pk)[0]
+    host.approved = True
+    host.save()
+    return redirect('/fwadmin/list-unapproved/',
+                    context_instance=RequestContext(request))
