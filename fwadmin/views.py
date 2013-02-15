@@ -29,12 +29,15 @@ def new_or_edit(request, ip=None):
     if request.method == 'POST':
         form = HostForm(request.POST)
         if form.is_valid():
+            # do not commit just yet, its not yet done
             host = form.save(commit=False)
-            # add owner as its not part of the form itself
+            # add the auto calculated stuff
             host.owner = request.user
             host.active_until = datetime.datetime.now() + datetime.timedelta(
                 days=365)
             host.save()
+            # see https://docs.djangoproject.com/en/dev/topics/forms/modelforms/#the-save-method
+            form.save_m2m()
             return HttpResponseRedirect('/fwadmin/list/')
     else:
         if host:
