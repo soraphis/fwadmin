@@ -93,5 +93,5 @@ def approve(request, pk):
     host = Host.objects.filter(pk=pk)[0]
     host.approved = True
     host.save()
-    return redirect('/fwadmin/list-unapproved/',
+    return redirect('/fwadmin/admin-list-unapproved/',
                     context_instance=RequestContext(request))
