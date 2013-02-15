@@ -1,22 +1,33 @@
 {% if all_hosts %}
-    <ul>
+    <table border="1" cellpadding="3">
+      <tr>
+        <th>Host Description</th>
+        <th>IP</th>
+        <th>Approved</th>
+        <th>Open Ports</th>
+        <th>Active Until</th>
+        <th>Renew Link</th>
+      </tr>
       {% for host in all_hosts  %}
-        <li><a href="/fwadmin/edit/{{ host.pk }}/">{{ host.ip }}</a> 
-          {{ host.name }} ({{ host.ip }}) {{ host.owner }} {{ host.approved }} 
-          {{ host.active_until }} 
-          <a href="/fwadmin/renew/{{ host.pk }}/">renew</a>
-          <ul>
-            {% if host.open_ports.all %}
-              {% for port in host.open_ports.all %}
-                <li>{{ port.name }} ({{ port.number }})</li>
-              {% endfor %}
-            {% else %}
-                <li>No ports open</li>
+      <tr>
+        <td>{{ host.name }}</td>
+        <td><a href="/fwadmin/edit/{{ host.pk }}/">{{ host.ip }}</a> </td>
+        <td>{{ host.approved }}</td>
+        <td>
+            {% for port in host.open_ports.all|slice:":5" %}
+               {{ port.name }}{% if not forloop.last %},{% endif %}
+          {% endfor %}
+            {% if host.open_ports.count > 5 %}
+              and {{ host.open_ports.count|add:"-5" }} more
             {% endif %}
-          </ul>
-        </li>
+        </td>
+        {% if host.approved %}
+          <td>{{ host.active_until }}</td>
+          <td><a href="/fwadmin/renew/{{ host.pk }}/">renew</a></td>
+        {% endif %}
+      </tr>
       {% endfor %}
-    </ul>
+    </table>
 {% else %}
     <p>No machines.</p>
 {% endif %}
