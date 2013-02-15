@@ -164,12 +164,27 @@ AUTHENTICATION_BACKENDS = (
 
 #AUTH_LDAP_SERVER_URI = "ldap://emailtest.uni-trier.de"
 #AUTH_LDAP_USER_DN_TEMPLATE = "cn=%(user)s,CN=Users,DC=emailtest,DC=uni-trier,DC=de"
-#import logging
-#logger = logging.getLogger('django_auth_ldap')
-#logger.addHandler(logging.StreamHandler())
-#logger.setLevel(logging.DEBUG)
 
 # FIXME: use round-robin or something
 AUTH_LDAP_SERVER_URI = "ldaps://saul.uni-trier.de:636"
 AUTH_LDAP_USER_DN_TEMPLATE = "cn=%(user)s,CN=Users,DC=uni-trier,DC=de"
+
+# FIXME: this does not work without
+#   AUTH_LDAP_BIND_DN = ""
+#   AUTH_LDAP_BIND_PASSWORD = ""
+# so we need to find a way round this (either a account or hack auth-ldap-bind)
+AUTH_LDAP_USER_ATTR_MAP = {
+    "first_name": "givenName", 
+    "last_name": "sn",
+    "email": "maiL",
+}
+AUTH_LDAP_USER_FLAGS_BY_GROUP = {
+    "is_staff": "CN=Mitarb,CN=Users,dc=uni-trier,dc=de",
+    "is_superuser": "CN=G-zentrale-systeme,CN=Users,DC=uni-trier,DE=de"
+}
+
+import logging
+logger = logging.getLogger('django_auth_ldap')
+logger.addHandler(logging.StreamHandler())
+logger.setLevel(logging.DEBUG)
 
