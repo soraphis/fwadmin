@@ -178,10 +178,10 @@ AUTH_LDAP_USER_ATTR_MAP = {
     "last_name": "sn",
     "email": "maiL",
 }
-AUTH_LDAP_USER_FLAGS_BY_GROUP = {
-    "is_staff": "CN=Mitarb,CN=Users,dc=uni-trier,dc=de",
-    "is_superuser": "CN=G-zentrale-systeme,CN=Users,DC=uni-trier,DE=de"
-}
+#AUTH_LDAP_USER_FLAGS_BY_GROUP = {
+#    "is_staff": "CN=Mitarb,CN=Users,dc=uni-trier,dc=de",
+#    "is_superuser": "CN=G-zentrale-systeme,CN=Users,DC=uni-trier,DE=de",
+#}
 
 import logging
 logger = logging.getLogger('django_auth_ldap')

@@ -8,7 +8,11 @@ from django.shortcuts import (
     redirect,
 )
 from django.template import RequestContext
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import (
+    login_required,
+    user_passes_test,
+)
+
 
 from fwadmin.forms import (
     Host,
@@ -39,8 +43,16 @@ def new_or_edit(request, ip=None):
 
 @login_required
 def list(request):
-    # XXX: query only hosts for the given user
     queryset=Host.objects.filter(owner=request.user)
+    return render_to_response('fwadmin/list.html', 
+                              { 'all_hosts': queryset },
+                              context_instance=RequestContext(request))
+
+
+@user_passes_test(lambda u: u.is_superuser)
+def list_unapproved(request):
+    queryset=Host.objects.filter(approved=False)
+    # XXX: add a template for list
     return render_to_response('fwadmin/list.html', 
                               { 'all_hosts': queryset },
                               context_instance=RequestContext(request))

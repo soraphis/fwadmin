@@ -7,4 +7,4 @@ class HostForm(ModelForm):
     class Meta:
         model = Host
         # alternatively use "editable=False" in model.py
-        exclude = ('owner', )
+        exclude = ('owner', 'approved', 'active_until')
