@@ -5,6 +5,8 @@ from django.contrib.auth.models import User
 class Port(models.Model):
     name = models.CharField(max_length=100)
     number = models.IntegerField()
+    # TCP/UDP
+    #type = models.CharField(max_length=5)
     def __unicode__(self):
         return "%s (%s)" % (self.name, self.number)
 
