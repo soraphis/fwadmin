@@ -9,7 +9,7 @@ class Port(models.Model):
     # TCP/UDP
     type = models.CharField(max_length=5)
     def __unicode__(self):
-        return "%s (%s)" % (self.name, self.number)
+        return "%s %s (%s)" % (self.type, self.name, self.number)
 
 
 class Host(models.Model):
