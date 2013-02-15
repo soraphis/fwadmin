@@ -10,16 +10,80 @@
  {"model": "fwadmin.port",
    "pk": 2,
    "fields": {
-     "name": "http",
-     "number": 80,
+     "name": "smtp",
+     "number": 25,
      "type": "TCP"
    }
  },
  {"model": "fwadmin.port",
    "pk": 3,
    "fields": {
+     "name": "http",
+     "number": 80,
+     "type": "TCP"
+   }
+ },
+ {"model": "fwadmin.port",
+   "pk": 4,
+   "fields": {
+     "name": "pop3",
+     "number": 110,
+     "type": "TCP"
+   }
+ },
+ {"model": "fwadmin.port",
+   "pk": 5,
+   "fields": {
+     "name": "sftp",
+     "number": 115,
+     "type": "TCP"
+   }
+ },
+ {"model": "fwadmin.port",
+   "pk": 7,
+   "fields": {
+     "name": "snmp",
+     "number": 161,
+     "type": "TCP"
+   }
+ },
+ {"model": "fwadmin.port",
+   "pk": 8,
+   "fields": {
+     "name": "irc",
+     "number": 194,
+     "type": "TCP"
+   }
+ },
+ {"model": "fwadmin.port",
+   "pk": 9,
+   "fields": {
      "name": "https",
      "number": 431,
+     "type": "TCP"
+   }
+ },
+ {"model": "fwadmin.port",
+   "pk": 10,
+   "fields": {
+     "name": "syslog",
+     "number": 514,
+     "type": "TCP"
+   }
+ },
+ {"model": "fwadmin.port",
+   "pk": 11,
+   "fields": {
+     "name": "ldaps",
+     "number": 636,
+     "type": "TCP"
+   }
+ },
+ {"model": "fwadmin.port",
+   "pk": 12,
+   "fields": {
+     "name": "imaps",
+     "number": 993,
      "type": "TCP"
    }
  }
