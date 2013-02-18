@@ -3,6 +3,10 @@
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
+# XXX: use reverse url mapping instead of hardcoding
+WARN_EXPIRE_URL_TEMPLATE = "https://fwadmin.uni-trier.de/fwadmin/renew/%(pk)s/"
+WARN_EXPIRE_EMAIL_FROM="fwadmin@uni-trier.de"
+
 ADMINS = (
     # ('Your Name', 'your_email@example.com'),
 )

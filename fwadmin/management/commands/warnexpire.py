@@ -1,27 +1,42 @@
 import datetime
+import os
 
 from django.core.management.base import BaseCommand
+from django.core.mail import send_mail
 
+from django_project.settings import (
+    WARN_EXPIRE_URL_TEMPLATE,
+    WARN_EXPIRE_EMAIL_FROM,
+)
 from fwadmin.models import Host
 
 # run command as:
 #   python manage.py warnexpire 14
 
 def send_renew_mail(host):
-    # XXX: HARDCODED OOOHHHH NO
-    url="http://fwadmin.uni-trier.de/"
+    url = WARN_EXPIRE_URL_TEMPLATE % { 'pk': host.pk}
     # the text
-    text = """Machine: '%(host)s' (%(ip)s
-Your firewall configuration will expire at '%(expire_date)s'. 
+    subject = "Firewall config for '%s'" % host.name
+    body = """Dear %(user)s,
+
+The firewall config for machine: '%(host)s' (%(ip)s) will expire at
+'%(expire_date)s'.
 
 Please click on %(url)s to renew.
-""" % {'host': host.name,
+""" % { 'user': host.owner.username,
+        'host': host.name,
        'ip': host.ip,
        'expire_date': host.active_until,
        'url': url,
        }
-    print text
-    print host.owner.username, host.owner.email
+    if "FWADMIN_DRY_RUN" in os.environ:
+        print "From:", WARN_EXPIRE_EMAIL_FROM
+        print "To:", host.owner.email
+        print "Subject: ", subject
+        print body
+        print 
+    else:
+        send_mail(subject, body, WARN_EXPIRE_EMAIL_FROM, [host.owner.email])
 
 
 class Command(BaseCommand):
