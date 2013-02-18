@@ -18,13 +18,20 @@ class CiscoRulesWriter(BaseRulesWriter):
 
     def get_rules_list(self, host):
         l = []
-        # XXX check if comments are allowed
-        l.append("# fw rules for %s (%s) owner by %s" % (
+        l.append("! fw rules for %s (%s) owner by %s" % (
                 host.name, host.ip, host.owner))
+        # XXX: how to get the access-list number?
+        list_nr = 120
+        # XXX: add allow_from to Port
+        from_location = "any" #port.allow_from
         for port in host.open_ports.all():
-            # XXX: check synatax
-            s = "from any to %s allow %s %s" % (
-                host.ip, port.type, port.number)
+            s = ("access-list %(list_nr)s "
+                 "permit %(type)s %(from)s host %(ip)s eq %(port)s" % {
+                    'list_nr': list_nr,
+                    'type': port.type,
+                    'from': from_location,
+                    'ip': host.ip,
+                    'port': port.number})
             l.append(s)
         return l
 

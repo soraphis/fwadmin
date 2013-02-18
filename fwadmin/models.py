@@ -2,11 +2,17 @@ from django.db import models
 from django.contrib.auth.models import User
 
 
-# XXX: add "IP Protocol Number" somewhere into the data structure
 class Port(models.Model):
     name = models.CharField(max_length=100)
     number = models.IntegerField()
-    # TCP/UDP
+
+    # XXX: add allow_from and also rename to something like OpenPort or
+    #      FwRule
+    #
+    # allows limiting the firewall to certain hosts
+    #allow_from = models.GenericIPAddressField(default="0.0.0.0")
+
+    # TCP/UDP or other IP protocol number
     type = models.CharField(max_length=5)
     def __unicode__(self):
         return "%s %s (%s)" % (self.type, self.name, self.number)
