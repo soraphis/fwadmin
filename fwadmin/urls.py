@@ -3,7 +3,7 @@ from django.conf.urls import patterns, url
 
 urlpatterns = patterns('fwadmin.views',
     # user stuff
-    url(r'^$', 'list', name='list'),
+    url(r'^$', 'index', name='index'),
     url(r'^list/$', 'list', name='list'),
 
     url(r'^new/$', 'new', name="new"),

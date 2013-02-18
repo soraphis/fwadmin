@@ -21,6 +21,19 @@ from fwadmin.forms import (
     EditHostForm,
 )
 
+@login_required
+def index(request):
+    return render_to_response('fwadmin/index.html', 
+                              context_instance=RequestContext(request))
+
+
+@login_required
+def list(request):
+    queryset=Host.objects.filter(owner=request.user)
+    return render_to_response('fwadmin/list.html', 
+                              { 'all_hosts': queryset },
+                              context_instance=RequestContext(request))
+
 
 @login_required
 def new(request, pk=None):
@@ -71,14 +84,6 @@ def renew(request, pk):
                               { 'active_until': active_until},
                               context_instance=RequestContext(request))
     
-
-@login_required
-def list(request):
-    queryset=Host.objects.filter(owner=request.user)
-    return render_to_response('fwadmin/list.html', 
-                              { 'all_hosts': queryset },
-                              context_instance=RequestContext(request))
-
 
 @user_passes_test(lambda u: u.is_superuser)
 def list_unapproved(request):
