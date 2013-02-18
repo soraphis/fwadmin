@@ -1,0 +1,27 @@
+<h2>All unapproved hosts</h2>
+{% if all_hosts %}
+    <table border="1" cellpadding="3">
+      <tr>
+        <th>Owner</th>
+        <th>Host Description</th>
+        <th>IP</th>
+        <th>Open Ports</th>
+        <th>Approve Link</th>
+      </tr>
+      {% for host in all_hosts  %}
+      <tr>
+        <td>{{ host.owner }}</td>
+        <td>{{ host.name }}</td>
+        <td>{{ host.ip }}</td>
+        <td>
+            {% for port in host.open_ports.all %}
+               {{ port.name }}{% if not forloop.last %},{% endif %}
+          {% endfor %}
+        </td>
+        <td><a href="/fwadmin/admin-approve/{{ host.pk }}/">approve</a></td>
+      </tr>
+      {% endfor %}
+    </table>
+{% else %}
+    <p>No machines.</p>
+{% endif %}
