@@ -8,6 +8,7 @@ from django.utils.translation import ugettext as _
 from django_project.settings import (
     WARN_EXPIRE_URL_TEMPLATE,
     WARN_EXPIRE_EMAIL_FROM,
+    WARN_EXPIRE_DAYS,
 )
 from fwadmin.models import Host
 
@@ -44,7 +45,7 @@ class Command(BaseCommand):
     help = 'send warning mails when expire is close, first arg is nr of days'
 
     def handle(self, *args, **options):
-        days_delta = int(args[0])
+        days_delta = WARN_EXPIRE_DAYS
         td = datetime.timedelta(days=days_delta)
         for host in Host.objects.all():
             if (host.active_until-td < datetime.date.today() and

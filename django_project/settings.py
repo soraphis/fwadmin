@@ -12,6 +12,8 @@ TEMPLATE_DEBUG = DEBUG
 # XXX: use reverse url mapping instead of hardcoding
 WARN_EXPIRE_URL_TEMPLATE = "https://fwadmin.uni-trier.de/fwadmin/renew/%(pk)s/"
 WARN_EXPIRE_EMAIL_FROM="fwadmin@uni-trier.de"
+WARN_EXPIRE_DAYS=7
+
 # the cisco access list number we use
 FWADMIN_ACCESS_LIST_NR = 120
 
