@@ -1,5 +1,6 @@
 # Django settings for django_project project.
 import ldap
+import os
 from django_auth_ldap.config import (
     LDAPSearch,
     ActiveDirectoryGroupType,
@@ -181,7 +182,8 @@ AUTHENTICATION_BACKENDS = (
 #
 AUTH_LDAP_SERVER_URI = "ldap://emailtest.uni-trier.de"
 AUTH_LDAP_BIND_DN = "fwadmin@emailtest.uni-trier.de"
-AUTH_LDAP_BIND_PASSWORD = "---"
+AUTH_LDAP_BIND_PASSWORD = open(os.path.join(os.path.dirname(__file__),
+                                            "ldap-password")).read()
 
 # FIXME: use round-robin or something
 #AUTH_LDAP_SERVER_URI = "ldaps://saul.uni-trier.de:636"
