@@ -205,10 +205,11 @@ AUTH_LDAP_USER_ATTR_MAP = {
 }
 # this will crash and burn if there is no such group
 AUTH_LDAP_USER_FLAGS_BY_GROUP = {
-    # XXX: we need something different than 
-    "is_employee": "CN=Mitarb,CN=Users,dc=emailtest,dc=uni-trier,dc=de",
+    # auto allow access to admin interface for our group
     "is_staff": "CN=G-zentrale-systeme,CN=Users,DC=emailtest,DC=uni-trier,DC=de",
 }
+# limit login to "Mitarb"
+AUTH_LDAP_REQUIRE_GROUP = "cn=Mitarb,CN=Users,DC=emailtest,dc=uni-trier,dc=de"
 
 AUTH_LDAP_GROUP_TYPE = ActiveDirectoryGroupType()
 AUTH_LDAP_FIND_GROUP_PERMS = True
