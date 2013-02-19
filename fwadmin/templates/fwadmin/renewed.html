@@ -3,7 +3,6 @@
 
 {% block content %}
 
-<p>{% trans "Thanks for renewing, host firewall active until  {{ active_until }}" %}
-</p>
+<p>{% blocktrans %}Thanks for renewing, host firewall active until {{ active_until }} {% endblocktrans %}</p>
 
 {% endblock %}
