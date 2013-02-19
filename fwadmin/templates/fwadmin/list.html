@@ -1,16 +1,17 @@
 {% extends "base.html" %}
+{% load i18n %}
 
 {% block content %}
 
 {% if all_hosts %}
     <table border="1" cellpadding="3">
       <tr>
-        <th>Host Description</th>
-        <th>IP</th>
-        <th>Approved</th>
-        <th>Open Ports</th>
-        <th>Active Until</th>
-        <th>Renew Link</th>
+        <th>{% trans "Host Description" %}</th>
+        <th>{% trans "IP" %}</th>
+        <th>{% trans "Approved"  %}</th>
+        <th>{% trans "Open Ports" %}</th>
+        <th>{% trans "Active Until" %}</th>
+        <th>{% trans "Renew Link" %}</th>
       </tr>
       {% for host in all_hosts  %}
       <tr>
@@ -33,7 +34,7 @@
       {% endfor %}
     </table>
 {% else %}
-    <p>No machines.</p>
+    <p>{% trans "No machines."  %}</p>
 {% endif %}
 
 {% endblock %}

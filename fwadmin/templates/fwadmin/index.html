@@ -1,11 +1,12 @@
 {% extends "base.html" %}
+{% load i18n %}
 
 {% block content %}
 
 <h1>Welcome {{ user }}</h1>
 
 You can
-<a href="/fwadmin/new/">Create a new host</a> or 
-<a href="/fwadmin/list/">List exisiting hosts</a>.
+<a href="/fwadmin/new/">{% trans "Create a new host"  %}</a> or 
+<a href="/fwadmin/list/">{% trans "List exisiting hosts"  %}</a>.
 
 {% endblock %}

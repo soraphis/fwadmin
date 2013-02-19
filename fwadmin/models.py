@@ -1,10 +1,12 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils.translation import ugettext as _
 
 
 class Port(models.Model):
-    name = models.CharField(max_length=100)
-    number = models.IntegerField()
+    name = models.CharField(
+        max_length=100, help_text=_("The port name"))
+    number = models.IntegerField(help_text=_("The port number"))
 
     # XXX: add allow_from and also rename to something like OpenPort or
     #      FwRule
@@ -13,7 +15,7 @@ class Port(models.Model):
     #allow_from = models.GenericIPAddressField(default="0.0.0.0")
 
     # TCP/UDP or other IP protocol number
-    type = models.CharField(max_length=5)
+    type = models.CharField(max_length=5, help_text=_("IP Protocol type"))
     def __unicode__(self):
         return "%s %s (%s)" % (self.type, self.name, self.number)
 

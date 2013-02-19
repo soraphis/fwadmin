@@ -3,6 +3,7 @@ import os
 
 from django.core.management.base import BaseCommand
 from django.core.mail import send_mail
+from django.utils.translation import ugettext as _
 
 from django_project.settings import (
     WARN_EXPIRE_URL_TEMPLATE,
@@ -16,18 +17,18 @@ from fwadmin.models import Host
 def send_renew_mail(host):
     url = WARN_EXPIRE_URL_TEMPLATE % { 'pk': host.pk}
     # the text
-    subject = "Firewall config for '%s'" % host.name
-    body = """Dear %(user)s,
+    subject = _("Firewall config for '%s'") % host.name
+    body = -("""Dear %(user)s,
 
 The firewall config for machine: '%(host)s' (%(ip)s) will expire at
 '%(expire_date)s'.
 
 Please click on %(url)s to renew.
-""" % { 'user': host.owner.username,
+""") % { 'user': host.owner.username,
         'host': host.name,
-       'ip': host.ip,
-       'expire_date': host.active_until,
-       'url': url,
+         'ip': host.ip,
+         'expire_date': host.active_until,
+         'url': url,
        }
     if "FWADMIN_DRY_RUN" in os.environ:
         print "From:", WARN_EXPIRE_EMAIL_FROM
