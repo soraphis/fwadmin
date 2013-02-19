@@ -86,5 +86,21 @@
      "number": 993,
      "type": "TCP"
    }
+ },
+ {"model": "fwadmin.port",
+   "pk": 13,
+   "fields": {
+     "name": "Remote Desktop",
+     "number": 3389,
+     "type": "TCP"
+   }
+ },
+ {"model": "fwadmin.port",
+   "pk": 14,
+   "fields": {
+     "name": "vnc",
+     "number": 5900,
+     "type": "TCP"
+   }
  }
 ]
