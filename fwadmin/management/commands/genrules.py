@@ -17,21 +17,48 @@ class BaseRulesWriter:
 
 class CiscoRulesWriter(BaseRulesWriter):
 
+    def _get_fw_string(self, list_nr, permit, type, from_net, to_ip, port):
+        # HRM, ugly and lacks tests!
+        d = {'list_nr': list_nr,
+             'type': type,
+             'from_net': from_net,
+             'to_ip': to_ip,
+             'port': "",
+            }
+        if permit:
+            d["permit_or_deny"] = "permit"
+        else:
+            d["permit_or_deny"] = "deny"
+        # port is optional I think
+        if port:
+            d["port"] = "eq %s" % port
+        s = ("access-list %(list_nr)s %(permit_or_deny)s %(type)s "
+             "%(from_net)s host %(to_ip)s %(port)s" % d)
+        return s
+
     def get_rules_list(self, host):
         l = []
         l.append("! fw rules for %s (%s) owner by %s" % (
                 host.name, host.ip, host.owner))
         list_nr = FWADMIN_ACCESS_LIST_NR
-        # XXX: add allow_from to Port
-        from_location = "any" #port.allow_from
+        # complex rules
+        for complex_rule in host.complex_rules.all():
+            s = self._get_fw_string(list_nr=list_nr,
+                                    permit=complex_rule.permit,
+                                    type=complex_rule.ip_protocol,
+                                    from_net=complex_rule.from_net,
+                                    to_ip=host.ip,
+                                    port=complex_rule.port)
+            l.append(s)
+        # simple rules 
+        from_location = "any"
         for port in host.open_ports.all():
-            s = ("access-list %(list_nr)s "
-                 "permit %(type)s %(from)s host %(ip)s eq %(port)s" % {
-                    'list_nr': list_nr,
-                    'type': port.type,
-                    'from': from_location,
-                    'ip': host.ip,
-                    'port': port.number})
+            s = self._get_fw_string(list_nr=list_nr,
+                                    permit=True,
+                                    type=port.type,
+                                    from_net=from_location,
+                                    to_ip=host.ip,
+                                    port=port.number)
             l.append(s)
         return l
 

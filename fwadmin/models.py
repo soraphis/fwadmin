@@ -7,17 +7,23 @@ class Port(models.Model):
     name = models.CharField(
         max_length=100, help_text=_("The port name"))
     number = models.IntegerField(help_text=_("The port number"))
-
-    # XXX: add allow_from and also rename to something like OpenPort or
-    #      FwRule
-    #
-    # allows limiting the firewall to certain hosts
-    #allow_from = models.GenericIPAddressField(default="0.0.0.0")
-
     # TCP/UDP or other IP protocol number
     type = models.CharField(max_length=5, help_text=_("IP Protocol type"))
     def __unicode__(self):
         return "%s %s (%s)" % (self.type, self.name, self.number)
+
+
+class ComplexRule(models.Model):
+    name = models.CharField(max_length=100)
+    from_net =  models.GenericIPAddressField(default="0.0.0.0")
+    # allow or deny
+    permit = models.BooleanField()
+    # TCP, UDP, anything
+    ip_protocol = models.CharField(max_length=10)
+    # just the integer
+    port = models.IntegerField(blank=True, null=True)
+    def __unicode__(self):
+        return "complex rule: %s " % self.name
 
 
 class Host(models.Model):
@@ -26,7 +32,10 @@ class Host(models.Model):
     ip = models.GenericIPAddressField(unique=True)
     active_until = models.DateField()
     owner = models.ForeignKey(User)
-    open_ports = models.ManyToManyField(Port)
+    # simple portfilter rules
+    open_ports = models.ManyToManyField(Port, blank=True)
+    # complex rules
+    complex_rules = models.ManyToManyField(ComplexRule)
     # approved by a admin
     approved = models.BooleanField(default=False)
     # no longer active
@@ -34,6 +43,5 @@ class Host(models.Model):
     def __unicode__(self):
         return "%s (%s): %s: %s %s" % (self.name, self.ip, self.active_until,
                                        self.owner, self.open_ports)
-
 
 
