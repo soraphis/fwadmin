@@ -2,6 +2,7 @@ import datetime
 import logging
 
 from django.core.management.base import BaseCommand
+from django_project.settings import FWADMIN_ACCESS_LIST_NR
 
 from fwadmin.models import Host
 
@@ -20,8 +21,7 @@ class CiscoRulesWriter(BaseRulesWriter):
         l = []
         l.append("! fw rules for %s (%s) owner by %s" % (
                 host.name, host.ip, host.owner))
-        # XXX: how to get the access-list number?
-        list_nr = 120
+        list_nr = FWADMIN_ACCESS_LIST_NR
         # XXX: add allow_from to Port
         from_location = "any" #port.allow_from
         for port in host.open_ports.all():
