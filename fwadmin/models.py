@@ -4,6 +4,7 @@ from django.utils.translation import ugettext as _
 
 
 class Port(models.Model):
+    """ Simple "open port" rule for a single host """
     name = models.CharField(
         max_length=100, help_text=_("The port name"))
     number = models.IntegerField(help_text=_("The port number"))
@@ -14,6 +15,7 @@ class Port(models.Model):
 
 
 class ComplexRule(models.Model):
+    """ Complex(er) allow/deny from net rule for a single host """
     name = models.CharField(max_length=100)
     from_net =  models.GenericIPAddressField(default="0.0.0.0")
     # allow or deny
