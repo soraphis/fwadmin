@@ -21,7 +21,14 @@ from fwadmin.forms import (
     EditHostForm,
 )
 
+def is_in_ldap_group(user, group_name):
+    if user:
+        return user.groups.filter(name=group_name).count() == 1
+    return False
+
+
 @login_required
+@user_passes_test(lambda u: is_in_ldap_group(u, "Mitarb"))
 def index(request):
     return render_to_response('fwadmin/index.html', 
                               context_instance=RequestContext(request))
