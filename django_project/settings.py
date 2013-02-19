@@ -1,4 +1,9 @@
 # Django settings for django_project project.
+import ldap
+from django_auth_ldap.config import (
+    LDAPSearch,
+    ActiveDirectoryGroupType,
+)
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -163,31 +168,53 @@ LOGGING = {
 
 
 # LDAP/AD AUTH
-#AUTHENTICATION_BACKENDS = (
-#    'django_auth_ldap.backend.LDAPBackend',
-#    'django.contrib.auth.backends.ModelBackend',
-#)
+AUTHENTICATION_BACKENDS = (
+    'django_auth_ldap.backend.LDAPBackend',
+    'django.contrib.auth.backends.ModelBackend',
+)
 
-#AUTH_LDAP_SERVER_URI = "ldap://emailtest.uni-trier.de"
-#AUTH_LDAP_USER_DN_TEMPLATE = "cn=%(user)s,CN=Users,DC=emailtest,DC=uni-trier,DC=de"
+# FUN! our active directory is setup so that we run into this:
+#   https://bitbucket.org/psagers/django-auth-ldap/issue/21/cant-bind-and-search-on-activedirectory
+# so we can not use something like
+#   AUTH_LDAP_USER_DN_TEMPLATE = "%(user)s@emailtest.uni-trier.de"
+# as the LDAP dn is set to the full user name, not to the SAMAccountName
+#
+AUTH_LDAP_SERVER_URI = "ldap://emailtest.uni-trier.de"
+AUTH_LDAP_BIND_DN = "fwadmin@emailtest.uni-trier.de"
+AUTH_LDAP_BIND_PASSWORD = "---"
 
 # FIXME: use round-robin or something
-AUTH_LDAP_SERVER_URI = "ldaps://saul.uni-trier.de:636"
-AUTH_LDAP_USER_DN_TEMPLATE = "cn=%(user)s,CN=Users,DC=uni-trier,DC=de"
+#AUTH_LDAP_SERVER_URI = "ldaps://saul.uni-trier.de:636"
 
-# FIXME: this does not work without
-#   AUTH_LDAP_BIND_DN = ""
-#   AUTH_LDAP_BIND_PASSWORD = ""
-# so we need to find a way round this (either a account or hack auth-ldap-bind)
+# custom search as the DN uses the full account name
+AUTH_LDAP_USER_SEARCH = LDAPSearch('dc=emailtest,dc=uni-trier,dc=de', 
+                                   ldap.SCOPE_SUBTREE, 
+                                   '(sAMAccountName=%(user)s)')
+
+# needed to make ActiveDirectory work
+AUTH_LDAP_CONNECTION_OPTIONS = {
+    ldap.OPT_REFERRALS: 0
+}
+
 AUTH_LDAP_USER_ATTR_MAP = {
     "first_name": "givenName", 
     "last_name": "sn",
     "email": "maiL",
 }
-#AUTH_LDAP_USER_FLAGS_BY_GROUP = {
-#    "is_staff": "CN=Mitarb,CN=Users,dc=uni-trier,dc=de",
-#    "is_superuser": "CN=G-zentrale-systeme,CN=Users,DC=uni-trier,DE=de",
-#}
+# this will crash and burn if there is no such group
+AUTH_LDAP_USER_FLAGS_BY_GROUP = {
+    # XXX: we need something different than 
+    "is_employee": "CN=Mitarb,CN=Users,dc=emailtest,dc=uni-trier,dc=de",
+    "is_staff": "CN=G-zentrale-systeme,CN=Users,DC=emailtest,DC=uni-trier,DC=de",
+}
+
+AUTH_LDAP_GROUP_TYPE = ActiveDirectoryGroupType()
+AUTH_LDAP_FIND_GROUP_PERMS = True
+#AUTH_LDAP_CACHE_GROUPS = True
+#AUTH_LDAP_GROUP_CACHE_TIMEOUT = 3600
+AUTH_LDAP_GROUP_SEARCH = LDAPSearch('OU=Groups,DC=emailtest,DC=uni-trier,DC=de',
+                                    ldap.SCOPE_SUBTREE,
+                                    "(objectClass=group)")
 
 import logging
 logger = logging.getLogger('django_auth_ldap')
