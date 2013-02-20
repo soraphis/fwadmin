@@ -4,7 +4,10 @@ from django.test import TestCase
 from mock import patch
 
 from fwadmin.management.commands.genrules import Command as GenrulesCommand
-from fwadmin.management.commands.disableinactive import Command as DisableInactiveCommand
+from fwadmin.management.commands.disableinactive import (
+    Command as DisableInactiveCommand
+)
+from fwadmin.management.commands.warnexpire import Command as WarnExpireCommand
 
 from fwadmin.models import (
     Host,
@@ -59,6 +62,31 @@ class DisableInactiveTestCase(MyBaseTest):
         # we need to "refresh" the host from the Db self.host is stale
         host_from_db = Host.objects.filter(pk=self.host.pk)[0]
         self.assertEqual(host_from_db.active, False)
+
+
+class WarnExpireTestCase(MyBaseTest):
+    
+    def setUp(self):
+        MyBaseTest.setUp(self)
+        self.cmd = WarnExpireCommand()
+
+    @patch("fwadmin.management.commands.warnexpire.send_renew_mail")
+    def test_no_send_renew_mail_when_still_active(self, mock_f):
+        """Ensure we do not send mails if there is enough delta"""
+        today = datetime.date.today()
+        delta = self.host.active_until-today
+        self.assertEqual(delta, datetime.timedelta(days=360))
+        self.cmd.handle()
+        self.assertEqual(mock_f.mock_calls, [])
+
+    @patch("fwadmin.management.commands.warnexpire.send_renew_mail")
+    def test_send_renew_mail(self, mock_f):
+        """Ensure we do send mails"""
+        tomorrow = datetime.date.today() + datetime.timedelta(days=1)
+        self.host.active_until = tomorrow
+        self.host.save()
+        self.cmd.handle()
+        mock_f.assert_called_with(self.host)
 
 
 class ManagementCommandsTestCase(MyBaseTest):
