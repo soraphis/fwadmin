@@ -38,7 +38,7 @@ class CiscoRulesWriter(BaseRulesWriter):
 
     def get_rules_list(self, host):
         l = []
-        l.append("! fw rules for %s (%s) owner by %s" % (
+        l.append("! fw rules for %s (%s) owned by %s" % (
                 host.name, host.ip, host.owner))
         list_nr = FWADMIN_ACCESS_LIST_NR
         # complex rules
@@ -66,11 +66,16 @@ class CiscoRulesWriter(BaseRulesWriter):
 class Command(BaseCommand):
     help = 'write the firewall rules to stdout'
 
+    def _write_rules(rules_list):
+        print "\n".join(rules_list)
+    
     def handle(self, *args, **options):
         writer = CiscoRulesWriter()
         for host in Host.objects.all():
             if (host.active_until > datetime.date.today() and
                 host.approved and
                 host.active):
-                print "\n".join(writer.get_rules_list(host))
+                rules_list = writer.get_rules_list(host)
+                self._write_rules(rules_list)
+               
 
