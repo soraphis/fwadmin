@@ -69,7 +69,7 @@ class Command(BaseCommand):
     def _write_rules(rules_list):
         print "\n".join(rules_list)
     
-    def handle(self, *args, **options):
+    def print_firewall_rules(self):
         writer = CiscoRulesWriter()
         for host in Host.objects.all():
             if (host.active_until > datetime.date.today() and
@@ -77,5 +77,7 @@ class Command(BaseCommand):
                 host.active):
                 rules_list = writer.get_rules_list(host)
                 self._write_rules(rules_list)
-               
+
+    def handle(self, *args, **options):
+        self.print_firewall_rules()
 
