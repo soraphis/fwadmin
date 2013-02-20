@@ -22,20 +22,21 @@ from fwadmin.forms import (
     EditHostForm,
 )
 
-def is_in_ldap_group(user, group_name):
+def is_in_group(user, group_name):
     if user:
         return user.groups.filter(name=group_name).count() == 1
     return False
 
 
 @login_required
-@user_passes_test(lambda u: is_in_ldap_group(u, "Mitarb"))
+@user_passes_test(lambda u: is_in_group(u, "Mitarb"))
 def index(request):
     return render_to_response('fwadmin/index.html', 
                               context_instance=RequestContext(request))
 
 
 @login_required
+@user_passes_test(lambda u: is_in_group(u, "Mitarb"))
 def list(request):
     queryset=Host.objects.filter(owner=request.user)
     return render_to_response('fwadmin/list.html', 
@@ -44,6 +45,7 @@ def list(request):
 
 
 @login_required
+@user_passes_test(lambda u: is_in_group(u, "Mitarb"))
 def new(request, pk=None):
     if request.method == 'POST':
         form = NewHostForm(request.POST)
@@ -68,6 +70,7 @@ def new(request, pk=None):
 
 
 @login_required
+@user_passes_test(lambda u: is_in_group(u, "Mitarb"))
 def edit(request, pk):
     host = Host.objects.filter(pk=pk)[0]
     if host.owner != request.user:
@@ -87,6 +90,7 @@ def edit(request, pk):
 
 
 @login_required
+@user_passes_test(lambda u: is_in_group(u, "Mitarb"))
 def renew(request, pk):
     host = Host.objects.filter(pk=pk)[0]
     if host.owner != request.user:
@@ -97,8 +101,9 @@ def renew(request, pk):
     return render_to_response('fwadmin/renewed.html',
                               { 'active_until': active_until},
                               context_instance=RequestContext(request))
-    
 
+
+@login_required
 @user_passes_test(lambda u: u.is_superuser)
 def list_unapproved(request):
     queryset=Host.objects.filter(approved=False)
@@ -107,6 +112,7 @@ def list_unapproved(request):
                               { 'all_hosts': queryset },
                               context_instance=RequestContext(request))
 
+@login_required
 @user_passes_test(lambda u: u.is_superuser)
 def approve(request, pk):
     host = Host.objects.filter(pk=pk)[0]
