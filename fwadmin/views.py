@@ -31,7 +31,9 @@ def is_in_group(user, group_name):
 @login_required
 @user_passes_test(lambda u: is_in_group(u, "Mitarb"))
 def index(request):
-    return render_to_response('fwadmin/index.html', 
+    queryset=Host.objects.filter(owner=request.user)
+    return render_to_response('fwadmin/index.html',
+                              { 'all_hosts': queryset },
                               context_instance=RequestContext(request))
 
 

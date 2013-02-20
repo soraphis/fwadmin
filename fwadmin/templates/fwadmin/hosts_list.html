@@ -1,13 +1,6 @@
-{% extends "base.html" %}
 {% load i18n %}
 
-{% block content %}
-
-<div class="page-header">
-  <h1>My Hosts</h1>
-</div>
-
-
+<div class="hosts-list">
 {% if all_hosts %}
     <table border="1" cellpadding="3">
       <tr>
@@ -39,7 +32,7 @@
       {% endfor %}
     </table>
 {% else %}
-    <p>{% trans "No machines."  %}</p>
+    <p>{% trans "No hosts yet."  %}</p>
 {% endif %}
+</div>
 
-{% endblock %}

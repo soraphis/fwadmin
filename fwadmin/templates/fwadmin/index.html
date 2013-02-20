@@ -8,12 +8,22 @@
 </div>
 
 <div>
+    <a href="/accounts/logout" class="logout">{% trans "Logout" %}</a>
+
   <h2>Welcome {{ user }}</h2>
 
-  You can
-  <a href="/fwadmin/new/">{% trans "Create a new host"  %}</a> or 
-  <a href="/fwadmin/list/">{% trans "List exisiting hosts"  %}</a>.
-  <a href="/accounts/logout/">{% trans "Logout"  %}</a>.
+
+  <p>This is the firewall config tool.
+  </p>
+
+  
+  <div>
+    <a href="/fwadmin/new">{% trans "Create New Host" %}</a>
+  </div>
+
+  {% include "fwadmin/hosts_list.html" %}
+
+
 </div>
 
 {% endblock %}
