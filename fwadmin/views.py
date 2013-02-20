@@ -1,4 +1,5 @@
 import datetime
+from django.utils.translation import ugettext as _
 
 from django.http import (
     HttpResponse,
@@ -59,7 +60,10 @@ def new(request, pk=None):
             form.save_m2m()
             return HttpResponseRedirect('/fwadmin/list/')
     form = NewHostForm()
-    return render_to_response('fwadmin/new.html', {'form': form },
+    return render_to_response('fwadmin/new.html',
+                              {'form': form,
+                               'action': _("New Host"),
+                              },
                               context_instance=RequestContext(request))
 
 
@@ -75,7 +79,10 @@ def edit(request, pk):
             return HttpResponseRedirect('/fwadmin/list/')
         return  HttpResponseRedirect('/fwadmin/list/')
     form = EditHostForm(instance=host)
-    return render_to_response('fwadmin/new.html', {'form': form },
+    return render_to_response('fwadmin/new.html',
+                              {'form': form,
+                               'action': _("Edit Host"),
+                              },
                               context_instance=RequestContext(request))
 
 

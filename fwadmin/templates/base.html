@@ -1,13 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!-- <link rel="stylesheet" href="style.css" /> -->
-  <title>{% block title %}Fwadmin{% endblock %}</title>
+  <link rel="stylesheet" href="{{ STATIC_URL }}style.css" />
+  <title>{% block title %}Fwadminx{% endblock %}</title>
 </head>
 
 <body>
-    <div id="content">
+    <div class="content">
         {% block content %}{% endblock %}
     </div>
+
+    <footer>
+      &copy; ZIMK 2013
+    </footer>
+
 </body>
 </html>

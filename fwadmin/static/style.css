@@ -1,0 +1,22 @@
+body {
+    background-color: #33f5f5;
+}
+
+.page-header {
+    padding: 3em;
+    margin: 0;
+    background-color: #005E9C;
+    color: #ffffff;
+}
+
+.content {
+    background-color: #ffffff;
+    min-height: 350px;
+}
+
+footer {
+    text-align: center;
+    padding: 30px 0;
+    border-top: 1px solid #E5E5E5;
+}
+
