@@ -135,9 +135,9 @@ class ManagementCommandsTestCase(MyBaseTest):
     def test_gen_rules_complex(self, mock_f):
         """ Ensure complex rules are written """
         rule = ComplexRule.objects.create(
+            host=self.host,
             name="complex", from_net="192.168.2.0/24", permit=False,
             ip_protocol="UDP", port=53)
-        self.host.complex_rules.add(rule)
         self.cmd.print_firewall_rules()
         mock_f.assert_called_with(
             ["! fw rules for %s (%s) owned by %s" % (

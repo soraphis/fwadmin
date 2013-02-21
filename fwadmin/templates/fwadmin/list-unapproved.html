@@ -1,6 +1,8 @@
 {% extends "base.html" %}
 {% load i18n %}
 
+{% block content %}
+
 <div class="page-header">
   <h1>Unapproved Hosts</h1>
 </div>
@@ -30,5 +32,7 @@
       {% endfor %}
     </table>
 {% else %}
-    <p>No machines.</p>
+    <p>No unapproved hosts.</p>
 {% endif %}
+
+{% endblock %}

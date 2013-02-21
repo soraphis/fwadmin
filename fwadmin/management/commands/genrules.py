@@ -4,7 +4,10 @@ import logging
 from django.core.management.base import BaseCommand
 from django_project.settings import FWADMIN_ACCESS_LIST_NR
 
-from fwadmin.models import Host
+from fwadmin.models import (
+    ComplexRule,
+    Host,
+)
 
 
 class BaseRulesWriter:
@@ -42,7 +45,7 @@ class CiscoRulesWriter(BaseRulesWriter):
                 host.name, host.ip, host.owner))
         list_nr = FWADMIN_ACCESS_LIST_NR
         # complex rules
-        for complex_rule in host.complex_rules.all():
+        for complex_rule in ComplexRule.objects.filter(host=host):
             s = self._get_fw_string(list_nr=list_nr,
                                     permit=complex_rule.permit,
                                     type=complex_rule.ip_protocol,
