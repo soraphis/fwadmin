@@ -69,7 +69,7 @@ class CiscoRulesWriter(BaseRulesWriter):
 class Command(BaseCommand):
     help = 'write the firewall rules to stdout'
 
-    def _write_rules(rules_list):
+    def _write_rules(self, rules_list):
         print "\n".join(rules_list)
     
     def print_firewall_rules(self):
