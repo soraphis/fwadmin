@@ -79,30 +79,13 @@ def new_host(request):
 
 @login_required
 @group_required(FWADMIN_ALLOWED_USER_GROUP)
-def edit_host(request, pk):
-    host = Host.objects.filter(pk=pk)[0]
-    if host.owner != request.user:
-        return HttpResponseForbidden("you are not owner")
-    if request.method == 'POST':
-        form = EditHostForm(request.POST, instance=host)
-        if form.is_valid():
-            form.save()
-            return HttpResponseRedirect('/fwadmin/list/')
-        return  HttpResponseRedirect('/fwadmin/list/')
-    form = EditHostForm(instance=host)
-    return render_to_response('fwadmin/new.html',
-                              {'form': form,
-                               'action': _("Edit Host"),
-                              },
-                              context_instance=RequestContext(request))
-
-
-@login_required
-@group_required(FWADMIN_ALLOWED_USER_GROUP)
 def renew_host(request, pk):
     host = Host.objects.filter(pk=pk)[0]
     if host.owner != request.user:
-        return HttpResponseForbidden("you are not owner")
+        # WARNING: do not give info like "name" or "ip" here to avoid
+        #          leaking information
+        return HttpResponseForbidden("You (%s) are not owner of this host" % 
+                                     request.user.username)
     active_until = (datetime.date.today() +
                     datetime.timedelta(FWADMIN_DEFAULT_ACTIVE_DAYS))
     host.active_until = active_until
@@ -123,6 +106,26 @@ def delete_host(request, pk):
         return redirect(reverse("fwadmin:index"),
                         context_instance=RequestContext(request))
     return HttpResponseBadRequest("Only POST supported here")
+
+
+@login_required
+@group_required(FWADMIN_ALLOWED_USER_GROUP)
+def edit_host(request, pk):
+    host = Host.objects.filter(pk=pk)[0]
+    if host.owner != request.user:
+        return HttpResponseForbidden("you are not owner")
+    if request.method == 'POST':
+        form = EditHostForm(request.POST, instance=host)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('/fwadmin/list/')
+        return  HttpResponseRedirect('/fwadmin/list/')
+    form = EditHostForm(instance=host)
+    return render_to_response('fwadmin/new.html',
+                              {'form': form,
+                               'action': _("Edit Host"),
+                              },
+                              context_instance=RequestContext(request))
 
 
 @login_required

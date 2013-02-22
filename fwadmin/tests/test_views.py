@@ -61,6 +61,39 @@ class LoggedInViewsTestCase(TestCase):
         with self.assertRaises(Host.DoesNotExist):
             Host.objects.get(pk=self.host.id)        
 
+    def test_renew_host(self):
+        # create ancient host
+        host = Host.objects.create(name="meep", ip="192.168.1.1",
+                                   # XXX: should we disallow renew after
+                                   #      some time?
+                                   active_until="1789-01-01",
+                                   owner=self.user)
+        # post to renew url
+        resp = self.client.post(reverse("fwadmin:renew_host", args=(host.id,)))
+        # ensure we get something of the right message
+        self.assertTrue("Thanks for renewing" in resp.content)
+        # and that it is actually renewed
+        host = Host.objects.get(name="meep")
+        self.assertEqual(
+            host.active_until, 
+            (datetime.date.today()+
+             datetime.timedelta(days=FWADMIN_DEFAULT_ACTIVE_DAYS)))
+
+    def test_renew_host_different_owner(self):
+        a_user = User.objects.create_user("Alice")
+        host_name = "alice host"
+        active_until = datetime.date(2036, 01, 01)
+        host = Host.objects.create(name=host_name, ip="192.168.1.1",
+                                   owner=a_user, active_until=active_until)
+        resp = self.client.post(reverse("fwadmin:renew_host", args=(host.id,)))
+        # ensure we get a error status
+        self.assertEqual(resp.status_code, 403)
+        # check error message
+        self.assertTrue("are not owner of this host" in resp.content)
+        # ensure the active_until date is not modified
+        host = Host.objects.get(name="alice host")
+        self.assertEqual(host.active_until, active_until)
+
     def test_new_host(self):
         post_data = {"name": "newhost",
                      "ip": "192.168.1.1",
