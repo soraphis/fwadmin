@@ -16,7 +16,11 @@ WARN_EXPIRE_DAYS=7
 
 # the cisco access list number we use
 FWADMIN_ACCESS_LIST_NR = 120
+# the LDAP/django group that is allowed to use the tool 
 FWADMIN_ALLOWED_USER_GROUP = "Mitarb"
+# the default time a host is active if when created/renewed
+FWADMIN_DEFAULT_ACTIVE_DAYS = 365
+
 
 ADMINS = (
     # ('Your Name', 'your_email@example.com'),

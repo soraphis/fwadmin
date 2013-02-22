@@ -1,5 +1,7 @@
+import datetime
+from urlparse import urlsplit
+
 from django.core.urlresolvers import reverse
-from django.db import models
 from django.test import TestCase
 from django.contrib.auth.models import (
     User,
@@ -7,7 +9,11 @@ from django.contrib.auth.models import (
 )
 from fwadmin.models import Host
 
-from django_project.settings import FWADMIN_ALLOWED_USER_GROUP
+from django_project.settings import (
+    FWADMIN_ALLOWED_USER_GROUP,
+    FWADMIN_DEFAULT_ACTIVE_DAYS,
+)
+
 
 class AnonymousTestCase(TestCase):
 
@@ -22,12 +28,11 @@ class AnonymousTestCase(TestCase):
             "http://testserver/accounts/login/?next=%s" % url)
 
     def test_user_has_permission_to_view_index(self):
-        user = User.objects.create_user("user_without_group", password="lala")
+        User.objects.create_user("user_without_group", password="lala")
         res = self.client.login(username="user_without_group", password="lala")
         self.assertEqual(res, True)
         url = reverse("fwadmin:index")
         resp = self.client.get(url)
-        print resp, resp.content
         self.assertEqual(resp.status_code, 403)
             
 
@@ -55,3 +60,22 @@ class LoggedInViewsTestCase(TestCase):
         self.assertEqual(resp.status_code, 302)
         with self.assertRaises(Host.DoesNotExist):
             Host.objects.get(pk=self.host.id)        
+
+    def test_new_host(self):
+        post_data = {"name": "newhost",
+                     "ip": "192.168.1.1",
+                    }
+        resp = self.client.post(reverse("fwadmin:new_host"), post_data)
+        # check the data
+        host = Host.objects.get(name=post_data["name"])
+        self.assertEqual(host.ip, post_data["ip"])
+        self.assertEqual(host.owner, self.user)
+        self.assertEqual(host.approved, False)
+        self.assertEqual(host.active_until,
+                         (datetime.date.today()+
+                          datetime.timedelta(days=FWADMIN_DEFAULT_ACTIVE_DAYS)))
+        # ensure the redirect to index works works
+        self.assertEqual(resp.status_code, 302)
+        self.assertEqual(
+            urlsplit(resp["Location"])[2], reverse("fwadmin:index"))
+        

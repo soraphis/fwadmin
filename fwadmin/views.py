@@ -25,6 +25,7 @@ from fwadmin.forms import (
 )
 from django_project.settings import (
     FWADMIN_ALLOWED_USER_GROUP,
+    FWADMIN_DEFAULT_ACTIVE_DAYS,
 )
 
 
@@ -51,22 +52,24 @@ def index(request):
 
 @login_required
 @group_required(FWADMIN_ALLOWED_USER_GROUP)
-def new_host(request, pk=None):
+def new_host(request):
     if request.method == 'POST':
         form = NewHostForm(request.POST)
         if form.is_valid():
-            # do not commit just yet, its not yet done
+            # do not commit just yet, we need to add more stuff
             host = form.save(commit=False)
             # add the stuff here that the user can't edit
             host.owner = request.user
-            active_until = datetime.date.today() + datetime.timedelta(365)
+            active_until = (datetime.date.today() + 
+                            datetime.timedelta(FWADMIN_DEFAULT_ACTIVE_DAYS))
             host.active_until = active_until
             # and really save
             host.save()
             # see https://docs.djangoproject.com/en/dev/topics/forms/modelforms/#the-save-method
             form.save_m2m()
-            return HttpResponseRedirect('/fwadmin/list/')
-    form = NewHostForm()
+            return HttpResponseRedirect(reverse("fwadmin:index"))
+    else:
+        form = NewHostForm()
     return render_to_response('fwadmin/new.html',
                               {'form': form,
                                'action': _("New Host"),
@@ -100,7 +103,8 @@ def renew_host(request, pk):
     host = Host.objects.filter(pk=pk)[0]
     if host.owner != request.user:
         return HttpResponseForbidden("you are not owner")
-    active_until = datetime.date.today() + datetime.timedelta(365)
+    active_until = (datetime.date.today() +
+                    datetime.timedelta(FWADMIN_DEFAULT_ACTIVE_DAYS))
     host.active_until = active_until
     host.save()
     return render_to_response('fwadmin/renewed.html',
