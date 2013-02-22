@@ -1,8 +1,9 @@
 import datetime
 from django.utils.translation import ugettext as _
+from django.core.urlresolvers import reverse
 
 from django.http import (
-    HttpResponse,
+    HttpResponseBadRequest,
     HttpResponseRedirect, 
     HttpResponseForbidden,
 )
@@ -15,11 +16,13 @@ from django.contrib.auth.decorators import (
     login_required,
     user_passes_test,
 )
-
 from fwadmin.forms import (
     Host,
     NewHostForm,
     EditHostForm,
+)
+from django_project.settings import (
+    FWADMIN_ALLOWED_USER_GROUP,
 )
 
 def is_in_group(user, group_name):
@@ -29,7 +32,7 @@ def is_in_group(user, group_name):
 
 
 @login_required
-@user_passes_test(lambda u: is_in_group(u, "Mitarb"))
+@user_passes_test(lambda u: is_in_group(u, FWADMIN_ALLOWED_USER_GROUP))
 def index(request):
     queryset=Host.objects.filter(owner=request.user)
     return render_to_response('fwadmin/index.html',
@@ -38,17 +41,8 @@ def index(request):
 
 
 @login_required
-@user_passes_test(lambda u: is_in_group(u, "Mitarb"))
-def list(request):
-    queryset=Host.objects.filter(owner=request.user)
-    return render_to_response('fwadmin/list.html', 
-                              { 'all_hosts': queryset },
-                              context_instance=RequestContext(request))
-
-
-@login_required
-@user_passes_test(lambda u: is_in_group(u, "Mitarb"))
-def new(request, pk=None):
+@user_passes_test(lambda u: is_in_group(u, FWADMIN_ALLOWED_USER_GROUP))
+def new_host(request, pk=None):
     if request.method == 'POST':
         form = NewHostForm(request.POST)
         if form.is_valid():
@@ -72,8 +66,8 @@ def new(request, pk=None):
 
 
 @login_required
-@user_passes_test(lambda u: is_in_group(u, "Mitarb"))
-def edit(request, pk):
+@user_passes_test(lambda u: is_in_group(u, FWADMIN_ALLOWED_USER_GROUP))
+def edit_host(request, pk):
     host = Host.objects.filter(pk=pk)[0]
     if host.owner != request.user:
         return HttpResponseForbidden("you are not owner")
@@ -92,8 +86,8 @@ def edit(request, pk):
 
 
 @login_required
-@user_passes_test(lambda u: is_in_group(u, "Mitarb"))
-def renew(request, pk):
+@user_passes_test(lambda u: is_in_group(u, FWADMIN_ALLOWED_USER_GROUP))
+def renew_host(request, pk):
     host = Host.objects.filter(pk=pk)[0]
     if host.owner != request.user:
         return HttpResponseForbidden("you are not owner")
@@ -106,8 +100,21 @@ def renew(request, pk):
 
 
 @login_required
+@user_passes_test(lambda u: is_in_group(u, FWADMIN_ALLOWED_USER_GROUP))
+def delete_host(request, pk):
+    host = Host.objects.get(pk=pk)
+    if host.owner != request.user:
+        return HttpResponseForbidden("you are not owner")
+    if request.method == 'POST':
+        host.delete()
+        return redirect(reverse("fwadmin:index"),
+                        context_instance=RequestContext(request))
+    return HttpResponseBadRequest("Only POST supported here")
+
+
+@login_required
 @user_passes_test(lambda u: u.is_superuser)
-def list_unapproved(request):
+def admin_list_unapproved(request):
     queryset=Host.objects.filter(approved=False)
     # XXX: add a template for list
     return render_to_response('fwadmin/list-unapproved.html', 
@@ -116,9 +123,21 @@ def list_unapproved(request):
 
 @login_required
 @user_passes_test(lambda u: u.is_superuser)
-def approve(request, pk):
-    host = Host.objects.filter(pk=pk)[0]
+def admin_approve_host(request, hostid):
+    host = Host.objects.get(pk=hostid)
     host.approved = True
     host.save()
     return redirect('/fwadmin/admin-list-unapproved/',
                     context_instance=RequestContext(request))
+
+
+@login_required
+@user_passes_test(lambda u: is_in_group(u, FWADMIN_ALLOWED_USER_GROUP))
+def delete_rule(request, pk):
+    pass
+
+@login_required
+@user_passes_test(lambda u: is_in_group(u, FWADMIN_ALLOWED_USER_GROUP))
+def new_rule_for_host(request, hostid):
+    host = Host.objects.get(pk=hostid)
+    

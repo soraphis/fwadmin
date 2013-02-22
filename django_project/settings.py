@@ -16,6 +16,7 @@ WARN_EXPIRE_DAYS=7
 
 # the cisco access list number we use
 FWADMIN_ACCESS_LIST_NR = 120
+FWADMIN_ALLOWED_USER_GROUP = "Mitarb"
 
 ADMINS = (
     # ('Your Name', 'your_email@example.com'),
