@@ -11,6 +11,8 @@ TEMPLATE_DEBUG = DEBUG
 
 # XXX: use reverse url mapping instead of hardcoding
 WARN_EXPIRE_URL_TEMPLATE = "https://fwadmin.uni-trier.de/fwadmin/renew/%(pk)s/"
+
+# XXX: make all this part of a settings module in the DB?
 WARN_EXPIRE_EMAIL_FROM="fwadmin@uni-trier.de"
 WARN_EXPIRE_DAYS=7
 

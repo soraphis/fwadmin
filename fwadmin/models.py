@@ -2,6 +2,8 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext as _
 
+# XXX: add a change history module similar to what the admin is doing
+
 
 class Port(models.Model):
     """ Simple "open port" rule for a single host """
