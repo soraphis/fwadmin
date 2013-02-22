@@ -1,6 +1,7 @@
 import datetime
 from django.utils.translation import ugettext as _
 from django.core.urlresolvers import reverse
+from django.core.exceptions import PermissionDenied
 
 from django.http import (
     HttpResponseBadRequest,
@@ -15,6 +16,7 @@ from django.template import RequestContext
 from django.contrib.auth.decorators import (
     login_required,
     user_passes_test,
+    permission_required,
 )
 from fwadmin.forms import (
     Host,
@@ -25,14 +27,21 @@ from django_project.settings import (
     FWADMIN_ALLOWED_USER_GROUP,
 )
 
-def is_in_group(user, group_name):
-    if user:
-        return user.groups.filter(name=group_name).count() == 1
-    return False
+
+def group_required(group_name):
+    """ Custom decorator that will raise a PermissionDendied if not in the
+        right group
+    """
+    def is_in_group(user, group_name):
+        if user:
+            if user.groups.filter(name=group_name).count() == 1:
+                return True
+        raise PermissionDenied("You are not in group '%s'" % group_name)
+    return user_passes_test(lambda u:is_in_group(u, group_name))
 
 
 @login_required
-@user_passes_test(lambda u: is_in_group(u, FWADMIN_ALLOWED_USER_GROUP))
+@group_required(FWADMIN_ALLOWED_USER_GROUP)
 def index(request):
     queryset=Host.objects.filter(owner=request.user)
     return render_to_response('fwadmin/index.html',
@@ -41,7 +50,7 @@ def index(request):
 
 
 @login_required
-@user_passes_test(lambda u: is_in_group(u, FWADMIN_ALLOWED_USER_GROUP))
+@group_required(FWADMIN_ALLOWED_USER_GROUP)
 def new_host(request, pk=None):
     if request.method == 'POST':
         form = NewHostForm(request.POST)
@@ -66,7 +75,7 @@ def new_host(request, pk=None):
 
 
 @login_required
-@user_passes_test(lambda u: is_in_group(u, FWADMIN_ALLOWED_USER_GROUP))
+@group_required(FWADMIN_ALLOWED_USER_GROUP)
 def edit_host(request, pk):
     host = Host.objects.filter(pk=pk)[0]
     if host.owner != request.user:
@@ -86,7 +95,7 @@ def edit_host(request, pk):
 
 
 @login_required
-@user_passes_test(lambda u: is_in_group(u, FWADMIN_ALLOWED_USER_GROUP))
+@group_required(FWADMIN_ALLOWED_USER_GROUP)
 def renew_host(request, pk):
     host = Host.objects.filter(pk=pk)[0]
     if host.owner != request.user:
@@ -100,7 +109,7 @@ def renew_host(request, pk):
 
 
 @login_required
-@user_passes_test(lambda u: is_in_group(u, FWADMIN_ALLOWED_USER_GROUP))
+@group_required(FWADMIN_ALLOWED_USER_GROUP)
 def delete_host(request, pk):
     host = Host.objects.get(pk=pk)
     if host.owner != request.user:

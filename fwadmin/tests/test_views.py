@@ -11,22 +11,30 @@ from django_project.settings import FWADMIN_ALLOWED_USER_GROUP
 
 class AnonymousTestCase(TestCase):
 
-    def test_pages_need_login(self):
-        for view in ["index", "edit_host", "renew_host",
-                     "delete_host", "new_rule_for_host",
-                     "delete_rule"]:
-            url = reverse("fwadmin:index")
-            resp = self.client.get(url)
-            self.assertEqual(resp.status_code, 302)
-            self.assertEqual(
-                resp["Location"],
-                "http://testserver/accounts/login/?next=%s" % url)
+    def test_index_need_login(self):
+        # we do only test "fwadmin:index" here as the other ones
+        # need paramters
+        url = reverse("fwadmin:index")
+        resp = self.client.get(url)
+        self.assertEqual(resp.status_code, 302)
+        self.assertEqual(
+            resp["Location"],
+            "http://testserver/accounts/login/?next=%s" % url)
 
+    def test_user_has_permission_to_view_index(self):
+        user = User.objects.create_user("user_without_group", password="lala")
+        res = self.client.login(username="user_without_group", password="lala")
+        self.assertEqual(res, True)
+        url = reverse("fwadmin:index")
+        resp = self.client.get(url)
+        print resp, resp.content
+        self.assertEqual(resp.status_code, 403)
+            
 
 class LoggedInViewsTestCase(TestCase):
 
     def setUp(self):
-        allowed_group = Group.objects.create(name=FWADMIN_ALLOWED_USER_GROUP)
+        allowed_group = Group.objects.get(name=FWADMIN_ALLOWED_USER_GROUP)
         self.user = User.objects.create_user("meep", password="lala")
         self.user.groups.add(allowed_group)
         res = self.client.login(username="meep", password="lala")
