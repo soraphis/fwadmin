@@ -53,16 +53,6 @@ class CiscoRulesWriter(BaseRulesWriter):
                                     to_ip=host.ip,
                                     port=complex_rule.port)
             l.append(s)
-        # simple rules 
-        from_location = "any"
-        for port in host.open_ports.all():
-            s = self._get_fw_string(list_nr=list_nr,
-                                    permit=True,
-                                    type=port.type,
-                                    from_net=from_location,
-                                    to_ip=host.ip,
-                                    port=port.number)
-            l.append(s)
         return l
 
 

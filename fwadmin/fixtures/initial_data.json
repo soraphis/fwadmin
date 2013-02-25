@@ -1,5 +1,5 @@
 [ 
- {"model": "fwadmin.port",
+ {"model": "fwadmin.sampleport",
    "pk": 1,
    "fields": {
      "name": "ssh",
@@ -7,7 +7,7 @@
      "type": "TCP"
    }
  },
- {"model": "fwadmin.port",
+ {"model": "fwadmin.sampleport",
    "pk": 2,
    "fields": {
      "name": "smtp",
@@ -15,7 +15,7 @@
      "type": "TCP"
    }
  },
- {"model": "fwadmin.port",
+ {"model": "fwadmin.sampleport",
    "pk": 3,
    "fields": {
      "name": "http",
@@ -23,7 +23,7 @@
      "type": "TCP"
    }
  },
- {"model": "fwadmin.port",
+ {"model": "fwadmin.sampleport",
    "pk": 4,
    "fields": {
      "name": "pop3",
@@ -31,7 +31,7 @@
      "type": "TCP"
    }
  },
- {"model": "fwadmin.port",
+ {"model": "fwadmin.sampleport",
    "pk": 5,
    "fields": {
      "name": "sftp",
@@ -39,7 +39,7 @@
      "type": "TCP"
    }
  },
- {"model": "fwadmin.port",
+ {"model": "fwadmin.sampleport",
    "pk": 7,
    "fields": {
      "name": "snmp",
@@ -47,7 +47,7 @@
      "type": "TCP"
    }
  },
- {"model": "fwadmin.port",
+ {"model": "fwadmin.sampleport",
    "pk": 8,
    "fields": {
      "name": "irc",
@@ -55,7 +55,7 @@
      "type": "TCP"
    }
  },
- {"model": "fwadmin.port",
+ {"model": "fwadmin.sampleport",
    "pk": 9,
    "fields": {
      "name": "https",
@@ -63,7 +63,7 @@
      "type": "TCP"
    }
  },
- {"model": "fwadmin.port",
+ {"model": "fwadmin.sampleport",
    "pk": 10,
    "fields": {
      "name": "syslog",
@@ -71,32 +71,40 @@
      "type": "TCP"
    }
  },
- {"model": "fwadmin.port",
+ {"model": "fwadmin.sampleport",
    "pk": 11,
+   "fields": {
+     "name": "New SMTP",
+     "number": 587,
+     "type": "TCP"
+   }
+ },
+ {"model": "fwadmin.sampleport",
+   "pk": 12,
    "fields": {
      "name": "ldaps",
      "number": 636,
      "type": "TCP"
    }
  },
- {"model": "fwadmin.port",
-   "pk": 12,
+ {"model": "fwadmin.sampleport",
+   "pk": 13,
    "fields": {
      "name": "imaps",
      "number": 993,
      "type": "TCP"
    }
  },
- {"model": "fwadmin.port",
-   "pk": 13,
+ {"model": "fwadmin.sampleport",
+   "pk": 14,
    "fields": {
      "name": "Remote Desktop",
      "number": 3389,
      "type": "TCP"
    }
  },
- {"model": "fwadmin.port",
-   "pk": 14,
+ {"model": "fwadmin.sampleport",
+   "pk": 15,
    "fields": {
      "name": "vnc",
      "number": 5900,

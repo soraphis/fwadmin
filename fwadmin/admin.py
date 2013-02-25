@@ -1,10 +1,10 @@
 from django.contrib import admin
 from fwadmin.models import (
     Host,
-    Port,
+    SamplePort,
     ComplexRule,
 )
 
 admin.site.register(Host)
-admin.site.register(Port)
+admin.site.register(SamplePort)
 admin.site.register(ComplexRule)
