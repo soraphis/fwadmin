@@ -18,8 +18,11 @@ from django.contrib.auth.decorators import (
     user_passes_test,
     permission_required,
 )
-from fwadmin.forms import (
+from fwadmin.models import (
+    ComplexRule,
     Host,
+)
+from fwadmin.forms import (
     NewHostForm,
     EditHostForm,
 )
@@ -155,12 +158,35 @@ def moderator_approve_host(request, pk):
 
 
 @login_required
-@user_passes_test(lambda u: is_in_group(u, FWADMIN_ALLOWED_USER_GROUP))
+@group_required(FWADMIN_ALLOWED_USER_GROUP)
 def delete_rule(request, pk):
-    pass
+    if request.method == 'POST':
+        rule = ComplexRule.objects.get(pk=pk)
+        host = rule.host
+        if host.owner != request.user:
+            return NotOwnerError()
+        rule.delete()
+        return redirect(reverse("fwadmin:edit_host", args=(host.id,)))
+    return HttpResponseBadRequest("Only POST supported here")
+
 
 @login_required
-@user_passes_test(lambda u: is_in_group(u, FWADMIN_ALLOWED_USER_GROUP))
+@group_required(FWADMIN_ALLOWED_USER_GROUP)
 def new_rule_for_host(request, hostid):
     host = Host.objects.get(pk=hostid)
-    
+    if host.owner != request.user:
+        return HttpResponseForbidden("you are not the owner of the host")
+    if request.method == 'POST':
+        form = NewRuleForm(request.POST)
+        if form.is_valid():
+            rule = form.save(commit=False)
+            rule.host = host
+            rule.save()
+            return HttpResponseRedirect('/fwadmin/edit/%s/' % host.id)
+    else:
+        form = NewRuleForm(instance=host)
+    return render_to_response('fwadmin/newrule.html',
+                              {'host': host,
+                               'form': form,
+                              },
+                              context_instance=RequestContext(request))

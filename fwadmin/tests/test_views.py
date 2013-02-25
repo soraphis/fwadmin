@@ -4,11 +4,13 @@ from urlparse import urlsplit
 from django.core.urlresolvers import reverse
 from django.test import TestCase
 from django.contrib.auth.models import (
-    User,
     Group,
+    User,
 )
-from fwadmin.models import Host
-
+from fwadmin.models import (
+    ComplexRule,
+    Host,
+)
 from django_project.settings import (
     FWADMIN_ALLOWED_USER_GROUP,
     FWADMIN_MODERATORS_USER_GROUP,
@@ -50,10 +52,11 @@ class LoggedInViewsTestCase(TestCase):
             owner=self.user)
         self.host.save()
 
-    def test_delete_host_needs_post(self):
-        resp = self.client.get(reverse("fwadmin:delete_host", 
-                                       args=(self.host.id,)))
-        self.assertEqual(resp.status_code, 400)
+    def test_delete_needs_post(self):
+        for action in ["delete_host", "delete_rule"]:
+            resp = self.client.get(reverse("fwadmin:%s" % action, 
+                                           args=(self.host.id,)))
+            self.assertEqual(resp.status_code, 400)
 
     def test_delete_host(self):
         resp = self.client.post(reverse("fwadmin:delete_host", 
@@ -179,3 +182,19 @@ class LoggedInViewsTestCase(TestCase):
         self.host.save()
         resp = self.client.post(reverse("fwadmin:moderator_list_unapproved"))
         self.assertFalse("<td>%s</td>" % self.host.ip in resp.content)
+
+    def test_delete_rule(self):
+        rule = ComplexRule.objects.create(
+            host=self.host, name="ssh", permit=True, ip_protocol="TCP",
+            port=22)
+        resp = self.client.post(reverse("fwadmin:delete_rule", 
+                                       args=(1,)))
+        # check that its gone
+        with self.assertRaises(ComplexRule.DoesNotExist):
+            ComplexRule.objects.get(pk=rule.pk)
+        # check redirect
+        self.assertEqual(resp.status_code, 302)
+        self.assertEqual(
+            urlsplit(resp["Location"])[2],
+            reverse("fwadmin:edit_host", args=(self.host.id,)))
+        
