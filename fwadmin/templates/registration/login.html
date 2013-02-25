@@ -2,14 +2,17 @@
 
 {% block content %}
 
+<h1>Welcome to the firwall config tool</h1>
+
 {% if form.errors %}
 <p style="color: red">
   Your username and password didn't match. Please try again.
 </p>
 {% endif %}
 
-<!-- FIXME: use {% url 'django.contrib.auth.views.login'} -->
-<form method="post" action="/accounts/login/">
+<p>Please login with your account</p>
+
+<form method="post" action={% url django.contrib.auth.views.login %}>
 {% csrf_token %}
 <table>
   {{ form.as_table }}
