@@ -25,6 +25,7 @@ from fwadmin.forms import (
 )
 from django_project.settings import (
     FWADMIN_ALLOWED_USER_GROUP,
+    FWADMIN_MODERATORS_USER_GROUP,
     FWADMIN_DEFAULT_ACTIVE_DAYS,
 )
 
@@ -37,6 +38,7 @@ def group_required(group_name):
         if user:
             if user.groups.filter(name=group_name).count() == 1:
                 return True
+        # XXX: add template with logout form here
         raise PermissionDenied("You are not in group '%s'" % group_name)
     return user_passes_test(lambda u:is_in_group(u, group_name))
 
@@ -134,8 +136,8 @@ def edit_host(request, pk):
 
 
 @login_required
-@user_passes_test(lambda u: u.is_superuser)
-def admin_list_unapproved(request):
+@group_required(FWADMIN_MODERATORS_USER_GROUP)
+def moderator_list_unapproved(request):
     queryset=Host.objects.filter(approved=False)
     # XXX: add a template for list
     return render_to_response('fwadmin/list-unapproved.html', 
@@ -143,8 +145,8 @@ def admin_list_unapproved(request):
                               context_instance=RequestContext(request))
 
 @login_required
-@user_passes_test(lambda u: u.is_superuser)
-def admin_approve_host(request, hostid):
+@group_required(FWADMIN_MODERATORS_USER_GROUP)
+def moderator_approve_host(request, hostid):
     host = Host.objects.get(pk=hostid)
     host.approved = True
     host.save()

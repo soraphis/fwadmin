@@ -17,8 +17,8 @@ urlpatterns = patterns('fwadmin.views',
     url(r'^rule/(?P<pk>\d+)/delete/', 'delete_rule', name="delete_rule"),
 
     # moderator views
-    url(r'^host/(?P<pk>\d+)/approve/$', 'admin_approve_host', 
-        name='admin_approve_host'),
+    url(r'^host/(?P<pk>\d+)/approve/$', 'moderator_approve_host', 
+        name='moderator_approve_host'),
     url(r'^host/list/unapproved/$',
-        'admin_list_unapproved', name='admin_list_unapproved'),
+        'moderator_list_unapproved', name='moderator_list_unapproved'),
 )

@@ -141,3 +141,10 @@ class LoggedInViewsTestCase(TestCase):
             host = Host.objects.get(name=host_name)
             self.assertEqual(host.active_until, active_until)
 
+    def test_moderator_auth(self):
+        resp = self.client.get(
+            reverse("fwadmin:moderator_list_unapproved"))
+        self.assertEqual(resp.status_code, 403)
+        resp = self.client.get(
+            reverse("fwadmin:moderator_approve_host", args=(1,)))
+        self.assertEqual(resp.status_code, 403)

@@ -20,6 +20,8 @@ WARN_EXPIRE_DAYS=7
 FWADMIN_ACCESS_LIST_NR = 120
 # the LDAP/django group that is allowed to use the tool 
 FWADMIN_ALLOWED_USER_GROUP = "Mitarb"
+# the LDAP/django group for the moderation
+FWADMIN_MODERATORS_USER_GROUP = "G-zentrale-systeme"
 # the default time a host is active if when created/renewed
 FWADMIN_DEFAULT_ACTIVE_DAYS = 365
 
