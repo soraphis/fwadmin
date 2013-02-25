@@ -62,9 +62,12 @@ def index(request):
     all_hosts=Host.objects.filter(owner=request.user)
     # pass all views that the user owns too
     all_rules=ComplexRule.objects.filter(host__owner=request.user)
+    is_moderator = request.user.groups.filter(
+        name=FWADMIN_MODERATORS_USER_GROUP).count()
     return render_to_response('fwadmin/index.html',
                               { 'all_hosts': all_hosts,
                                 'complex_rules': all_rules,
+                                'is_moderator': is_moderator,
                               },
                               context_instance=RequestContext(request))
 
@@ -149,10 +152,13 @@ def edit_host(request, pk):
 @login_required
 @group_required(FWADMIN_MODERATORS_USER_GROUP)
 def moderator_list_unapproved(request):
-    queryset=Host.objects.filter(approved=False)
+    all_hosts = Host.objects.filter(approved=False)
+    all_rules = ComplexRule.objects.filter(host__approved=False)
     # XXX: add a template for list
     return render_to_response('fwadmin/list-unapproved.html', 
-                              { 'all_hosts': queryset },
+                              {'all_hosts': all_hosts,
+                               'complex_rules': all_rules,
+                               },
                               context_instance=RequestContext(request))
 
 

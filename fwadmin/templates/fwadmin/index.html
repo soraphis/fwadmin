@@ -10,15 +10,24 @@
 <div>
     <a href="/accounts/logout" class="logout">{% trans "Logout" %}</a>
 
-  <h2>Welcome {{ user }}</h2>
+  {% if is_moderator %}
+  <div>
+    <h2>Welcome Moderator {{ user }}</h2>
+    <p>SuperpowerZ:
+      <a href={% url fwadmin:moderator_list_unapproved %}>List Unapproved</a>
+    </p>
+  </div>
+  {% else %}
+    <h2>Welcome {{ user }}</h2>
+  {% endif %}
+
 
 
   <p>This is the firewall config tool.</p>
-
-  
   <div>
     <a href={% url fwadmin:new_host %}>{% trans "Create New Host" %}</a>
   </div>
+
 
   {% include "fwadmin/hosts_list.html" %}
 
