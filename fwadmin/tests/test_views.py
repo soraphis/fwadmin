@@ -11,6 +11,7 @@ from fwadmin.models import Host
 
 from django_project.settings import (
     FWADMIN_ALLOWED_USER_GROUP,
+    FWADMIN_MODERATORS_USER_GROUP,
     FWADMIN_DEFAULT_ACTIVE_DAYS,
 )
 
@@ -148,3 +149,18 @@ class LoggedInViewsTestCase(TestCase):
         resp = self.client.get(
             reverse("fwadmin:moderator_approve_host", args=(1,)))
         self.assertEqual(resp.status_code, 403)
+
+    def test_moderator_approve(self):
+        moderators = Group.objects.get(name=FWADMIN_MODERATORS_USER_GROUP)
+        self.user.groups.add(moderators)
+        self.host.approved = False
+        self.host.save()
+        resp = self.client.post(reverse("fwadmin:moderator_approve_host",
+                                        args=(self.host.id,)))
+        self.assertEqual(resp.status_code, 302)
+        self.assertEqual(
+            urlsplit(resp["Location"])[2],
+            reverse("fwadmin:moderator_list_unapproved"))
+        # refresh from DB
+        host = Host.objects.get(pk=self.host.id)
+        self.assertEqual(host.approved, True)

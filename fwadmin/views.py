@@ -146,11 +146,11 @@ def moderator_list_unapproved(request):
 
 @login_required
 @group_required(FWADMIN_MODERATORS_USER_GROUP)
-def moderator_approve_host(request, hostid):
-    host = Host.objects.get(pk=hostid)
+def moderator_approve_host(request, pk):
+    host = Host.objects.get(pk=pk)
     host.approved = True
     host.save()
-    return redirect('/fwadmin/admin-list-unapproved/',
+    return redirect(reverse("fwadmin:moderator_list_unapproved"),
                     context_instance=RequestContext(request))
 
 
