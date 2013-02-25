@@ -70,9 +70,9 @@ def new_host(request):
             return HttpResponseRedirect(reverse("fwadmin:index"))
     else:
         form = NewHostForm()
-    return render_to_response('fwadmin/new.html',
+    return render_to_response('fwadmin/new_host.html',
                               {'form': form,
-                               'action': _("New Host"),
+                               'host': host,
                               },
                               context_instance=RequestContext(request))
 
@@ -121,9 +121,8 @@ def edit_host(request, pk):
             return HttpResponseRedirect(reverse("fwadmin:index"))
     else:
         form = EditHostForm(instance=host)
-    return render_to_response('fwadmin/new.html',
+    return render_to_response('fwadmin/edit_host.html',
                               {'form': form,
-                               'action': _("Edit Host"),
                               },
                               context_instance=RequestContext(request))
 

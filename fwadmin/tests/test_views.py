@@ -114,18 +114,18 @@ class LoggedInViewsTestCase(TestCase):
         
     def test_edit_host(self):
         # create a new host
-        new_post_data = {"name": "newhost",
+        initial_hostname = "My initial hostname"
+        new_post_data = {"name": initial_hostname,
                          "ip": "192.168.1.1",
                          }
         resp = self.client.post(reverse("fwadmin:new_host"), new_post_data)
+        pk = Host.objects.get(name=initial_hostname).pk
         # now edit it and also try changing the IP
         edit_post_data = {"name": "edithost",
                          "ip": "192.168.99.99",
                          }
         # get the PK of the new host
-        pk = Host.objects.get(name="newhost").pk
-        args = (pk, )
-        resp = self.client.post(reverse("fwadmin:edit_host", args=args),
+        resp = self.client.post(reverse("fwadmin:edit_host", args=(pk,)),
                                 edit_post_data)
         # and verify that:
         host = Host.objects.get(pk=pk)
