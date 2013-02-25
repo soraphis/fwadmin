@@ -112,3 +112,28 @@ class LoggedInViewsTestCase(TestCase):
         self.assertEqual(
             urlsplit(resp["Location"])[2], reverse("fwadmin:index"))
         
+    def test_edit_host(self):
+        # create a new host
+        new_post_data = {"name": "newhost",
+                         "ip": "192.168.1.1",
+                         }
+        resp = self.client.post(reverse("fwadmin:new_host"), new_post_data)
+        # now edit it and also try changing the IP
+        edit_post_data = {"name": "edithost",
+                         "ip": "192.168.99.99",
+                         }
+        # get the PK of the new host
+        pk = Host.objects.get(name="newhost").pk
+        args = (pk, )
+        resp = self.client.post(reverse("fwadmin:edit_host", args=args),
+                                edit_post_data)
+        # and verify that:
+        host = Host.objects.get(pk=pk)
+        # name changed
+        self.assertEqual(host.name, "edithost")
+        # IP did not change
+        self.assertEqual(host.ip, "192.168.1.1")
+        # and we redirect back
+        self.assertEqual(resp.status_code, 302)
+        self.assertEqual(
+            urlsplit(resp["Location"])[2], reverse("fwadmin:index"))

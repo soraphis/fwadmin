@@ -118,9 +118,9 @@ def edit_host(request, pk):
         form = EditHostForm(request.POST, instance=host)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect('/fwadmin/list/')
-        return  HttpResponseRedirect('/fwadmin/list/')
-    form = EditHostForm(instance=host)
+            return HttpResponseRedirect(reverse("fwadmin:index"))
+    else:
+        form = EditHostForm(instance=host)
     return render_to_response('fwadmin/new.html',
                               {'form': form,
                                'action': _("Edit Host"),
