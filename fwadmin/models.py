@@ -12,9 +12,10 @@ class SamplePort(models.Model):
         max_length=100, help_text=_("The port name"))
     number = models.IntegerField(help_text=_("The port number"))
     # TCP/UDP or other IP protocol number
-    type = models.CharField(max_length=5, help_text=_("IP Protocol type"))
+    ip_protocol = models.CharField(
+        max_length=5, help_text=_("IP Protocol type"))
     def __unicode__(self):
-        return "%s %s (%s)" % (self.type, self.name, self.number)
+        return "%s %s (%s)" % (self.ip_protocol, self.name, self.number)
 
 
 class Host(models.Model):
@@ -38,7 +39,7 @@ class ComplexRule(models.Model):
     host = models.ForeignKey(Host)
     name = models.CharField(max_length=100)
     # XXX: its not a from IP its really a network
-    from_net =  models.GenericIPAddressField(default="any")
+    from_net =  models.GenericIPAddressField(default="0.0.0.0")
     # allow or deny
     permit = models.BooleanField(default=True)
     # TCP, UDP, anything
