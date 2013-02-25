@@ -22,8 +22,11 @@ class Host(models.Model):
     ip = models.GenericIPAddressField(unique=True)
     active_until = models.DateField()
     owner = models.ForeignKey(User)
+
+    # XXX: kill 'em
     # simple portfilter rules
     open_ports = models.ManyToManyField(Port, blank=True)
+
     # approved by a admin
     approved = models.BooleanField(default=False)
     # no longer active

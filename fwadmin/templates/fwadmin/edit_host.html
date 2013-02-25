@@ -4,10 +4,10 @@
 {% block content %}
 
 <div class="page-header">
-  <h1>{% blocktrans %}Edit host {{ host.name }} ({{ host.ip }}){% endblocktrans %}</h1>
+  <h1>Edit {{ host.name }} ({{ host.ip }})</h1>
 </div>
 
-
+<h2>{% trans "Host settings" %}</h2>
 {% if form.errors %}
 <p style="color: red;">
  {% trans "Please correct the error{{ form.errors|pluralize }} below." %}
@@ -22,4 +22,40 @@
   <input type="submit" value="Update">
 </form>
 
+
+
+<h2>{% trans "Firewall rules" %}</h2>
+<div class="rules-list">
+
+<a href={% url fwadmin:new_rule_for_host host.id %}>Add rule</a>
+{% if rules_list %}
+    <table border="1" cellpadding="3">
+      <tr>
+	<th>{% trans "Name"  %}</th>
+        <th>{% trans "Permit"  %}</th>
+        <th>{% trans "Port" %}</th>
+        <th>{% trans "Protocol" %}</th>
+      </tr>
+      {% for rule in rules_list  %}
+      <tr>
+        <td>{{ rule.name }}</td>
+        <td>{{ rule.permit }}</td>
+        <td>{{ rule.port }}</td>
+        <td>{{ rule.protocol }}</td>
+	<td>
+	  <form	action={% url fwadmin:delete_rule host.id %} 
+		method="post">
+	    {% csrf_token %}
+	    <input type="submit" value={% trans "Delete" %}>
+	  </form>
+	</td>
+      </tr>
+      {% endfor %}
+    </table>
+{% else %}
+    <p>{% trans "No rules."  %}</p>
+{% endif %}
+</div>
+
 {% endblock %}
+

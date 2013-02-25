@@ -132,8 +132,11 @@ def edit_host(request, pk):
             return HttpResponseRedirect(reverse("fwadmin:index"))
     else:
         form = EditHostForm(instance=host)
+    rules_list = ComplexRule.objects.filter(host=host)
     return render_to_response('fwadmin/edit_host.html',
                               {'form': form,
+                               'host': host,
+                               'rules_list': rules_list,
                               },
                               context_instance=RequestContext(request))
 
@@ -188,7 +191,7 @@ def new_rule_for_host(request, hostid):
                                                 args=(host.id,)))
     else:
         form = NewRuleForm(instance=host)
-    return render_to_response('fwadmin/newrule.html',
+    return render_to_response('fwadmin/new_rule.html',
                               {'host': host,
                                'form': form,
                               },

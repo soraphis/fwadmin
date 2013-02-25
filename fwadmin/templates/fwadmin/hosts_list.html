@@ -7,7 +7,6 @@
         <th>{% trans "Host Description" %}</th>
         <th>{% trans "IP" %}</th>
         <th>{% trans "Approved"  %}</th>
-        <th>{% trans "Open Ports" %}</th>
         <th>{% trans "Active Until" %}</th>
         <th>{% trans "Renew Link" %}</th>
       </tr>
@@ -16,18 +15,12 @@
         <td>{{ host.name }}</td>
         <td><a href={% url fwadmin:edit_host host.pk %}>{{ host.ip }}</a></td>
         <td>{{ host.approved }}</td>
-        <td>
-            {% for port in host.open_ports.all|slice:":5" %}
-               {{ port.name }}{% if not forloop.last %},{% endif %}
-          {% endfor %}
-            {% if host.open_ports.count > 5 %}
-              and {{ host.open_ports.count|add:"-5" }} more
-            {% endif %}
-        </td>
         {% if host.approved %}
           <td>{{ host.active_until }}</td>
           <td>
-	    <form action={% url fwadmin:renew_host host.pk %}>
+	    <form action={% url fwadmin:renew_host host.pk %} 
+		  method="post">
+	      {% csrf_token %}
 	      <input type="submit" value={% trans "Renew" %}>
 	    </form>
 	  </td>
