@@ -2,7 +2,6 @@
 from django.utils import unittest
 from fwadmin.models import (
     Host,
-    Port,
 )
 
 

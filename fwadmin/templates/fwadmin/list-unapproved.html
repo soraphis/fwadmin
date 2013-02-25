@@ -14,7 +14,7 @@
         <th>Owner</th>
         <th>Host Description</th>
         <th>IP</th>
-        <th>Open Ports</th>
+        <th>Rules</th>
         <th>Approve Link</th>
       </tr>
       {% for host in all_hosts  %}
@@ -23,11 +23,21 @@
         <td>{{ host.name }}</td>
         <td>{{ host.ip }}</td>
         <td>
-            {% for port in host.open_ports.all %}
-               {{ port.name }}{% if not forloop.last %},{% endif %}
-          {% endfor %}
+	  {# XXX: meeeeh, is there a better way to do this than to loop here N-times ? #}
+	  {% for rule in complex_rules %}
+	    {% if rule.host == host %}
+	      <p>name:{{ rule.name }} from:{{ rule.from_net }} permit:{{ rule.permit }} protocol:{{ rule.ip_protocol }} port:{{ rule.port }}
+	      </p>
+	    {% endif %}
+	  {% endfor %}
         </td>
-        <td><a href="/fwadmin/admin-approve/{{ host.pk }}/">approve</a></td>
+        <td> 
+	  <form	action={% url fwadmin:moderator_approve_host host.pk %}
+		method="post">
+	    {% csrf_token %}
+	    <input type="submit" value={% trans "Approve" %}>
+	  </form>
+	</td>
       </tr>
       {% endfor %}
     </table>

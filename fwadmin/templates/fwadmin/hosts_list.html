@@ -4,29 +4,44 @@
 {% if all_hosts %}
     <table border="1" cellpadding="3">
       <tr>
-        <th>{% trans "Host Description" %}</th>
+        <th>{% trans "Host" %}</th>
+        <th>{% trans "Description" %}</th>
         <th>{% trans "IP" %}</th>
+	<th>{% trans "Active Rules" %}
         <th>{% trans "Approved"  %}</th>
-        <th>{% trans "Open Ports" %}</th>
         <th>{% trans "Active Until" %}</th>
         <th>{% trans "Renew Link" %}</th>
       </tr>
       {% for host in all_hosts  %}
       <tr>
         <td>{{ host.name }}</td>
-        <td><a href="/fwadmin/edit/{{ host.pk }}/">{{ host.ip }}</a> </td>
+        <td>{{ host.description|truncatechars:60 }}</td>
+        <td><a href={% url fwadmin:edit_host host.pk %}>{{ host.ip }}</a></td>
+	<td>
+	  {# XXX: meeeeh, is there a better way to do this than to loop here N-times ? #}
+	  {% for rule in complex_rules %}
+	    {% if rule.host == host %}
+	      {% if forloop.last %}
+	        {{rule.name}}
+	      {% else %}
+	        {{rule.name}},
+	      {% endif %}
+	    {% endif %}
+	  {% endfor %}
+	</td>
         <td>{{ host.approved }}</td>
-        <td>
-            {% for port in host.open_ports.all|slice:":5" %}
-               {{ port.name }}{% if not forloop.last %},{% endif %}
-          {% endfor %}
-            {% if host.open_ports.count > 5 %}
-              and {{ host.open_ports.count|add:"-5" }} more
-            {% endif %}
-        </td>
         {% if host.approved %}
           <td>{{ host.active_until }}</td>
-          <td><a href="/fwadmin/renew/{{ host.pk }}/">renew</a></td>
+          <td>
+	    <form action={% url fwadmin:renew_host host.pk %} 
+		  method="post">
+	      {% csrf_token %}
+	      <input type="submit" value={% trans "Renew" %}>
+	    </form>
+	  </td>
+	{% else %}
+	  <td> - </td>
+	  <td> - </td>
         {% endif %}
       </tr>
       {% endfor %}

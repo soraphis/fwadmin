@@ -11,16 +11,10 @@ from fwadmin.management.commands.warnexpire import Command as WarnExpireCommand
 
 from fwadmin.models import (
     Host,
-    Port,
     ComplexRule,
 )
 from django.contrib.auth.models import User
 from django_project.settings import FWADMIN_ACCESS_LIST_NR
-
-def make_port(name, number, protocol):
-    port = Port.objects.create(
-        name=name, number=number, type=protocol)
-    return port
 
 
 def make_host(name, ip, owner, active_until=None, approved=True):
@@ -40,10 +34,8 @@ def make_owner(username, email):
 class MyBaseTest(TestCase):
 
     def setUp(self):
-        self.port = make_port("ssh", 22, "TCP")
         self.owner = make_owner("user1", "meep@example.com")
         self.host = make_host("test", "192.168.1.1", owner=self.owner)
-        self.host.open_ports.add(self.port)
         self.host.save()
     
 
@@ -121,17 +113,6 @@ class ManagementCommandsTestCase(MyBaseTest):
         self.assertEqual(mock_f.mock_calls, [])
 
     @patch("fwadmin.management.commands.genrules.Command._write_rules")
-    def test_gen_rules_simple(self, mock_f):
-        """ Ensure simple rules are written """
-        self.cmd.print_firewall_rules()
-        mock_f.assert_called_with(
-            ["! fw rules for %s (%s) owned by %s" % (
-                    self.host.name, self.host.ip, self.owner.username),
-             "access-list %s permit TCP any host 192.168.1.1 eq 22" % \
-                 FWADMIN_ACCESS_LIST_NR,
-            ])
-    
-    @patch("fwadmin.management.commands.genrules.Command._write_rules")
     def test_gen_rules_complex(self, mock_f):
         """ Ensure complex rules are written """
         rule = ComplexRule.objects.create(
@@ -142,10 +123,7 @@ class ManagementCommandsTestCase(MyBaseTest):
         mock_f.assert_called_with(
             ["! fw rules for %s (%s) owned by %s" % (
                     self.host.name, self.host.ip, self.owner.username),
-             # ensure its applied *before* the normal rule
              "access-list %s deny UDP 192.168.2.0/24 host 192.168.1.1 eq 53" % \
-                 FWADMIN_ACCESS_LIST_NR,
-             "access-list %s permit TCP any host 192.168.1.1 eq 22" % \
                  FWADMIN_ACCESS_LIST_NR,
              ])
     

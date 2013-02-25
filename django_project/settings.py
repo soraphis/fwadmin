@@ -11,11 +11,20 @@ TEMPLATE_DEBUG = DEBUG
 
 # XXX: use reverse url mapping instead of hardcoding
 WARN_EXPIRE_URL_TEMPLATE = "https://fwadmin.uni-trier.de/fwadmin/renew/%(pk)s/"
+
+# XXX: make all this part of a settings module in the DB?
 WARN_EXPIRE_EMAIL_FROM="fwadmin@uni-trier.de"
 WARN_EXPIRE_DAYS=7
 
 # the cisco access list number we use
 FWADMIN_ACCESS_LIST_NR = 120
+# the LDAP/django group that is allowed to use the tool 
+FWADMIN_ALLOWED_USER_GROUP = "Mitarb"
+# the LDAP/django group for the moderation
+FWADMIN_MODERATORS_USER_GROUP = "G-zentrale-systeme"
+# the default time a host is active if when created/renewed
+FWADMIN_DEFAULT_ACTIVE_DAYS = 365
+
 
 ADMINS = (
     # ('Your Name', 'your_email@example.com'),
@@ -172,8 +181,8 @@ LOGGING = {
 
 # LDAP/AD AUTH
 AUTHENTICATION_BACKENDS = (
-    #'django_auth_ldap.backend.LDAPBackend',
     'django.contrib.auth.backends.ModelBackend',
+    'django_auth_ldap.backend.LDAPBackend',
 )
 
 # FUN! our active directory is setup so that we run into this:

@@ -1,106 +1,114 @@
 [ 
- {"model": "fwadmin.port",
+ {"model": "fwadmin.sampleport",
    "pk": 1,
    "fields": {
      "name": "ssh",
      "number": 22,
-     "type": "TCP"
+     "ip_protocol": "TCP"
    }
  },
- {"model": "fwadmin.port",
+ {"model": "fwadmin.sampleport",
    "pk": 2,
    "fields": {
      "name": "smtp",
      "number": 25,
-     "type": "TCP"
+     "ip_protocol": "TCP"
    }
  },
- {"model": "fwadmin.port",
+ {"model": "fwadmin.sampleport",
    "pk": 3,
    "fields": {
      "name": "http",
      "number": 80,
-     "type": "TCP"
+     "ip_protocol": "TCP"
    }
  },
- {"model": "fwadmin.port",
+ {"model": "fwadmin.sampleport",
    "pk": 4,
    "fields": {
      "name": "pop3",
      "number": 110,
-     "type": "TCP"
+     "ip_protocol": "TCP"
    }
  },
- {"model": "fwadmin.port",
+ {"model": "fwadmin.sampleport",
    "pk": 5,
    "fields": {
      "name": "sftp",
      "number": 115,
-     "type": "TCP"
+     "ip_protocol": "TCP"
    }
  },
- {"model": "fwadmin.port",
+ {"model": "fwadmin.sampleport",
    "pk": 7,
    "fields": {
      "name": "snmp",
      "number": 161,
-     "type": "TCP"
+     "ip_protocol": "TCP"
    }
  },
- {"model": "fwadmin.port",
+ {"model": "fwadmin.sampleport",
    "pk": 8,
    "fields": {
      "name": "irc",
      "number": 194,
-     "type": "TCP"
+     "ip_protocol": "TCP"
    }
  },
- {"model": "fwadmin.port",
+ {"model": "fwadmin.sampleport",
    "pk": 9,
    "fields": {
      "name": "https",
      "number": 431,
-     "type": "TCP"
+     "ip_protocol": "TCP"
    }
  },
- {"model": "fwadmin.port",
+ {"model": "fwadmin.sampleport",
    "pk": 10,
    "fields": {
      "name": "syslog",
      "number": 514,
-     "type": "TCP"
+     "ip_protocol": "TCP"
    }
  },
- {"model": "fwadmin.port",
+ {"model": "fwadmin.sampleport",
    "pk": 11,
+   "fields": {
+     "name": "New SMTP",
+     "number": 587,
+     "ip_protocol": "TCP"
+   }
+ },
+ {"model": "fwadmin.sampleport",
+   "pk": 12,
    "fields": {
      "name": "ldaps",
      "number": 636,
-     "type": "TCP"
+     "ip_protocol": "TCP"
    }
  },
- {"model": "fwadmin.port",
-   "pk": 12,
+ {"model": "fwadmin.sampleport",
+   "pk": 13,
    "fields": {
      "name": "imaps",
      "number": 993,
-     "type": "TCP"
+     "ip_protocol": "TCP"
    }
  },
- {"model": "fwadmin.port",
-   "pk": 13,
+ {"model": "fwadmin.sampleport",
+   "pk": 14,
    "fields": {
      "name": "Remote Desktop",
      "number": 3389,
-     "type": "TCP"
+     "ip_protocol": "TCP"
    }
  },
- {"model": "fwadmin.port",
-   "pk": 14,
+ {"model": "fwadmin.sampleport",
+   "pk": 15,
    "fields": {
      "name": "vnc",
      "number": 5900,
-     "type": "TCP"
+     "ip_protocol": "TCP"
    }
  }
 ]

@@ -1,0 +1,6 @@
+
+Firwall config tool.
+
+Dependencies:
+ - python-django
+ - python-netaddr
