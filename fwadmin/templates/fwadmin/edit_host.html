@@ -7,23 +7,6 @@
   <h1>Edit {{ host.name }} ({{ host.ip }})</h1>
 </div>
 
-<h2>{% trans "Host settings" %}</h2>
-{% if form.errors %}
-<p style="color: red;">
- {% trans "Please correct the error{{ form.errors|pluralize }} below." %}
-</p>
-{% endif %}
-
-<form action="" method="post">
-  {% csrf_token %}
-  <table>
-    {{ form.as_table }}
-  </table>
-  <input type="submit" value="Update">
-</form>
-
-
-
 <h2>{% trans "Firewall rules" %}</h2>
 <div class="rules-list">
 
@@ -35,6 +18,7 @@
         <th>{% trans "Permit"  %}</th>
         <th>{% trans "Port" %}</th>
         <th>{% trans "Protocol" %}</th>
+	<th>{% trans "Action" %}</th>
       </tr>
       {% for rule in rules_list  %}
       <tr>
@@ -56,6 +40,23 @@
     <p>{% trans "No rules."  %}</p>
 {% endif %}
 </div>
+
+<h2>{% trans "Change host config" %}</h2>
+{% if form.errors %}
+<p style="color: red;">
+ {% trans "Please correct the error{{ form.errors|pluralize }} below." %}
+</p>
+{% endif %}
+
+<form action="" method="post">
+  {% csrf_token %}
+  <table>
+    {{ form.as_table }}
+  </table>
+  <input type="submit" value="Update">
+</form>
+
+
 
 {% endblock %}
 

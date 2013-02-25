@@ -4,8 +4,10 @@
 {% if all_hosts %}
     <table border="1" cellpadding="3">
       <tr>
-        <th>{% trans "Host Description" %}</th>
+        <th>{% trans "Host" %}</th>
+        <th>{% trans "Description" %}</th>
         <th>{% trans "IP" %}</th>
+	<th>{% trans "Active Rules" %}
         <th>{% trans "Approved"  %}</th>
         <th>{% trans "Active Until" %}</th>
         <th>{% trans "Renew Link" %}</th>
@@ -13,7 +15,20 @@
       {% for host in all_hosts  %}
       <tr>
         <td>{{ host.name }}</td>
+        <td>{{ host.description|truncatechars:60 }}</td>
         <td><a href={% url fwadmin:edit_host host.pk %}>{{ host.ip }}</a></td>
+	<td>
+	  {# XXX: meeeeh, is there a better way to do this than to loop here N-times ? #}
+	  {% for rule in complex_rules %}
+	    {% if rule.host == host %}
+	      {% if forloop.last %}
+	        {{rule.name}}
+	      {% else %}
+	        {{rule.name}},
+	      {% endif %}
+	    {% endif %}
+	  {% endfor %}
+	</td>
         <td>{{ host.approved }}</td>
         {% if host.approved %}
           <td>{{ host.active_until }}</td>
@@ -24,6 +39,9 @@
 	      <input type="submit" value={% trans "Renew" %}>
 	    </form>
 	  </td>
+	{% else %}
+	  <td> - </td>
+	  <td> - </td>
         {% endif %}
       </tr>
       {% endfor %}
