@@ -1,6 +1,9 @@
 from django.forms import ModelForm
 
-from .models import Host
+from .models import (
+    ComplexRule,
+    Host,
+)
 
 
 class NewHostForm(ModelForm):
@@ -15,3 +18,9 @@ class EditHostForm(ModelForm):
         model = Host
         exclude = ('owner', 'approved', 'active', 'active_until',
                    'ip', 'complex_rules')
+
+
+class NewRuleForm(ModelForm):
+    class Meta:
+        model = ComplexRule
+        exclude = ('host', )

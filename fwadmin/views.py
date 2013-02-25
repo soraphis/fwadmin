@@ -25,6 +25,7 @@ from fwadmin.models import (
 from fwadmin.forms import (
     NewHostForm,
     EditHostForm,
+    NewRuleForm,
 )
 from django_project.settings import (
     FWADMIN_ALLOWED_USER_GROUP,
@@ -147,6 +148,7 @@ def moderator_list_unapproved(request):
                               { 'all_hosts': queryset },
                               context_instance=RequestContext(request))
 
+
 @login_required
 @group_required(FWADMIN_MODERATORS_USER_GROUP)
 def moderator_approve_host(request, pk):
@@ -170,6 +172,7 @@ def delete_rule(request, pk):
     return HttpResponseBadRequest("Only POST supported here")
 
 
+
 @login_required
 @group_required(FWADMIN_ALLOWED_USER_GROUP)
 def new_rule_for_host(request, hostid):
@@ -182,7 +185,8 @@ def new_rule_for_host(request, hostid):
             rule = form.save(commit=False)
             rule.host = host
             rule.save()
-            return HttpResponseRedirect('/fwadmin/edit/%s/' % host.id)
+            return HttpResponseRedirect(reverse("fwadmin:edit_host",
+                                                args=(host.id,)))
     else:
         form = NewRuleForm(instance=host)
     return render_to_response('fwadmin/newrule.html',

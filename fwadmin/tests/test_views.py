@@ -198,3 +198,23 @@ class LoggedInViewsTestCase(TestCase):
             urlsplit(resp["Location"])[2],
             reverse("fwadmin:edit_host", args=(self.host.id,)))
         
+    def test_new_rule_for_host(self):
+        rule_name = "random rule name"
+        post_data = {"name": rule_name,
+                     "from_net": "0.0.0.0",
+                     "permit": False,
+                     "ip_protocol": "UDP",
+                     "port": 1337,
+                    }
+        resp = self.client.post(reverse("fwadmin:new_rule_for_host",
+                                        args=(self.host.id,)),
+                                post_data)
+        # ensure we have the new rule
+        rule = ComplexRule.objects.get(name=rule_name)
+        for k, v in post_data.items():
+            self.assertEqual(getattr(rule, k), v)
+        # check redirect
+        self.assertEqual(resp.status_code, 302)
+        self.assertEqual(
+            urlsplit(resp["Location"])[2],
+            reverse("fwadmin:edit_host", args=(self.host.id,)))
