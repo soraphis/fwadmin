@@ -1,4 +1,12 @@
 
+ * add JavaScript to the edit_rules.html that syncs stock_port
+   and port (or hides port by default or something)
+ * pyflakes
+ * pep8
+ * iptables/ufw rules backend
+ * move (some) of the settings into the DB so that it can be
+   edited via the admin interface(?)
+
  * send mail when a new host is waiting for moderation
  * add log functionality for the edit form and when rules are
    added/removed by the user
