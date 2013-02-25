@@ -1,5 +1,8 @@
+import netaddr
+
 import django.forms as forms
 from django.forms import ModelForm
+from django.utils.translation import ugettext as _
 
 from .models import (
     ComplexRule,
@@ -31,23 +34,32 @@ class NewRuleForm(ModelForm):
     ip_protocol = forms.CharField(
             max_length=3,
             widget=forms.Select(choices=IP_PROTOCOL_CHOICES))
-    # reorder or something
     stock_port = forms.ModelChoiceField(queryset=SamplePort.objects.all(),
                                         required=False)
-    
     def clean(self):
+        """ Custom validation """
         cleaned_data = super(NewRuleForm, self).clean()
         port = cleaned_data.get("port")
         stock_port = cleaned_data.get("stock_port")
-        print port, stock_port
+        # XXX: no test for this yet
+        from_net = cleaned_data.get("from_net")
+        if from_net and from_net != "any":
+            try:
+                net = netaddr.IPNetwork(from_net)
+            except netaddr.AddrFormatError:
+                raise forms.ValidationError(_("Invalid network address"))
         if not (port or stock_port):
-            raise forms.ValidationError("Need a port number or a stock port")
-        if port and stock_port:
-            raise forms.ValidationError("You can not add both port and stock port")
+            raise forms.ValidationError(_("Need a port number or a stock port"))
+        if (port and stock_port and port != stock_port.number):
+            raise forms.ValidationError(_("You port and stock port differ"))
         return cleaned_data
 
     class Meta:
+        fields = ('name',
+                  'permit',
+                  'ip_protocol',
+                  'stock_port',
+                  'port',
+                  #'from_net',
+                  )
         model = ComplexRule
-        exclude = ('host', 
-                   # hide for simplicity for now
-                   'from_net')

@@ -202,7 +202,6 @@ class LoggedInViewsTestCase(TestCase):
     def test_new_rule_for_host(self):
         rule_name = "random rule name"
         post_data = {"name": rule_name,
-                     "from_net": "0.0.0.0",
                      "permit": False,
                      "ip_protocol": "UDP",
                      "port": 1337,

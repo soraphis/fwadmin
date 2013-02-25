@@ -39,7 +39,7 @@ class ComplexRule(models.Model):
     host = models.ForeignKey(Host)
     name = models.CharField(max_length=100)
     # XXX: its not a from IP its really a network
-    from_net =  models.GenericIPAddressField(default="0.0.0.0")
+    from_net =  models.CharField(default="any", max_length=100)
     # allow or deny
     permit = models.BooleanField(default=True)
     # TCP, UDP, anything
