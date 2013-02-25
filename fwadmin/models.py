@@ -18,6 +18,7 @@ class Port(models.Model):
 
 class Host(models.Model):
     name = models.CharField(max_length=200)
+    description = models.TextField(blank=True, null=True)
     # can be ipv4,ipv6; not unique as it keeps a history
     ip = models.GenericIPAddressField(unique=True)
     active_until = models.DateField()
