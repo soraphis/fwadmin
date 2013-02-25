@@ -164,3 +164,18 @@ class LoggedInViewsTestCase(TestCase):
         # refresh from DB
         host = Host.objects.get(pk=self.host.id)
         self.assertEqual(host.approved, True)
+
+    def test_moderator_list_unapproved(self):
+        moderators = Group.objects.get(name=FWADMIN_MODERATORS_USER_GROUP)
+        self.user.groups.add(moderators)
+        self.host.approved = False
+        self.host.save()
+        # check that the unapproved one is listed
+        resp = self.client.post(reverse("fwadmin:moderator_list_unapproved"))
+        self.assertEqual(resp.status_code, 200)
+        self.assertTrue("<td>%s</td>" % self.host.ip in resp.content)
+        # simulate approve
+        self.host.approved = True
+        self.host.save()
+        resp = self.client.post(reverse("fwadmin:moderator_list_unapproved"))
+        self.assertFalse("<td>%s</td>" % self.host.ip in resp.content)
