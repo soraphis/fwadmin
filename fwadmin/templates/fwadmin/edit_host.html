@@ -41,7 +41,7 @@
         <td>{{ rule.name }}</td>
         <td>{{ rule.permit }}</td>
         <td>{{ rule.port }}</td>
-        <td>{{ rule.protocol }}</td>
+        <td>{{ rule.ip_protocol }}</td>
 	<td>
 	  <form	action={% url fwadmin:delete_rule host.id %} 
 		method="post">

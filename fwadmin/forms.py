@@ -13,7 +13,6 @@ class NewHostForm(ModelForm):
                    'open_ports',
                    'complex_rules')
 
-# XXX do we keep this form?
 class EditHostForm(ModelForm):
     class Meta:
         model = Host
@@ -25,4 +24,6 @@ class EditHostForm(ModelForm):
 class NewRuleForm(ModelForm):
     class Meta:
         model = ComplexRule
-        exclude = ('host', )
+        exclude = ('host', 
+                   # hide for simplicity for now
+                   'from_net', 'permit', 'ip_protocol')
