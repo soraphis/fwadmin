@@ -41,6 +41,15 @@ def group_required(group_name):
     return user_passes_test(lambda u:is_in_group(u, group_name))
 
 
+class NotOwnerError(HttpResponseForbidden):
+    """A error if the user is not the owner of the object he/she tries
+       to modify
+    """
+    def __init__(self, user):
+        super(HttpResponseForbidden, self).__init__(
+            "You (%s) are not owner of this object" % user.username)
+
+
 @login_required
 @group_required(FWADMIN_ALLOWED_USER_GROUP)
 def index(request):
@@ -82,10 +91,7 @@ def new_host(request):
 def renew_host(request, pk):
     host = Host.objects.filter(pk=pk)[0]
     if host.owner != request.user:
-        # WARNING: do not give info like "name" or "ip" here to avoid
-        #          leaking information
-        return HttpResponseForbidden("You (%s) are not owner of this host" % 
-                                     request.user.username)
+        return NotOwnerError(request.user)
     active_until = (datetime.date.today() +
                     datetime.timedelta(FWADMIN_DEFAULT_ACTIVE_DAYS))
     host.active_until = active_until
@@ -100,7 +106,7 @@ def renew_host(request, pk):
 def delete_host(request, pk):
     host = Host.objects.get(pk=pk)
     if host.owner != request.user:
-        return HttpResponseForbidden("you are not owner")
+        return NotOwnerError(request.user)
     if request.method == 'POST':
         host.delete()
         return redirect(reverse("fwadmin:index"),
@@ -113,7 +119,7 @@ def delete_host(request, pk):
 def edit_host(request, pk):
     host = Host.objects.filter(pk=pk)[0]
     if host.owner != request.user:
-        return HttpResponseForbidden("you are not owner")
+        return NotOwnerError(request.user)
     if request.method == 'POST':
         form = EditHostForm(request.POST, instance=host)
         if form.is_valid():

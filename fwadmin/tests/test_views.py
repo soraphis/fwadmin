@@ -79,21 +79,6 @@ class LoggedInViewsTestCase(TestCase):
             (datetime.date.today()+
              datetime.timedelta(days=FWADMIN_DEFAULT_ACTIVE_DAYS)))
 
-    def test_renew_host_different_owner(self):
-        a_user = User.objects.create_user("Alice")
-        host_name = "alice host"
-        active_until = datetime.date(2036, 01, 01)
-        host = Host.objects.create(name=host_name, ip="192.168.1.1",
-                                   owner=a_user, active_until=active_until)
-        resp = self.client.post(reverse("fwadmin:renew_host", args=(host.id,)))
-        # ensure we get a error status
-        self.assertEqual(resp.status_code, 403)
-        # check error message
-        self.assertTrue("are not owner of this host" in resp.content)
-        # ensure the active_until date is not modified
-        host = Host.objects.get(name="alice host")
-        self.assertEqual(host.active_until, active_until)
-
     def test_new_host(self):
         post_data = {"name": "newhost",
                      "ip": "192.168.1.1",
@@ -131,9 +116,28 @@ class LoggedInViewsTestCase(TestCase):
         host = Host.objects.get(pk=pk)
         # name changed
         self.assertEqual(host.name, "edithost")
-        # IP did not change
+        # IP did not change (django forms give this for free, but its still 
+        # good to be paranoid if its just a single extra line)
         self.assertEqual(host.ip, "192.168.1.1")
         # and we redirect back
         self.assertEqual(resp.status_code, 302)
         self.assertEqual(
             urlsplit(resp["Location"])[2], reverse("fwadmin:index"))
+
+    def test_same_owner_actions(self):
+        a_user = User.objects.create_user("Alice")
+        host_name = "alice host"
+        active_until = datetime.date(2036, 01, 01)
+        host = Host.objects.create(name=host_name, ip="192.168.1.1",
+                                   owner=a_user, active_until=active_until)
+        for action in ["renew_host", "edit_host", "delete_host"]:
+            resp = self.client.post(reverse("fwadmin:%s" % action,
+                                            args=(host.id,)))
+            # ensure we get a error status
+            self.assertEqual(resp.status_code, 403)
+            # check error message
+            self.assertTrue("are not owner of this object" in resp.content)
+            # ensure the active_until date is not modified
+            host = Host.objects.get(name=host_name)
+            self.assertEqual(host.active_until, active_until)
+
