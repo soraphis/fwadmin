@@ -2,5 +2,4 @@
  * send mail when a new host is waiting for moderation
  * add log functionality for the edit form and when rules are
    added/removed by the user
- * add new field "notes" (?)
   

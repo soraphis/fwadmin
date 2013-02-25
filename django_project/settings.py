@@ -9,8 +9,8 @@ from django_auth_ldap.config import (
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
-# XXX: use reverse url mapping instead of hardcoding
-WARN_EXPIRE_URL_TEMPLATE = "https://fwadmin.uni-trier.de/fwadmin/renew/%(pk)s/"
+# XXX: can we do better?
+WARN_EXPIRE_URL_TEMPLATE = "https://fwadmin.uni-trier.de%(url)s"
 
 # XXX: make all this part of a settings module in the DB?
 WARN_EXPIRE_EMAIL_FROM="fwadmin@uni-trier.de"
@@ -132,7 +132,7 @@ TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    "/home/egon/uni-trier/src/firewalladmin/fwadmin/templates",
+    os.path.join(os.path.dirname(__file__), "..", "fwadmin", "templates"),
 )
 
 INSTALLED_APPS = (

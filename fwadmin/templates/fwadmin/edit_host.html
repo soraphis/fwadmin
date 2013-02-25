@@ -7,6 +7,16 @@
   <h1>Edit {{ host.name }} ({{ host.ip }})</h1>
 </div>
 
+<h2>{% trans "Active until" %}</h2>
+ <p>This host is valid until {{ host.active_until }}
+  <form action={% url fwadmin:renew_host host.pk %} 
+	method="post">
+    {% csrf_token %}
+    <input type="submit" value={% trans "Renew" %}>
+  </form>
+ </p>
+
+
 <h2>{% trans "Firewall rules" %}</h2>
 <div class="rules-list">
 

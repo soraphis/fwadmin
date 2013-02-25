@@ -4,11 +4,12 @@ import os
 from django.core.management.base import BaseCommand
 from django.core.mail import send_mail
 from django.utils.translation import ugettext as _
+from django.core.urlresolvers import reverse
 
 from django_project.settings import (
-    WARN_EXPIRE_URL_TEMPLATE,
     WARN_EXPIRE_EMAIL_FROM,
     WARN_EXPIRE_DAYS,
+    WARN_EXPIRE_URL_TEMPLATE,
 )
 from fwadmin.models import Host
 
@@ -16,10 +17,12 @@ from fwadmin.models import Host
 #   python manage.py warnexpire 14
 
 def send_renew_mail(host):
-    url = WARN_EXPIRE_URL_TEMPLATE % { 'pk': host.pk}
+    url = WARN_EXPIRE_URL_TEMPLATE % {
+        'url': reverse("fwadmin:edit_host", args=(host.pk,)),
+        }
     # the text
     subject = _("Firewall config for '%s'") % host.name
-    body = -("""Dear %(user)s,
+    body = _("""Dear %(user)s,
 
 The firewall config for machine: '%(host)s' (%(ip)s) will expire at
 '%(expire_date)s'.

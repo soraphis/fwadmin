@@ -3,18 +3,25 @@ from django.test import TestCase
 
 from mock import patch
 
+from django.core.urlresolvers import reverse
 from fwadmin.management.commands.genrules import Command as GenrulesCommand
 from fwadmin.management.commands.disableinactive import (
     Command as DisableInactiveCommand
 )
-from fwadmin.management.commands.warnexpire import Command as WarnExpireCommand
+from fwadmin.management.commands.warnexpire import (
+    Command as WarnExpireCommand,
+    send_renew_mail,
+)
 
 from fwadmin.models import (
     Host,
     ComplexRule,
 )
 from django.contrib.auth.models import User
-from django_project.settings import FWADMIN_ACCESS_LIST_NR
+from django_project.settings import (
+    FWADMIN_ACCESS_LIST_NR,
+    WARN_EXPIRE_EMAIL_FROM,
+)
 
 
 def make_host(name, ip, owner, active_until=None, approved=True):
@@ -79,6 +86,25 @@ class WarnExpireTestCase(MyBaseTest):
         self.host.save()
         self.cmd.handle()
         mock_f.assert_called_with(self.host)
+
+    @patch("fwadmin.management.commands.warnexpire.send_mail")
+    def test_send_renew_mail(self, mock_f):
+        """Ensure we do send mails"""
+        tomorrow = datetime.date.today() + datetime.timedelta(days=1)
+        self.host.active_until = tomorrow
+        self.host.save()
+        send_renew_mail(self.host)
+        subject = u"Firewall config for 'test'"
+        body = u"""Dear user1,
+
+The firewall config for machine: 'test' (192.168.1.1) will expire at
+'%s'.
+
+Please click on https://fwadmin.uni-trier.de%s to renew.
+""" % (self.host.active_until,
+       reverse("fwadmin:edit_host", args=(self.host.id,)))
+        mock_f.assert_called_with(
+            subject, body, WARN_EXPIRE_EMAIL_FROM, [self.host.owner.email])
 
 
 class ManagementCommandsTestCase(MyBaseTest):
