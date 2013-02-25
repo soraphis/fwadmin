@@ -14,7 +14,7 @@
       {% for host in all_hosts  %}
       <tr>
         <td>{{ host.name }}</td>
-        <td><a href="/fwadmin/edit/{{ host.pk }}/">{{ host.ip }}</a> </td>
+        <td><a href={% url fwadmin:edit_host host.pk %}>{{ host.ip }}</a></td>
         <td>{{ host.approved }}</td>
         <td>
             {% for port in host.open_ports.all|slice:":5" %}
@@ -26,7 +26,11 @@
         </td>
         {% if host.approved %}
           <td>{{ host.active_until }}</td>
-          <td><a href="/fwadmin/renew/{{ host.pk }}/">renew</a></td>
+          <td>
+	    <form action={% url fwadmin:renew_host host.pk %}>
+	      <input type="submit" value={% trans "Renew" %}>
+	    </form>
+	  </td>
         {% endif %}
       </tr>
       {% endfor %}

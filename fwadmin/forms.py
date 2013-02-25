@@ -12,7 +12,7 @@ class NewHostForm(ModelForm):
         exclude = ('owner', 'approved', 'active', 'active_until',
                    'complex_rules')
 
-
+# XXX do we keep this form?
 class EditHostForm(ModelForm):
     class Meta:
         model = Host

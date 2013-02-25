@@ -87,7 +87,6 @@ def new_host(request):
         form = NewHostForm()
     return render_to_response('fwadmin/new_host.html',
                               {'form': form,
-                               'host': host,
                               },
                               context_instance=RequestContext(request))
 
