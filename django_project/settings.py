@@ -181,8 +181,8 @@ LOGGING = {
 
 # LDAP/AD AUTH
 AUTHENTICATION_BACKENDS = (
-    #'django_auth_ldap.backend.LDAPBackend',
     'django.contrib.auth.backends.ModelBackend',
+    'django_auth_ldap.backend.LDAPBackend',
 )
 
 # FUN! our active directory is setup so that we run into this:
