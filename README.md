@@ -1,5 +1,13 @@
+Fwadmin
+=======
 
-Firwall config tool.
+Django based self-serivce firwall config tool.
+
+The use-case is that a group of trusted users can easily configure
+simple fireall rules for a set of machines. Each machine has a owner
+and the rules are valid for a certain amount of time only, then they
+need to be refreshed.
+
 
 Dependencies:
  - python-django
