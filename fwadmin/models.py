@@ -3,11 +3,8 @@ from django.contrib.auth.models import User
 from django.utils.translation import ugettext as _
 
 
-# XXX: this has no function yet, its meant as a simple
-#      way of providing default "open this port" rules
-# we may kill it if its not useful
 class SamplePort(models.Model):
-    """ Simple "open port" rule for a single host """
+    """ A open port for the UI """
     name = models.CharField(
         max_length=100, help_text=_("The port name"))
     number = models.IntegerField(help_text=_("The port number"))
@@ -20,6 +17,7 @@ class SamplePort(models.Model):
 
 
 class Host(models.Model):
+    """ A single host """
     name = models.CharField(max_length=200)
     description = models.TextField(blank=True, null=True)
     # can be ipv4,ipv6; not unique as it keeps a history
