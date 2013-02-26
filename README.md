@@ -21,6 +21,7 @@ Dependencies for testing/development:
 
 How to install javascript dependencies:
 $ bower install
+$ bower install http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/jquery-ui.min.js
 
 How to run the testsuite:
 ```
