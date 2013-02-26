@@ -21,4 +21,23 @@
   <input type="submit" value="Add">
 </form>
 
+<script type="text/javascript">                                         
+$(document).ready(function(){
+
+  // keep id_stock_port and id_port in sync
+  $("#id_stock_port").change(function() {
+    var selected_str = $("#id_stock_port option:selected").text();
+    var port = selected_str.match(/.*\((.*)\)/)[1];
+    $("#id_port").val(port);
+  });
+
+  // reset id_stock_port when id_port changes
+  $("#id_port").change(function() {
+     console.log("meep meep");
+     $("#id_stock_port").val(0);
+  });
+
+});
+ </script>   
+
 {% endblock %}
