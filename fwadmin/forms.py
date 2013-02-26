@@ -12,13 +12,16 @@ from .models import (
 
 
 class NewHostForm(ModelForm):
+
     class Meta:
         model = Host
         exclude = ('owner', 'approved', 'active', 'active_until',
                    'open_ports',
                    'complex_rules')
 
+
 class EditHostForm(ModelForm):
+
     class Meta:
         model = Host
         exclude = ('owner', 'approved', 'active', 'active_until',
@@ -27,15 +30,19 @@ class EditHostForm(ModelForm):
 
 
 class NewRuleForm(ModelForm):
+
     IP_PROTOCOL_CHOICES = (
         ('TCP', 'TCP protocol'),
         ('UDP', 'UDP protocol'),
         )
+
     ip_protocol = forms.CharField(
             max_length=3,
             widget=forms.Select(choices=IP_PROTOCOL_CHOICES))
+
     stock_port = forms.ModelChoiceField(queryset=SamplePort.objects.all(),
                                         required=False)
+
     def clean(self):
         """ Custom validation """
         cleaned_data = super(NewRuleForm, self).clean()
@@ -46,10 +53,12 @@ class NewRuleForm(ModelForm):
         if from_net and from_net != "any":
             try:
                 net = netaddr.IPNetwork(from_net)
+                net  # pyflakes
             except netaddr.AddrFormatError:
                 raise forms.ValidationError(_("Invalid network address"))
         if not (port or stock_port):
-            raise forms.ValidationError(_("Need a port number or a stock port"))
+            raise forms.ValidationError(
+                _("Need a port number or a stock port"))
         if (port and stock_port and port != stock_port.number):
             raise forms.ValidationError(_("You port and stock port differ"))
         return cleaned_data

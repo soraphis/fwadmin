@@ -28,7 +28,8 @@ def make_host(name, ip, owner, active_until=None, approved=True):
     if active_until is None:
         active_until = datetime.date.today() + datetime.timedelta(days=360)
     host = Host.objects.create(
-        name=name, ip=ip, active_until=active_until, owner=owner, approved=approved)
+        name=name, ip=ip, active_until=active_until, owner=owner,
+        approved=approved)
     return host
 
 
@@ -44,7 +45,7 @@ class MyBaseTest(TestCase):
         self.owner = make_owner("user1", "meep@example.com")
         self.host = make_host("test", "192.168.1.1", owner=self.owner)
         self.host.save()
-    
+
 
 class DisableInactiveTestCase(MyBaseTest):
 
@@ -64,7 +65,7 @@ class DisableInactiveTestCase(MyBaseTest):
 
 
 class WarnExpireTestCase(MyBaseTest):
-    
+
     def setUp(self):
         MyBaseTest.setUp(self)
         self.cmd = WarnExpireCommand()
@@ -73,13 +74,13 @@ class WarnExpireTestCase(MyBaseTest):
     def test_no_send_renew_mail_when_still_active(self, mock_f):
         """Ensure we do not send mails if there is enough delta"""
         today = datetime.date.today()
-        delta = self.host.active_until-today
+        delta = self.host.active_until - today
         self.assertEqual(delta, datetime.timedelta(days=360))
         self.cmd.handle()
         self.assertEqual(mock_f.mock_calls, [])
 
     @patch("fwadmin.management.commands.warnexpire.send_renew_mail")
-    def test_send_renew_mail(self, mock_f):
+    def test_send_renew_mail_from_cmd(self, mock_f):
         """Ensure we do send mails"""
         tomorrow = datetime.date.today() + datetime.timedelta(days=1)
         self.host.active_until = tomorrow
@@ -141,7 +142,7 @@ class ManagementCommandsTestCase(MyBaseTest):
     @patch("fwadmin.management.commands.genrules.Command._write_rules")
     def test_gen_rules_complex(self, mock_f):
         """ Ensure complex rules are written """
-        rule = ComplexRule.objects.create(
+        ComplexRule.objects.create(
             host=self.host,
             name="complex", from_net="192.168.2.0/24", permit=False,
             ip_protocol="UDP", port=53)
@@ -149,7 +150,6 @@ class ManagementCommandsTestCase(MyBaseTest):
         mock_f.assert_called_with(
             ["! fw rules for %s (%s) owned by %s" % (
                     self.host.name, self.host.ip, self.owner.username),
-             "access-list %s deny UDP 192.168.2.0/24 host 192.168.1.1 eq 53" % \
+             "access-list %s deny UDP 192.168.2.0/24 host 192.168.1.1 eq 53" %
                  FWADMIN_ACCESS_LIST_NR,
              ])
-    

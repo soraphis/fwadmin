@@ -1,5 +1,4 @@
 import datetime
-import logging
 
 from django.core.management.base import BaseCommand
 from django_project.settings import FWADMIN_ACCESS_LIST_NR
@@ -61,7 +60,7 @@ class Command(BaseCommand):
 
     def _write_rules(self, rules_list):
         print "\n".join(rules_list)
-    
+
     def print_firewall_rules(self):
         writer = CiscoRulesWriter()
         for host in Host.objects.all():
@@ -73,4 +72,3 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         self.print_firewall_rules()
-

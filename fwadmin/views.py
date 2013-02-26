@@ -1,22 +1,21 @@
 import datetime
-from django.utils.translation import ugettext as _
+#from django.utils.translation import ugettext as _
 from django.core.urlresolvers import reverse
 from django.core.exceptions import PermissionDenied
 
 from django.http import (
     HttpResponseBadRequest,
-    HttpResponseRedirect, 
+    HttpResponseRedirect,
     HttpResponseForbidden,
 )
 from django.shortcuts import (
-    render_to_response, 
+    render_to_response,
     redirect,
 )
 from django.template import RequestContext
 from django.contrib.auth.decorators import (
     login_required,
     user_passes_test,
-    permission_required,
 )
 from fwadmin.models import (
     ComplexRule,
@@ -44,7 +43,7 @@ def group_required(group_name):
                 return True
         # XXX: add template with logout form here
         raise PermissionDenied("You are not in group '%s'" % group_name)
-    return user_passes_test(lambda u:is_in_group(u, group_name))
+    return user_passes_test(lambda u: is_in_group(u, group_name))
 
 
 class NotOwnerError(HttpResponseForbidden):
@@ -59,15 +58,15 @@ class NotOwnerError(HttpResponseForbidden):
 @login_required
 @group_required(FWADMIN_ALLOWED_USER_GROUP)
 def index(request):
-    all_hosts=Host.objects.filter(owner=request.user)
+    all_hosts = Host.objects.filter(owner=request.user)
     # pass all views that the user owns too
-    all_rules=ComplexRule.objects.filter(host__owner=request.user)
+    all_rules = ComplexRule.objects.filter(host__owner=request.user)
     is_moderator = request.user.groups.filter(
         name=FWADMIN_MODERATORS_USER_GROUP).count()
     return render_to_response('fwadmin/index.html',
-                              { 'all_hosts': all_hosts,
-                                'complex_rules': all_rules,
-                                'is_moderator': is_moderator,
+                              {'all_hosts': all_hosts,
+                               'complex_rules': all_rules,
+                               'is_moderator': is_moderator,
                               },
                               context_instance=RequestContext(request))
 
@@ -82,12 +81,13 @@ def new_host(request):
             host = form.save(commit=False)
             # add the stuff here that the user can't edit
             host.owner = request.user
-            active_until = (datetime.date.today() + 
+            active_until = (datetime.date.today() +
                             datetime.timedelta(FWADMIN_DEFAULT_ACTIVE_DAYS))
             host.active_until = active_until
             # and really save
             host.save()
-            # see https://docs.djangoproject.com/en/dev/topics/forms/modelforms/#the-save-method
+            # see https://docs.djangoproject.com/en/dev/topics/forms/\
+            #        modelforms/#the-save-method
             form.save_m2m()
             return HttpResponseRedirect(reverse("fwadmin:edit_host",
                                                 args=(host.id,)))
@@ -110,7 +110,8 @@ def renew_host(request, pk):
     host.active_until = active_until
     host.save()
     return render_to_response('fwadmin/renewed.html',
-                              { 'active_until': active_until},
+                              {'active_until': active_until,
+                              },
                               context_instance=RequestContext(request))
 
 
@@ -155,7 +156,7 @@ def moderator_list_unapproved(request):
     all_hosts = Host.objects.filter(approved=False)
     all_rules = ComplexRule.objects.filter(host__approved=False)
     # XXX: add a template for list
-    return render_to_response('fwadmin/list-unapproved.html', 
+    return render_to_response('fwadmin/list-unapproved.html',
                               {'all_hosts': all_hosts,
                                'complex_rules': all_rules,
                                },
@@ -183,7 +184,6 @@ def delete_rule(request, pk):
         rule.delete()
         return redirect(reverse("fwadmin:edit_host", args=(host.id,)))
     return HttpResponseBadRequest("Only POST supported here")
-
 
 
 @login_required

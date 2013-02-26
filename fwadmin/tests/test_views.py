@@ -37,7 +37,7 @@ class AnonymousTestCase(TestCase):
         url = reverse("fwadmin:index")
         resp = self.client.get(url)
         self.assertEqual(resp.status_code, 403)
-            
+
 
 class LoggedInViewsTestCase(TestCase):
 
@@ -54,16 +54,16 @@ class LoggedInViewsTestCase(TestCase):
 
     def test_delete_needs_post(self):
         for action in ["delete_host", "delete_rule"]:
-            resp = self.client.get(reverse("fwadmin:%s" % action, 
+            resp = self.client.get(reverse("fwadmin:%s" % action,
                                            args=(self.host.id,)))
             self.assertEqual(resp.status_code, 400)
 
     def test_delete_host(self):
-        resp = self.client.post(reverse("fwadmin:delete_host", 
+        resp = self.client.post(reverse("fwadmin:delete_host",
                                         args=(self.host.id,)))
         self.assertEqual(resp.status_code, 302)
         with self.assertRaises(Host.DoesNotExist):
-            Host.objects.get(pk=self.host.id)        
+            Host.objects.get(pk=self.host.id)
 
     def test_renew_host(self):
         # create ancient host
@@ -79,8 +79,8 @@ class LoggedInViewsTestCase(TestCase):
         # and that it is actually renewed
         host = Host.objects.get(name="meep")
         self.assertEqual(
-            host.active_until, 
-            (datetime.date.today()+
+            host.active_until,
+            (datetime.date.today() +
              datetime.timedelta(days=FWADMIN_DEFAULT_ACTIVE_DAYS)))
 
     def test_new_host(self):
@@ -93,15 +93,16 @@ class LoggedInViewsTestCase(TestCase):
         self.assertEqual(host.ip, post_data["ip"])
         self.assertEqual(host.owner, self.user)
         self.assertEqual(host.approved, False)
-        self.assertEqual(host.active_until,
-                         (datetime.date.today()+
-                          datetime.timedelta(days=FWADMIN_DEFAULT_ACTIVE_DAYS)))
+        self.assertEqual(
+            host.active_until,
+            (datetime.date.today() +
+             datetime.timedelta(days=FWADMIN_DEFAULT_ACTIVE_DAYS)))
         # ensure the redirect to index works works
         self.assertEqual(resp.status_code, 302)
         self.assertEqual(
             urlsplit(resp["Location"])[2], reverse("fwadmin:edit_host",
                                                    args=(host.id,)))
-        
+
     def test_edit_host(self):
         # create a new host
         initial_hostname = "My initial hostname"
@@ -121,7 +122,7 @@ class LoggedInViewsTestCase(TestCase):
         host = Host.objects.get(pk=pk)
         # name changed
         self.assertEqual(host.name, "edithost")
-        # IP did not change (django forms give this for free, but its still 
+        # IP did not change (django forms give this for free, but its still
         # good to be paranoid if its just a single extra line)
         self.assertEqual(host.ip, "192.168.1.1")
         # and we redirect back
@@ -188,7 +189,7 @@ class LoggedInViewsTestCase(TestCase):
         rule = ComplexRule.objects.create(
             host=self.host, name="ssh", permit=True, ip_protocol="TCP",
             port=22)
-        resp = self.client.post(reverse("fwadmin:delete_rule", 
+        resp = self.client.post(reverse("fwadmin:delete_rule",
                                        args=(1,)))
         # check that its gone
         with self.assertRaises(ComplexRule.DoesNotExist):
@@ -198,7 +199,7 @@ class LoggedInViewsTestCase(TestCase):
         self.assertEqual(
             urlsplit(resp["Location"])[2],
             reverse("fwadmin:edit_host", args=(self.host.id,)))
-        
+
     def test_new_rule_for_host(self):
         rule_name = "random rule name"
         post_data = {"name": rule_name,

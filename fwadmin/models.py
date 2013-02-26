@@ -14,6 +14,7 @@ class SamplePort(models.Model):
     # TCP/UDP or other IP protocol number
     ip_protocol = models.CharField(
         max_length=5, help_text=_("IP Protocol type"))
+
     def __unicode__(self):
         return "%s %s (%s)" % (self.ip_protocol, self.name, self.number)
 
@@ -29,6 +30,7 @@ class Host(models.Model):
     approved = models.BooleanField(default=False)
     # no longer active
     active = models.BooleanField(default=True)
+
     def __unicode__(self):
         return "%s (%s): %s: %s %s" % (self.name, self.ip, self.active_until,
                                        self.owner, self.open_ports)
@@ -38,13 +40,14 @@ class ComplexRule(models.Model):
     """ Complex(er) allow/deny from net rule for a single host """
     host = models.ForeignKey(Host)
     name = models.CharField(max_length=100)
-    # XXX: its not a from IP its really a network
-    from_net =  models.CharField(default="any", max_length=100)
+    # its not a from IP its really a network
+    from_net = models.CharField(default="any", max_length=100)
     # allow or deny
     permit = models.BooleanField(default=True)
     # TCP, UDP, anything
     ip_protocol = models.CharField(default="TCP", max_length=10)
     # just the integer
     port = models.IntegerField(blank=True, null=True)
+
     def __unicode__(self):
         return "complex rule: %s " % self.name

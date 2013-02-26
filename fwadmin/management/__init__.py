@@ -2,9 +2,7 @@ from django.db.models.signals import post_syncdb
 
 from django.contrib.auth.models import (
     Group,
-    Permission,
 )
-from django.contrib.contenttypes.models import ContentType
 
 from django_project.settings import (
     FWADMIN_ALLOWED_USER_GROUP,
