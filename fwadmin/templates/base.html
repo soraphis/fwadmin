@@ -14,16 +14,20 @@
      src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/jquery-ui.min.js">
   </script> 
   </script>
+
 </head>
 
 <body>
-    <div class="content">
-        {% block content %}{% endblock %}
-    </div>
+  <!-- show tiny home icon, this certainly needs some work -->
+  <a href={% url fwadmin:index %} class="ui-icon ui-icon-home">Home</a>
 
-    <footer>
-      &copy; ZIMK 2013
-    </footer>
+  <div class="content">
+    {% block content %}{% endblock %}
+  </div>
+
+  <footer>
+    &copy; ZIMK 2013
+  </footer>
 
 </body>
 </html>
