@@ -1,6 +1,4 @@
 
- * add JavaScript to the edit_rules.html that syncs stock_port
-   and port (or hides port by default or something)
  * iptables/ufw rules backend
  * move (some) of the settings into the DB so that it can be
    edited via the admin interface(?)
