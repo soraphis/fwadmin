@@ -9,12 +9,12 @@ from django_auth_ldap.config import (
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
-# XXX: can we do better?
-WARN_EXPIRE_URL_TEMPLATE = "https://fwadmin.uni-trier.de%(url)s"
+# XXX: can we do better? e.g. via socket.gethostbyname(me)
+FWADMIN_HOST_URL_TEMPLATE = "https://fwadmin.uni-trier.de%(url)s"
 
 # XXX: make all this part of a settings module in the DB?
-WARN_EXPIRE_EMAIL_FROM="fwadmin@uni-trier.de"
-WARN_EXPIRE_DAYS=7
+FWADMIN_EMAIL_FROM="fwadmin@uni-trier.de"
+FWADMIN_WARN_EXPIRE_DAYS=7
 
 # the cisco access list number we use
 FWADMIN_ACCESS_LIST_NR = 120
