@@ -3,6 +3,7 @@
  * iptables/ufw rules backend
  * move (some) of the settings into the DB so that it can be
    edited via the admin interface(?)
+ * moderation needs a way to "disapprove" (delete)
 
  * send mail when a new host is waiting for moderation
  * add log functionality for the edit form and when rules are
