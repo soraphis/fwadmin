@@ -64,11 +64,12 @@ class NewRuleForm(ModelForm):
         return cleaned_data
 
     class Meta:
-        fields = ('name',
-                  'permit',
-                  'ip_protocol',
-                  'stock_port',
-                  'port',
-                  #'from_net',
-                  )
+        fields = (
+            'stock_port',
+            'name',
+            'permit',
+            'ip_protocol',
+            'port',
+            #'from_net',
+            )
         model = ComplexRule
