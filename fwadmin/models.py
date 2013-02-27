@@ -20,7 +20,7 @@ class Host(models.Model):
     """ A single host """
     name = models.CharField(max_length=200)
     description = models.TextField(blank=True, null=True)
-    # can be ipv4,ipv6; not unique as it keeps a history
+    # can be ipv4,ipv6
     ip = models.GenericIPAddressField(unique=True)
     active_until = models.DateField()
     owner = models.ForeignKey(User)
