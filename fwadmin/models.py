@@ -30,8 +30,8 @@ class Host(models.Model):
     active = models.BooleanField(default=True)
 
     def __unicode__(self):
-        return "%s (%s): %s: %s %s" % (self.name, self.ip, self.active_until,
-                                       self.owner, self.open_ports)
+        return "%s (%s): %s: %s" % (self.name, self.ip, self.active_until,
+                                    self.owner)
 
 
 class ComplexRule(models.Model):
