@@ -13,6 +13,7 @@ Dependencies:
  - python-django (1.4 is currently used)
  - python-django-auth-ldap
  - python-netaddr
+ - python-mock
 
 How to run the testsuite:
 $ python manage.py test fwadmin
