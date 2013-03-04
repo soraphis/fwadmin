@@ -1,5 +1,6 @@
 Fwadmin
 =======
+[![Build Status](https://travis-ci.org/pgolm/fwadmin.png)](https://travis-ci.org/pgolm/fwadmin)
 
 Django based self-serivce firwall config tool.
 
