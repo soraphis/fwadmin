@@ -10,8 +10,8 @@ need to be refreshed.
 
 
 Dependencies:
+ - python-django (1.4 is currently used)
  - python-django-auth-ldap
- - python-django
  - python-netaddr
 
 How to run the testsuite:
