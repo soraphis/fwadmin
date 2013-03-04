@@ -49,12 +49,7 @@
          POST needs to go into the fwadmin:new_rule_for_host page
       */
       $("#myModal").on("shown", function() {
-        // XXX: this does not work
-        $("#new_rule_for_host_form").action = "{% url fwadmin:new_rule_for_host host.id %}";
-        
-        // but this does ?!?
-        document.getElementById("new_rule_for_host_form").action = "{% url fwadmin:new_rule_for_host host.id %}";
-
+        $("#new_rule_for_host_form").attr("action", "{% url fwadmin:new_rule_for_host host.id %}");
       });
     </script>
     <!-- /dynamic modal form -->
