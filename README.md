@@ -9,10 +9,12 @@ and the rules are valid for a certain amount of time only, then they
 need to be refreshed.
 
 
-Dependencies:
+Dependencies to run in production:
  - python-django (1.4 is currently used)
  - python-django-auth-ldap
  - python-netaddr
+
+Dependencies for development:
  - python-mock
 
 How to run the testsuite:
