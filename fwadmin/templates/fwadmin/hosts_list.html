@@ -18,11 +18,12 @@
         <td>{{ host.description|truncatechars:60 }}</td>
         <td><a href={% url fwadmin:edit_host host.pk %}>{{ host.ip }}</a></td>
 	<td>
-	  {# XXX: meeeeh, is there a better way to do this than to loop here N-times ? #}
-	  {% for rule in complex_rules %}
-	    {% if rule.host == host %}
-	        {{ rule.name }}
-	    {% endif %}
+	  {% for rule in host.get_rules_for_host %}
+            {% if not forloop.last %}
+	      {{ rule.name }},
+            {% else %}
+              {{ rule.name }}
+            {% endif %}
 	  {% endfor %}
 	</td>
         <td>{{ host.approved }}</td>
