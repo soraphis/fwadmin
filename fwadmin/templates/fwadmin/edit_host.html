@@ -34,8 +34,14 @@
     <div class="modal fade" 
          id="myModal" 
          data-remote="{% url fwadmin:new_rule_for_host host.id %}">
-      <div class="modal-body">
-      </div>
+       <div class="modal-header">
+         <button type="button" class="close" data-dismiss="modal" 
+                 aria-hidden="true">×</button>
+         <h3>New rule for {{ host.name }}</h3>
+       </div>
+       <div class="modal-body">
+         {# taken from "fwadmin:new_rule_for_host" #}
+       </div>
     </div>
     <script>
       /* we need to override the form action for the modal dialog
