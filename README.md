@@ -14,7 +14,7 @@ Dependencies to run in production:
  - python-django-auth-ldap
  - python-netaddr
 
-Dependencies for development:
+Dependencies for testing/development:
  - python-mock
 
 How to run the testsuite:
