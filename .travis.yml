@@ -16,6 +16,6 @@ install:
 before_script:
  - echo "secret" > django_project/ldap-password
  - python manage.py syncdb --noinput
- - "pep8 --exclude=migrations --ignore=E501,E225 src"
- - pyflakes -x W src
+ - "pep8 --exclude=migrations --ignore=E501,E225 fwadmin"
+ - pyflakes -x W fwadmin
 script:  python manage.py test fwadmin
