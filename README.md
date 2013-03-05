@@ -20,7 +20,9 @@ Dependencies for testing/development:
  - python-mock
 
 How to install javascript dependencies:
+```
 $ bower install
+```
 
 How to run the testsuite:
 ```
