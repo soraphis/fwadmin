@@ -1,23 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <link rel="stylesheet" href="{{ STATIC_URL }}style.css" />
   <title>{% block title %}Fwadmin{% endblock %}</title>
 
-  <link rel="stylesheet" 
-        href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.1/themes/base/jquery-ui.css" /> 
+  <link rel="stylesheet" href="{{ STATIC_URL }}style.css" />
 
-  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js">
+  <script src="{{ STATIC_URL }}components/jquery/jquery.min.js">
   </script>
 
+  <link rel="stylesheet" 
+        href="{{ STATIC_URL }}components/jquery-ui/themes/base/jquery-ui.css" />
   <script 
-     src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/jquery-ui.min.js">
+     src="{{ STATIC_URL }}components/jquery-ui.min/index.js">
   </script> 
 
-<link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css" rel="stylesheet">
-  <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/js/bootstrap.min.js"></script>
-
-
+  <link rel="stylesheet" 
+        href="{{ STATIC_URL }}components/bootstrap.css/index.css" />
+  <script 
+     src="{{ STATIC_URL }}components/bootstrap.min/index.js">
+  </script> 
 
 </head>
 
