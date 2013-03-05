@@ -3,25 +3,29 @@
 
 {% block content %}
 
+<script>
+  $(function() {
+    $("#tabs").tabs();
+  });
+</script>
+
 <div class="page-header">
   <h1>Edit {{ host.name }} ({{ host.ip }})</h1>
 </div>
 
-<h2>{% trans "Active until" %}</h2>
- <p>This host is valid until {{ host.active_until }}
-  <form action={% url fwadmin:renew_host host.pk %} 
-	method="post">
-    {% csrf_token %}
-    <input type="submit" value={% trans "Renew" %}>
-  </form>
- </p>
+<div id="tabs">
+  <ul>
+    <li><a href="#tab-rules">Firewall rules</a></li>
+    <li><a href="#tab-renew">Active until</a></li>
+    <li><a href="#tab-settings">Settings</a></li>
+  </ul>
 
-
-<h2>{% trans "Firewall rules" %}</h2>
-<div class="rules-list">
-
-<a href={% url fwadmin:new_rule_for_host host.id %}>Add rule</a>
-{% if rules_list %}
+<div id="tab-rules">
+  <h2>{% trans "Firewall rules" %}</h2>
+  <div class="rules-list">
+    
+    <a href={% url fwadmin:new_rule_for_host host.id %}>Add rule</a>
+    {% if rules_list %}
     <table border="1" cellpadding="3">
       <tr>
 	<th>{% trans "Name"  %}</th>
@@ -46,26 +50,40 @@
       </tr>
       {% endfor %}
     </table>
-{% else %}
+    {% else %}
     <p>{% trans "No rules."  %}</p>
-{% endif %}
+    {% endif %}
+  </div>
 </div>
 
-<h2>{% trans "Change host config" %}</h2>
-{% if form.errors %}
-<p style="color: red;">
- {% blocktrans %} Please correct the error {{ form.errors|pluralize }} below.  {% endblocktrans %}
-</p>
-{% endif %}
+<div id="tab-renew">
+  <h2>{% trans "Active until" %}</h2>
+  <p>This host is valid until {{ host.active_until }}
+    <form action={% url fwadmin:renew_host host.pk %} 
+	  method="post">
+      {% csrf_token %}
+      <input type="submit" value={% trans "Renew" %}>
+    </form>
+  </p>
+</div>
 
-<form action="" method="post">
-  {% csrf_token %}
-  <table>
-    {{ form.as_table }}
-  </table>
-  <input type="submit" value="Update">
-</form>
-
+<div id="tab-settings">
+  <h2>{% trans "Change host config" %}</h2>
+  {% if form.errors %}
+  <p style="color: red;">
+    {% blocktrans %} Please correct the error {{ form.errors|pluralize }} below.  {% endblocktrans %}
+  </p>
+  {% endif %}
+  
+  <form action="" method="post">
+    {% csrf_token %}
+    <table>
+      {{ form.as_table }}
+    </table>
+    <input type="submit" value="Update">
+  </form>
+</div>
+</div>
 
 
 {% endblock %}
