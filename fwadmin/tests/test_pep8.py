@@ -11,7 +11,7 @@ class PackagePep8TestCase(unittest.TestCase):
         res += subprocess.call(
             ["pep8",
              "--ignore=E121,E123,E124,E125,E126,E127,E128",
-             "--exclude", "tastypie_test_v0912.py",
+             "--exclude", "static,tastypie_test_v0912.py",
              "--repeat", py_dir])
         self.assertEqual(res, 0)
 
