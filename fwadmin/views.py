@@ -86,9 +86,6 @@ def new_host(request):
             host.active_until = active_until
             # and really save
             host.save()
-            # see https://docs.djangoproject.com/en/dev/topics/forms/\
-            #        modelforms/#the-save-method
-            form.save_m2m()
             return HttpResponseRedirect(reverse("fwadmin:edit_host",
                                                 args=(host.id,)))
     else:
