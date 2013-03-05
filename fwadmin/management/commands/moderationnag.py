@@ -5,8 +5,8 @@ from django.core.urlresolvers import reverse
 
 from django_project.settings import (
     FWADMIN_MODERATION_WAITING_MAIL_NAG,
-    WARN_EXPIRE_EMAIL_FROM,
-    WARN_EXPIRE_URL_TEMPLATE,
+    FWADMIN_EMAIL_FROM,
+    FWADMIN_HOST_URL_TEMPLATE,
 )
 
 from fwadmin.models import (
@@ -16,7 +16,7 @@ from fwadmin.models import (
 
 def send_moderation_nag_mail():
     path = reverse("fwadmin:moderator_list_unapproved")
-    url = WARN_EXPIRE_URL_TEMPLATE % {'url': path}
+    url = FWADMIN_HOST_URL_TEMPLATE % {'url': path}
     subject = _("fwadmin hosts waiting for moderation")
     hosts_from_db = Host.objects.filter(approved=False)
     if hosts_from_db:
@@ -28,7 +28,7 @@ Hosts waiting for moderation:
 %(hosts)s""") % {'hosts': "\n".join(hosts),
                  'url': url,
                  }
-        send_mail(subject, body, WARN_EXPIRE_EMAIL_FROM,
+        send_mail(subject, body, FWADMIN_EMAIL_FROM,
                   [FWADMIN_MODERATION_WAITING_MAIL_NAG])
 
 

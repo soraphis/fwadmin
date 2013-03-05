@@ -23,7 +23,7 @@ from fwadmin.models import (
 from django.contrib.auth.models import User
 from django_project.settings import (
     FWADMIN_ACCESS_LIST_NR,
-    WARN_EXPIRE_EMAIL_FROM,
+    FWADMIN_EMAIL_FROM,
     FWADMIN_MODERATION_WAITING_MAIL_NAG,
 )
 
@@ -109,7 +109,8 @@ Please click on https://fwadmin.uni-trier.de%s to renew.
 """ % (self.host.active_until,
        reverse("fwadmin:edit_host", args=(self.host.id,)))
         mock_f.assert_called_with(
-            subject, body, WARN_EXPIRE_EMAIL_FROM, [self.host.owner.email])
+            subject, body, FWADMIN_EMAIL_FROM,
+            [self.host.owner.email])
 
 
 class ManagementCommandsTestCase(MyBaseTest):

@@ -202,7 +202,7 @@ def new_rule_for_host(request, hostid):
             return HttpResponseRedirect(reverse("fwadmin:edit_host",
                                                 args=(host.id,)))
     else:
-        form = NewRuleForm(instance=host)
+        form = NewRuleForm()
     return render_to_response('fwadmin/new_rule.html',
                               {'host': host,
                                'form': form,

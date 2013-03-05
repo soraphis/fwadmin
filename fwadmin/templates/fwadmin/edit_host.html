@@ -24,7 +24,36 @@
   <h2>{% trans "Firewall rules" %}</h2>
   <div class="rules-list">
     
-    <a href={% url fwadmin:new_rule_for_host host.id %}>Add rule</a>
+    <!-- dynamic modal form -->
+    <a href="{% url fwadmin:new_rule_for_host host.id %}"
+       class="btn"
+       data-toggle="modal" 
+       data-target="#myModal">Add rule
+    </a>
+
+    <div class="modal fade" 
+         id="myModal" 
+         data-remote="{% url fwadmin:new_rule_for_host host.id %}">
+       <div class="modal-header">
+         <button type="button" class="close" data-dismiss="modal" 
+                 aria-hidden="true">×</button>
+         <h3>New rule for {{ host.name }}</h3>
+       </div>
+       <div class="modal-body">
+         {# taken from "fwadmin:new_rule_for_host" #}
+       </div>
+    </div>
+    <script>
+      /* we need to override the form action for the modal dialog
+         because the document.URL will still be this page but the
+         POST needs to go into the fwadmin:new_rule_for_host page
+      */
+      $("#myModal").on("shown", function() {
+        $("#new_rule_for_host_form").attr("action", "{% url fwadmin:new_rule_for_host host.id %}");
+      });
+    </script>
+    <!-- /dynamic modal form -->
+
     {% if rules_list %}
     <table border="1" cellpadding="3">
       <tr>
@@ -41,7 +70,7 @@
         <td>{{ rule.port }}</td>
         <td>{{ rule.ip_protocol }}</td>
 	<td>
-	  <form	action={% url fwadmin:delete_rule host.id %} 
+	  <form	action={% url fwadmin:delete_rule rule.id %} 
 		method="post">
 	    {% csrf_token %}
 	    <input type="submit" value={% trans "Delete" %}>
@@ -56,6 +85,7 @@
   </div>
 </div>
 
+
 <div id="tab-renew">
   <h2>{% trans "Active until" %}</h2>
   <p>This host is valid until {{ host.active_until }}
@@ -66,6 +96,7 @@
     </form>
   </p>
 </div>
+
 
 <div id="tab-settings">
   <h2>{% trans "Change host config" %}</h2>

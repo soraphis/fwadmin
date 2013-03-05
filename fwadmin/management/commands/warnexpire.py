@@ -7,9 +7,9 @@ from django.utils.translation import ugettext as _
 from django.core.urlresolvers import reverse
 
 from django_project.settings import (
-    WARN_EXPIRE_EMAIL_FROM,
-    WARN_EXPIRE_DAYS,
-    WARN_EXPIRE_URL_TEMPLATE,
+    FWADMIN_EMAIL_FROM,
+    FWADMIN_WARN_EXPIRE_DAYS,
+    FWADMIN_HOST_URL_TEMPLATE,
 )
 from fwadmin.models import Host
 
@@ -18,7 +18,7 @@ from fwadmin.models import Host
 
 
 def send_renew_mail(host):
-    url = WARN_EXPIRE_URL_TEMPLATE % {
+    url = FWADMIN_HOST_URL_TEMPLATE % {
         'url': reverse("fwadmin:edit_host", args=(host.pk,)),
         }
     # the text
@@ -36,20 +36,21 @@ Please click on %(url)s to renew.
         'url': url,
        }
     if "FWADMIN_DRY_RUN" in os.environ:
-        print "From:", WARN_EXPIRE_EMAIL_FROM
+        print "From:", FWADMIN_EMAIL_FROM
         print "To:", host.owner.email
         print "Subject: ", subject
         print body
         print
     else:
-        send_mail(subject, body, WARN_EXPIRE_EMAIL_FROM, [host.owner.email])
+        send_mail(subject, body, FWADMIN_EMAIL_FROM,
+                  [host.owner.email])
 
 
 class Command(BaseCommand):
     help = 'send warning mails when expire is close, first arg is nr of days'
 
     def handle(self, *args, **options):
-        days_delta = WARN_EXPIRE_DAYS
+        days_delta = FWADMIN_WARN_EXPIRE_DAYS
         td = datetime.timedelta(days=days_delta)
         for host in Host.objects.all():
             if (host.active_until - td < datetime.date.today() and
