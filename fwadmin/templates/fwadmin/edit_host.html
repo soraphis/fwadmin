@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load i18n %}
+{% load url from future %}
 
 {% block content %}
 
@@ -25,7 +26,7 @@
   <div class="rules-list">
     
     <!-- dynamic modal form -->
-    <a href="{% url fwadmin:new_rule_for_host host.id %}"
+    <a href="{% url 'fwadmin:new_rule_for_host' host.id %}"
        class="btn"
        data-toggle="modal" 
        data-target="#myModal">Add rule
@@ -33,7 +34,7 @@
 
     <div class="modal fade" 
          id="myModal" 
-         data-remote="{% url fwadmin:new_rule_for_host host.id %}">
+         data-remote="{% url 'fwadmin:new_rule_for_host' host.id %}">
        <div class="modal-header">
          <button type="button" class="close" data-dismiss="modal" 
                  aria-hidden="true">×</button>
@@ -49,7 +50,7 @@
          POST needs to go into the fwadmin:new_rule_for_host page
       */
       $("#myModal").on("shown", function() {
-        $("#new_rule_for_host_form").attr("action", "{% url fwadmin:new_rule_for_host host.id %}");
+        $("#new_rule_for_host_form").attr("action", "{% url 'fwadmin:new_rule_for_host' host.id %}");
       });
     </script>
     <!-- /dynamic modal form -->
@@ -70,7 +71,7 @@
         <td>{{ rule.port }}</td>
         <td>{{ rule.ip_protocol }}</td>
 	<td>
-	  <form	action={% url fwadmin:delete_rule rule.id %} 
+	  <form	action={% url 'fwadmin:delete_rule' host.id %} 
 		method="post">
 	    {% csrf_token %}
 	    <input type="submit" value={% trans "Delete" %}>
@@ -89,7 +90,7 @@
 <div id="tab-renew">
   <h2>{% trans "Active until" %}</h2>
   <p>This host is valid until {{ host.active_until }}
-    <form action={% url fwadmin:renew_host host.pk %} 
+    <form action={% url 'fwadmin:renew_host' host.pk %} 
 	  method="post">
       {% csrf_token %}
       <input type="submit" value={% trans "Renew" %}>

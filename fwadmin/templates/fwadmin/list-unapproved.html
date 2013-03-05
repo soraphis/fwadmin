@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load i18n %}
+{% load url from future %}
 
 {% block content %}
 
@@ -32,7 +33,7 @@
 	  {% endfor %}
         </td>
         <td> 
-	  <form	action={% url fwadmin:moderator_approve_host host.pk %}
+	  <form	action={% url 'fwadmin:moderator_approve_host' host.pk %}
 		method="post">
 	    {% csrf_token %}
 	    <input type="submit" value={% trans "Approve" %}>

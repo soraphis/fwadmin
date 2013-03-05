@@ -11,7 +11,7 @@ need to be refreshed.
 
 
 Dependencies to run in production:
- - python-django (1.4 is currently used)
+ - python-django (tested with 1.4 and 1.5)
  - python-django-auth-ldap
  - python-netaddr
  - [bower](https://github.com/twitter/bower)
