@@ -35,10 +35,6 @@ $ echo "my-secret-ldap-password" > django_project/ldap-password
 $ python manage.py syncdb
 ```
 
-One time setup:
-$ echo "my-secret-ldap-password" > django_project/ldap-password
-$ python manage.py syncdb
-
 How to test interactively:
 ```
 $ python manage.py runserver
