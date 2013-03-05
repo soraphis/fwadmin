@@ -14,9 +14,13 @@ Dependencies to run in production:
  - python-django (1.4 is currently used)
  - python-django-auth-ldap
  - python-netaddr
+ - [bower](https://github.com/twitter/bower)
 
 Dependencies for testing/development:
  - python-mock
+
+How to install javascript dependencies:
+$ bower install
 
 How to run the testsuite:
 ```

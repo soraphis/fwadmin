@@ -21,4 +21,27 @@
   <input type="submit" value="Add">
 </form>
 
+<script type="text/javascript">                                         
+$(document).ready(function(){
+
+  // keep id_stock_port and id_port in sync
+  $("#id_stock_port").change(function() {
+    var selected_str = $("#id_stock_port option:selected").text();
+    var regexp = selected_str.match(/(\w+)(.*)\((.*)\)/);
+    var ip_protocol = regexp[1];
+    var name = regexp[2];
+    var port = regexp[3];
+    $("#id_ip_protocol").val(ip_protocol);
+    $("#id_port").val(port);
+    $("#id_name").val(name);
+  });
+
+  // reset id_stock_port when id_port changes
+  $("#id_port").change(function() {
+     $("#id_stock_port").val(0);
+  });
+
+});
+ </script>   
+
 {% endblock %}
