@@ -1,4 +1,5 @@
 {% load url from future %}
+{% load i18n %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -25,10 +26,18 @@
 </head>
 
 <body>
-  <!-- show tiny home icon, this certainly needs some work -->
-  <a href={% url 'fwadmin:index' %} class="ui-icon ui-icon-home">Home</a>
+  <div class="content container">
+    <div class="navbar">
+      <div class="navbar-inner">
+        <ul class="nav">
+          <li><a href={% url 'fwadmin:index' %}><i class="ui-icon ui-icon-home pull-left"></i>Home</a></li>
+        </ul>
+        <ul class="nav pull-right">
+          <li><a href="/accounts/logout" class="logout">{% trans "Logout" %}</a></li>
+        </ul>
+      </div>
+    </div>
 
-  <div class="content">
     {% block content %}{% endblock %}
   </div>
 
