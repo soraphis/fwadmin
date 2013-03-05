@@ -24,7 +24,7 @@
   <h2>{% trans "Firewall rules" %}</h2>
   <div class="rules-list">
     
-    <a href={% url fwadmin:new_rule_for_host host.id %}>Add rule</a>
+    <a href={% url 'fwadmin:new_rule_for_host' host.id %}>Add rule</a>
     {% if rules_list %}
     <table border="1" cellpadding="3">
       <tr>
@@ -41,7 +41,7 @@
         <td>{{ rule.port }}</td>
         <td>{{ rule.ip_protocol }}</td>
 	<td>
-	  <form	action={% url fwadmin:delete_rule host.id %} 
+	  <form	action={% url 'fwadmin:delete_rule' host.id %} 
 		method="post">
 	    {% csrf_token %}
 	    <input type="submit" value={% trans "Delete" %}>
@@ -59,7 +59,7 @@
 <div id="tab-renew">
   <h2>{% trans "Active until" %}</h2>
   <p>This host is valid until {{ host.active_until }}
-    <form action={% url fwadmin:renew_host host.pk %} 
+    <form action={% url 'fwadmin:renew_host' host.pk %} 
 	  method="post">
       {% csrf_token %}
       <input type="submit" value={% trans "Renew" %}>

@@ -14,7 +14,7 @@
   <div>
     <h2>Welcome Moderator {{ user }}</h2>
     <p>SuperpowerZ:
-      <a href={% url fwadmin:moderator_list_unapproved %}>List Unapproved</a>
+      <a href={% url 'fwadmin:moderator_list_unapproved' %}>List Unapproved</a>
     </p>
   </div>
   {% else %}
@@ -25,7 +25,7 @@
 
   <p>This is the firewall config tool.</p>
   <div>
-    <a href={% url fwadmin:new_host %}>{% trans "Create New Host" %}</a>
+    <a href={% url 'fwadmin:new_host' %}>{% trans "Create New Host" %}</a>
   </div>
 
 

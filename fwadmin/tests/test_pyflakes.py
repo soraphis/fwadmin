@@ -16,7 +16,8 @@ CURDIR = os.path.dirname(os.path.abspath(__file__))
 class TestPyflakesClean(unittest.TestCase):
 
     def test_pyflakes_clean(self):
-        cmd = 'find %s/.. -type f -name "*.py" | xargs pyflakes' % CURDIR
+        cmd = 'find %s/.. -type f -name \( ! -path "*/components/*"' \
+              ' -and -name "*.py" \) | xargs pyflakes' % CURDIR
         p = subprocess.Popen(
             cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
             close_fds=True, shell=True, universal_newlines=True)

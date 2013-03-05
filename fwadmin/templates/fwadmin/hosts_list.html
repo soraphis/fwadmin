@@ -16,7 +16,7 @@
       <tr>
         <td>{{ host.name }}</td>
         <td>{{ host.description|truncatechars:60 }}</td>
-        <td><a href={% url fwadmin:edit_host host.pk %}>{{ host.ip }}</a></td>
+        <td><a href={% url 'fwadmin:edit_host' host.pk %}>{{ host.ip }}</a></td>
 	<td>
 	  {# XXX: meeeeh, is there a better way to do this than to loop here N-times ? #}
 	  {% for rule in complex_rules %}
@@ -33,7 +33,7 @@
         {% if host.approved %}
           <td>{{ host.active_until }}</td>
           <td>
-	    <form action={% url fwadmin:renew_host host.pk %} 
+	    <form action={% url 'fwadmin:renew_host' host.pk %} 
 		  method="post">
 	      {% csrf_token %}
 	      <input type="submit" value={% trans "Renew" %}>
