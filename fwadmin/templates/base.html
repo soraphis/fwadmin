@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>{% block title %}Fwadminx{% endblock %}</title>
+  <title>{% block title %}Fwadmin{% endblock %}</title>
 
   <link rel="stylesheet" href="{{ STATIC_URL }}style.css" />
+
   <script src="{{ STATIC_URL }}components/jquery/jquery.min.js">
   </script>
 
@@ -12,7 +13,12 @@
   <script 
      src="{{ STATIC_URL }}components/jquery-ui.min/index.js">
   </script> 
-  </script>
+
+  <link rel="stylesheet" 
+        href="{{ STATIC_URL }}components/bootstrap.css/index.css" />
+  <script 
+     src="{{ STATIC_URL }}components/bootstrap.min/index.js">
+  </script> 
 </head>
 
 <body>
