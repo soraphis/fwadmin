@@ -1,5 +1,6 @@
 Fwadmin
 =======
+[![Build Status](https://travis-ci.org/ZIMK/fwadmin.png)](https://travis-ci.org/ZIMK/fwadmin)
 
 Django based self-serivce firwall config tool.
 
@@ -18,17 +19,23 @@ Dependencies for testing/development:
  - python-mock
 
 How to run the testsuite:
+```
 $ python manage.py test fwadmin
+```
 
 One time setup:
+```
 $ echo "my-secret-ldap-password" > django_project/ldap-password
 $ python manage.py syncdb
+```
 
 How to test interactively:
+```
 $ python manage.py runserver
+```
 
 go to the admin interface:
- http://localhost:8000/admin/
+ [http://localhost:8000/admin/]()
 and create user(s) and add them to
 the "Mitarb".
 
@@ -36,5 +43,5 @@ If you want users to have moderation capabilities
 add them to "G-zentrale-systeme".
 
 Then go to:
- http://localhost:8000/fwadmin/
+ [http://localhost:8000/fwadmin/]()
 and create hosts/rules.
