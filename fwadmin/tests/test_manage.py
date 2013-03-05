@@ -12,6 +12,9 @@ from fwadmin.management.commands.warnexpire import (
     Command as WarnExpireCommand,
     send_renew_mail,
 )
+from fwadmin.management.commands.moderationnag import (
+    send_moderation_nag_mail,
+)
 
 from fwadmin.models import (
     Host,
@@ -21,6 +24,7 @@ from django.contrib.auth.models import User
 from django_project.settings import (
     FWADMIN_ACCESS_LIST_NR,
     WARN_EXPIRE_EMAIL_FROM,
+    FWADMIN_MODERATION_WAITING_MAIL_NAG,
 )
 
 
@@ -153,3 +157,30 @@ class ManagementCommandsTestCase(MyBaseTest):
              "access-list %s deny UDP 192.168.2.0/24 host 192.168.1.1 eq 53" %
                  FWADMIN_ACCESS_LIST_NR,
              ])
+
+
+class SendModerationWaitingMailTestCase(MyBaseTest):
+
+    def setUp(self):
+        MyBaseTest.setUp(self)
+
+    @patch("fwadmin.management.commands.moderationnag.send_mail")
+    def test_no_send_moderation_mail(self, mock_f):
+        """ if there are no hosts to moderate, do not send mail"""
+        send_moderation_nag_mail()
+        self.assertFalse(mock_f.called)
+
+    @patch("fwadmin.management.commands.moderationnag.send_mail")
+    def test_send_moderation_mail(self, mock_f):
+        """ if there is something to moderate, send mail"""
+        self.host.approved = False
+        self.host.save()
+        send_moderation_nag_mail()
+        self.assertTrue(mock_f.called)
+        mail_body = mock_f.call_args[0][1]
+        mail_to = mock_f.call_args[0][3]
+        self.assertTrue(
+            reverse("fwadmin:moderator_list_unapproved") in mail_body)
+        self.assertTrue(
+            "\ntest (192.168.1.1)" in mail_body)
+        self.assertEqual(mail_to, [FWADMIN_MODERATION_WAITING_MAIL_NAG])

@@ -24,6 +24,8 @@ FWADMIN_ALLOWED_USER_GROUP = "Mitarb"
 FWADMIN_MODERATORS_USER_GROUP = "G-zentrale-systeme"
 # the default time a host is active if when created/renewed
 FWADMIN_DEFAULT_ACTIVE_DAYS = 365
+# mail about moderation requests
+FWADMIN_MODERATION_WAITING_MAIL_NAG = "netz@uni-trier.de"
 
 
 ADMINS = (
