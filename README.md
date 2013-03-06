@@ -52,3 +52,9 @@ add them to "G-zentrale-systeme".
 Then go to:
  [http://localhost:8000/fwadmin/]()
 and create hosts/rules.
+
+To generate rules run:
+```
+$ python manange runrules ufw
+```
+(supported are currently cisco, ufw)
