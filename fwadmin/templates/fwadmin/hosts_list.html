@@ -1,9 +1,21 @@
 {% load i18n %}
 {% load url from future %}
 
+<script>
+  $(function() {
+    $("#table_my_hosts").dataTable({
+      "bPaginate": false,
+      "bFilter": false
+      "bInfo": false
+    });
+  });
+</script>
+
+
 <div class="hosts-list">
 {% if all_hosts %}
-    <table border="1" cellpadding="3">
+    <table class="table table-striped" id="table_my_hosts">
+      <thead>
       <tr>
         <th>{% trans "Host" %}</th>
         <th>{% trans "Description" %}</th>
@@ -13,6 +25,8 @@
         <th>{% trans "Active Until" %}</th>
         <th>{% trans "Renew Link" %}</th>
       </tr>
+      </thead>
+      <tbody>
       {% for host in all_hosts  %}
       <tr>
         <td>{{ host.name }}</td>
@@ -43,6 +57,7 @@
         {% endif %}
       </tr>
       {% endfor %}
+      </tbody>
     </table>
 {% else %}
     <p>{% trans "No hosts yet."  %}</p>
