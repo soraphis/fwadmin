@@ -7,6 +7,10 @@
 <script>
   $(function() {
     $("#tabs").tabs();
+    $("#table_rules").dataTable({
+      "bPaginate": false,
+      "bFilter": false
+    });
   });
 </script>
 
@@ -26,11 +30,13 @@
   <div class="rules-list">
     
     <!-- dynamic modal form -->
-    <a href="{% url 'fwadmin:new_rule_for_host' host.id %}"
+    <p>
+      <a href="{% url 'fwadmin:new_rule_for_host' host.id %}"
        class="btn"
        data-toggle="modal" 
        data-target="#myModal">Add rule
-    </a>
+      </a>
+    </p>
 
     <div class="modal fade" 
          id="myModal" 
@@ -45,18 +51,23 @@
        </div>
     </div>
     <script>
-      /* we need to override the form action for the modal dialog
-         because the document.URL will still be this page but the
-         POST needs to go into the fwadmin:new_rule_for_host page
-      */
-      $("#myModal").on("shown", function() {
-        $("#new_rule_for_host_form").attr("action", "{% url 'fwadmin:new_rule_for_host' host.id %}");
+      $(function() {
+        /* we need to override the form action for the modal dialog
+           because the document.URL will still be this page but the
+           POST needs to go into the fwadmin:new_rule_for_host page
+         */
+        $("#myModal").on("shown", function() {
+          $("#new_rule_for_host_form").attr(
+                "action", 
+                "{% url 'fwadmin:new_rule_for_host' host.id %}");
+        });
       });
     </script>
     <!-- /dynamic modal form -->
 
     {% if rules_list %}
-    <table border="1" cellpadding="3">
+    <table class="table table-condensed" id="table_rules">
+      <thead>
       <tr>
 	<th>{% trans "Name"  %}</th>
         <th>{% trans "Permit"  %}</th>
@@ -64,6 +75,8 @@
         <th>{% trans "Protocol" %}</th>
 	<th>{% trans "Action" %}</th>
       </tr>
+      </thead>
+      <tbody>
       {% for rule in rules_list  %}
       <tr>
         <td>{{ rule.name }}</td>
@@ -79,6 +92,7 @@
 	</td>
       </tr>
       {% endfor %}
+      </tbody>
     </table>
     {% else %}
     <p>{% trans "No rules."  %}</p>
