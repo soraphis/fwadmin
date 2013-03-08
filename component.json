@@ -3,8 +3,7 @@
   "version": "0.0.1",
   "dependencies": {
     "jquery": "~1.9.1",
-    "bootstrap.css": "https://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css",
-    "bootstrap.min": "https://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/js/bootstrap.min.js",
+    "bootstrap.css": "~2.1.1",
     "datatables": "~1.9.4"
   },
   "devDependencies": {}

@@ -13,9 +13,9 @@
   </script>
 
   <link rel="stylesheet" 
-        href="{{ STATIC_URL }}components/bootstrap.css/index.css" />
+        href="{{ STATIC_URL }}components/bootstrap.css/css/bootstrap.min.css" />
   <script 
-     src="{{ STATIC_URL }}components/bootstrap.min/index.js">
+     src="{{ STATIC_URL }}components/bootstrap.css/js/bootstrap.min.js">
   </script> 
 
   <script 
@@ -32,7 +32,7 @@
     <div class="navbar">
       <div class="navbar-inner">
         <ul class="nav">
-          <li><a href={% url 'fwadmin:index' %}><i class="ui-icon ui-icon-home pull-left"></i>Home</a></li>
+          <li><a href={% url 'fwadmin:index' %}><i class="icon-home pull-left"></i>Home</a></li>
         </ul>
         <ul class="nav pull-right">
           <li><a href="/accounts/logout" class="logout">{% trans "Logout" %}</a></li>
