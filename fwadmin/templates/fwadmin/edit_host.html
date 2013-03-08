@@ -8,7 +8,10 @@
   $(function() {
     $("#table_rules").dataTable({
       "bPaginate": false,
-      "bFilter": false
+      "bFilter": false,
+      "aoColumnDefs": [
+        { "bSortable": false, "aTargets": [ 4 ] }
+      ]   
     });
   });
 </script>
