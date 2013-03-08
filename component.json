@@ -6,7 +6,8 @@
     "jquery-ui": "~1.10.1",
     "jquery-ui.min": "https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/jquery-ui.min.js",
     "bootstrap.css": "https://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css",
-    "bootstrap.min": "https://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/js/bootstrap.min.js"
+    "bootstrap.min": "https://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/js/bootstrap.min.js",
+    "datatable.min": "http://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.4/jquery.dataTables.min.js"
   },
   "devDependencies": {}
 }

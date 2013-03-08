@@ -4,7 +4,11 @@ from django.test import TestCase
 from mock import patch
 
 from django.core.urlresolvers import reverse
-from fwadmin.management.commands.genrules import Command as GenrulesCommand
+from fwadmin.management.commands.genrules import (
+    Command as GenrulesCommand,
+    CiscoRulesWriter,
+    UfwRulesWriter,
+)
 from fwadmin.management.commands.disableinactive import (
     Command as DisableInactiveCommand
 )
@@ -118,13 +122,14 @@ class ManagementCommandsTestCase(MyBaseTest):
     def setUp(self):
         MyBaseTest.setUp(self)
         self.cmd = GenrulesCommand()
+        self.writer = CiscoRulesWriter()
 
     @patch("fwadmin.management.commands.genrules.Command._write_rules")
     def test_no_gen_rules_unapproved(self, mock_f):
         """Ensure we do not write rules for unapproved hosts"""
         self.host.approved = False
         self.host.save()
-        self.cmd.print_firewall_rules()
+        self.cmd.print_firewall_rules(self.writer)
         self.assertFalse(mock_f.called)
         self.assertEqual(mock_f.mock_calls, [])
 
@@ -133,7 +138,7 @@ class ManagementCommandsTestCase(MyBaseTest):
         """Ensure to not write rules for inactive hosts"""
         self.host.active = False
         self.host.save()
-        self.cmd.print_firewall_rules()
+        self.cmd.print_firewall_rules(self.writer)
         self.assertEqual(mock_f.mock_calls, [])
 
     @patch("fwadmin.management.commands.genrules.Command._write_rules")
@@ -141,7 +146,7 @@ class ManagementCommandsTestCase(MyBaseTest):
         """Ensure we do not write rules for hosts that are expired"""
         self.host.active_until = datetime.date.today()
         self.host.save()
-        self.cmd.print_firewall_rules()
+        self.cmd.print_firewall_rules(self.writer)
         self.assertEqual(mock_f.mock_calls, [])
 
     @patch("fwadmin.management.commands.genrules.Command._write_rules")
@@ -151,12 +156,35 @@ class ManagementCommandsTestCase(MyBaseTest):
             host=self.host,
             name="complex", from_net="192.168.2.0/24", permit=False,
             ip_protocol="UDP", port=53)
-        self.cmd.print_firewall_rules()
+        self.cmd.print_firewall_rules(self.writer)
         mock_f.assert_called_with(
             ["! fw rules for %s (%s) owned by %s" % (
                     self.host.name, self.host.ip, self.owner.username),
              "access-list %s deny UDP 192.168.2.0/24 host 192.168.1.1 eq 53" %
                  FWADMIN_ACCESS_LIST_NR,
+             ])
+
+
+class GenRulesUfwTestCase(MyBaseTest):
+
+    def setUp(self):
+        MyBaseTest.setUp(self)
+        self.cmd = GenrulesCommand()
+        self.writer = UfwRulesWriter()
+
+    @patch("fwadmin.management.commands.genrules.Command._write_rules")
+    def test_gen_rules(self, mock_f):
+        """ Test the ufw backend """
+        ComplexRule.objects.create(
+            host=self.host,
+            name="complex", from_net="192.168.2.0/24", permit=False,
+            ip_protocol="UDP", port=53)
+        self.cmd.print_firewall_rules(self.writer)
+        mock_f.assert_called_with(
+            ["# fw rules for %s (%s) owned by %s" % (
+                    self.host.name, self.host.ip, self.owner.username),
+             "ufw deny proto udp from 192.168.2.0/24 to 192.168.1.1 "
+             "port 53",
              ])
 
 

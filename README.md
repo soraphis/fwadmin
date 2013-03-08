@@ -9,6 +9,7 @@ simple fireall rules for a set of machines. Each machine has a owner
 and the rules are valid for a certain amount of time only, then they
 need to be refreshed.
 
+Supported firewalls are: cisco, ubuntu ufw
 
 Dependencies to run in production:
  - python-django (tested with 1.4 and 1.5)
@@ -51,3 +52,9 @@ add them to "G-zentrale-systeme".
 Then go to:
  [http://localhost:8000/fwadmin/]()
 and create hosts/rules.
+
+To generate rules run:
+```
+$ python manange runrules ufw
+```
+(supported are currently cisco, ufw)
