@@ -6,7 +6,6 @@
 
 <script>
   $(function() {
-    $("#tabs").tabs();
     $("#table_rules").dataTable({
       "bPaginate": false,
       "bFilter": false
@@ -18,14 +17,14 @@
   <h1>Edit {{ host.name }} ({{ host.ip }})</h1>
 </div>
 
-<div id="tabs">
-  <ul>
-    <li><a href="#tab-rules">Firewall rules</a></li>
-    <li><a href="#tab-renew">Active until</a></li>
-    <li><a href="#tab-settings">Settings</a></li>
-  </ul>
+<ul class="nav nav-tabs">
+  <li class="active"><a href="#tab-rules" data-toggle="tab">Firewall rules</a></li>
+  <li><a href="#tab-renew" data-toggle="tab">Active until</a></li>
+  <li><a href="#tab-settings" data-toggle="tab">Settings</a></li>
+</ul>
 
-<div id="tab-rules">
+<div class="tab-content">
+  <div class="tab-pane active" id="tab-rules">
   <h2>{% trans "Firewall rules" %}</h2>
   <div class="rules-list">
     
@@ -101,7 +100,7 @@
 </div>
 
 
-<div id="tab-renew">
+<div class="tab-pane" id="tab-renew">
   <h2>{% trans "Active until" %}</h2>
   <p>This host is valid until {{ host.active_until }}
     <form action={% url 'fwadmin:renew_host' host.pk %} 
@@ -113,7 +112,7 @@
 </div>
 
 
-<div id="tab-settings">
+<div class="tab-pane" id="tab-settings">
   <h2>{% trans "Change host config" %}</h2>
   {% if form.errors %}
   <p style="color: red;">
