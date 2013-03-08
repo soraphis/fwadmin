@@ -31,5 +31,6 @@ footer {
 }
 
 #controls > * {
-    margin: 0.2em;
+    margin-bottom: 1em;
+    width: 100px;
 }
