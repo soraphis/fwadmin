@@ -6,6 +6,7 @@ env:
  - DJANGO=1.4
  - DJANGO=1.5
 install:
+ - pip install python-coveralls --use-mirrors
  - pip install -q Django==$DJANGO --use-mirrors 
  - pip install pep8 --use-mirrors
  - pip install https://github.com/dcramer/pyflakes/tarball/master
@@ -16,4 +17,7 @@ before_script:
  - echo "secret" > django_project/ldap-password
  - python manage.py syncdb --noinput
  - pyflakes -x W fwadmin
-script:  python manage.py test fwadmin
+script:
+ - python manage.py test fwadmin
+after_success:
+ - coveralls
