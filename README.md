@@ -1,6 +1,7 @@
 Fwadmin
 =======
 [![Build Status](https://travis-ci.org/ZIMK/fwadmin.png)](https://travis-ci.org/ZIMK/fwadmin)
+[![Coverage Status](https://coveralls.io/repos/pgolm/fwadmin/badge.png?branch=master)](https://coveralls.io/r/pgolm/fwadmin)
 
 Django based self-serivce firwall config tool.
 
