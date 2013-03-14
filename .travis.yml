@@ -6,18 +6,14 @@ env:
  - DJANGO=1.4
  - DJANGO=1.5
 install:
- - pip install python-coveralls --use-mirrors
- - pip install -q Django==$DJANGO --use-mirrors 
- - pip install pep8 --use-mirrors
- - pip install https://github.com/dcramer/pyflakes/tarball/master
- - pip install mock --use-mirrors
- - pip install django-auth-ldap --use-mirrors
- - pip install netaddr --use-mirrors
+ - pip install -q Django==$DJANGO --use-mirrors
+ - pip install -r REQUIREMENTS --use-mirrors
+ - pip install -r TEST_REQUIREMENTS --use-mirrors
 before_script:
  - echo "secret" > django_project/ldap-password
  - python manage.py syncdb --noinput
- - pyflakes -x W fwadmin
 script:
- - python manage.py test fwadmin
+ - pyflakes -x W fwadmin
+ - coverage run manage.py test fwadmin
 after_success:
  - coveralls
