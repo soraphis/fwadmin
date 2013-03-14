@@ -12,6 +12,9 @@
   $(function() {
     $("#table_hosts").dataTable({
       "bPaginate": false,
+      "aoColumnDefs": [
+        { "bSortable": false, "aTargets": [ 4 ] }
+      ]
     });
   });
 </script>
