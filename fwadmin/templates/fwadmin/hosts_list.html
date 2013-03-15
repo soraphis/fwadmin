@@ -6,7 +6,10 @@
     $("#table_my_hosts").dataTable({
       "bPaginate": false,
       "bFilter": false,
-      "bInfo": false
+      "bInfo": false,
+      "aoColumnDefs": [
+        { "bSortable": false, "aTargets": [ 6 ] }
+      ]
     });
   });
 </script>
