@@ -64,6 +64,15 @@ class LoggedInViewsTestCase(TestCase):
         self.assertEqual(resp.status_code, 200)
         self.assertTrue(re.search(needle, resp.content))
 
+    def test_new_host_get(self):
+        resp = self.client.get(reverse("fwadmin:new_host"))
+        self.assertEqual(resp.status_code, 200)
+
+    def test_new_rule_get(self):
+        resp = self.client.get(reverse("fwadmin:new_rule_for_host",
+                                       args=(self.host.id,)))
+        self.assertEqual(resp.status_code, 200)
+
     def test_delete_needs_post(self):
         for action in ["delete_host", "delete_rule"]:
             resp = self.client.get(reverse("fwadmin:%s" % action,
