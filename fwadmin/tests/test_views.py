@@ -1,4 +1,6 @@
 import datetime
+import re
+
 from urlparse import urlsplit
 
 from django.core.urlresolvers import reverse
@@ -48,9 +50,28 @@ class LoggedInViewsTestCase(TestCase):
         res = self.client.login(username="meep", password="lala")
         self.assertTrue(res)
         self.host = Host.objects.create(
-            name="host", ip="192.168.0.2", active_until="2022-01-01",
+            name="ahost", description="some description",
+            ip="192.168.0.2", active_until="2022-01-01",
             owner=self.user)
         self.host.save()
+
+    def test_index_has_host(self):
+        """Test that the index view has a html table with out test host"""
+        resp = self.client.get(reverse("fwadmin:index"))
+        needle = r'<td>ahost</td>\s+<td>some description</td>\s+'\
+                  '<td><a href="/fwadmin/host/%s/edit/">%s</a></td>' % (
+                      self.host.id, self.host.ip)
+        self.assertEqual(resp.status_code, 200)
+        self.assertTrue(re.search(needle, resp.content))
+
+    def test_new_host_get(self):
+        resp = self.client.get(reverse("fwadmin:new_host"))
+        self.assertEqual(resp.status_code, 200)
+
+    def test_new_rule_get(self):
+        resp = self.client.get(reverse("fwadmin:new_rule_for_host",
+                                       args=(self.host.id,)))
+        self.assertEqual(resp.status_code, 200)
 
     def test_delete_needs_post(self):
         for action in ["delete_host", "delete_rule"]:
