@@ -108,15 +108,9 @@ STATICFILES_FINDERS = (
 # auto gen a secret, submited to upstream django as
 #  https://code.djangoproject.com/ticket/20181
 _secrets_file = os.path.join(os.path.dirname(__file__), "secret.txt")
-if not os.path.exists(_secrets_file) or os.path.getsize(_secrets_file) == 0:
-    with open(_secrets_file, "w") as f:
-        # taken from django/core/management/commands/startproject.py
-        from django.utils.crypto import get_random_string
-        chars = 'abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*(-_=+)'
-        f.write(get_random_string(50, chars))
-with open(_secrets_file) as f:
-    SECRET_KEY = f.read()
-del _secrets_file
+if os.path.exists(_secrets_file):
+    with open(_secrets_file) as f:
+        SECRET_KEY = f.read()
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
