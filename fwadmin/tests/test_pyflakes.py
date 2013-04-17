@@ -16,18 +16,21 @@ CURDIR = os.path.dirname(os.path.abspath(__file__))
 class TestPyflakesClean(unittest.TestCase):
 
     def test_pyflakes_clean(self):
-        cmd = 'find %s/.. -type f ! -path "*/components/*"'\
-              ' -and -name "*.py"  | xargs pyflakes' % CURDIR
-        p = subprocess.Popen(
-            cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
-            close_fds=True, shell=True, universal_newlines=True)
-        stdout, stderr = p.communicate()
-        self.assertEqual(stderr, "")
-        contents = stdout.splitlines()
-        for line in contents:
-            print(line)
-        self.assertEqual(0, len(contents))
-
+        # gather all py files we care about
+        cmd = ["find", os.path.abspath(os.path.join(CURDIR, "..")),
+               "-type", "f", 
+               "!", "-path", "*/components/*",
+               "-and",
+               "-name", "*.py"]
+        files = subprocess.check_output(cmd)
+        # canary
+        self.assertTrue("fwadmin/views.py" in files)
+        # run them through pyflakes
+        cmd = ["pyflakes"] + files.splitlines()
+        try:
+            subprocess.check_output(cmd).splitlines()
+        except subprocess.CalledProcessError as e:
+            self.fail("pyflakes failed with:\n%s"  % e.output)
 
 if __name__ == "__main__":
     import logging
