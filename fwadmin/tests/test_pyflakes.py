@@ -13,19 +13,36 @@ import unittest
 CURDIR = os.path.dirname(os.path.abspath(__file__))
 
 
+# this can go once we do no longer support py2.6, then
+# we can simply use subprocess.check_output()
+def check_output(*args, **kwargs):
+    kwargs["stdout"] = subprocess.PIPE
+    p = subprocess.Popen(*args, **kwargs)
+    stdout, stderr = p.communicate()
+    ret_code = p.wait()
+    if ret_code != 0:
+        raise subprocess.CalledProcessError(ret_code, args[0], stdout)
+    return stdout
+
+
 class TestPyflakesClean(unittest.TestCase):
 
     def test_pyflakes_clean(self):
-        cmd = 'find %s/.. -type f -name \( ! -path "*/components/*"' \
-              ' -and -name "*.py" \) | xargs pyflakes' % CURDIR
-        p = subprocess.Popen(
-            cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
-            close_fds=True, shell=True, universal_newlines=True)
-        contents = p.communicate()[0].splitlines()
-        for line in contents:
-            print(line)
-        self.assertEqual(0, len(contents))
-
+        # gather all py files we care about
+        cmd = ["find", os.path.abspath(os.path.join(CURDIR, "..")),
+               "-type", "f",
+               "!", "-path", "*/components/*",
+               "-and",
+               "-name", "*.py"]
+        files = check_output(cmd)
+        # canary
+        self.assertTrue("fwadmin/views.py" in files)
+        # run them through pyflakes
+        cmd = ["pyflakes"] + files.splitlines()
+        try:
+            check_output(cmd).splitlines()
+        except subprocess.CalledProcessError as e:
+            self.fail("pyflakes failed with:\n%s" % e.output)
 
 if __name__ == "__main__":
     import logging

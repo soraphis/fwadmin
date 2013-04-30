@@ -30,42 +30,11 @@
   <div class="tab-pane active" id="tab-rules">
   <div class="row">  
     <div class="span10"><h2>{% trans "Firewall rules" %}</h2></div>
-    <div class="span2"><a href="{% url 'fwadmin:new_rule_for_host' host.id %}"
-       class="btn pull-right"
-       data-toggle="modal" 
-       data-target="#myModal">Add rule
-      </a></div>
+    <div class="span2">
+      <a href="{% url 'fwadmin:new_rule_for_host' host.id %}" class="btn pull-right">New Rule</a>
+    </div>
   </div>
   <div class="rules-list">
-    
-    <!-- dynamic modal form -->
-    <div class="modal fade" 
-         id="myModal" 
-         data-remote="{% url 'fwadmin:new_rule_for_host' host.id %}">
-       <div class="modal-header">
-         <button type="button" class="close" data-dismiss="modal" 
-                 aria-hidden="true">×</button>
-         <h3>New rule for {{ host.name }}</h3>
-       </div>
-       <div class="modal-body">
-         {# taken from "fwadmin:new_rule_for_host" #}
-       </div>
-    </div>
-    <script>
-      $(function() {
-        /* we need to override the form action for the modal dialog
-           because the document.URL will still be this page but the
-           POST needs to go into the fwadmin:new_rule_for_host page
-         */
-        $("#myModal").on("shown", function() {
-          $("#new_rule_for_host_form").attr(
-                "action", 
-                "{% url 'fwadmin:new_rule_for_host' host.id %}");
-        });
-      });
-    </script>
-    <!-- /dynamic modal form -->
-
     {% if rules_list %}
     <table class="table table-condensed" id="table_rules">
       <thead>
@@ -100,7 +69,6 @@
     {% endif %}
   </div>
 </div>
-
 
 <div class="tab-pane" id="tab-renew">
   <h2>{% trans "Active until" %}</h2>
