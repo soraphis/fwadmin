@@ -18,7 +18,8 @@
   <table>
     {{ form.as_table }}
   </table>
-  <input class="btn btn-primary" type="submit" value="Add">
+  <a class="btn btn-danger" href="{% url 'fwadmin:edit_host' host.id %}">Cancel</a>
+  <input class="btn btn-primary" type="submit" value="Add"/>
 </form>
 
 <script type="text/javascript">                                         
