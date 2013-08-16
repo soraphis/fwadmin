@@ -1,2 +1,5 @@
 django
+django-auth-ldap
+netaddr
 south
+mock

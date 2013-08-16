@@ -60,5 +60,10 @@
              ${project_virtual_env}/bin/python 
              ${project_root}/application/manage.py compilemessages
 
+    - name: Run the tests
+      shell: chdir=${project_root}/application/${project_name}
+             ${project_virtual_env}/bin/python 
+             ${project_root}/application/manage.py test ${project_name}
+
   handlers:
     - include: handlers.yml
