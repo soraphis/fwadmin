@@ -57,6 +57,6 @@ and create hosts/rules.
 
 To generate rules run:
 ```
-$ python manange runrules ufw
+$ python manange genrules ufw
 ```
 (supported are currently cisco, ufw)
