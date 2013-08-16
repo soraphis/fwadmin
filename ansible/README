@@ -1,0 +1,34 @@
+
+Test using a local LXC container
+================================
+
+* Create a 12.04 container (and disable ufw):
+```
+$ sudo lxc-create -t ubuntu -n fwadmin-devel-12.04 -- -r precise
+$ sudo lxc-start -n fwadmin-devel 
+```
+
+* Login to LXC to get IP
+
+* Set the ip in inventory/ansible_hosts under [lxc].
+
+* Provision the container, only needed once (but can be run multiple
+times). The lxc container password is "ubuntu":
+```
+$ ansible-playbook -u ubuntu -k -K provision.yml --limit lxc
+```
+
+Create a django user in the lxc-container:
+------------------------------------------
+```
+$ /srv/fwadmin/venv/bin/activate && DJANGO_SETTINGS_MODULE=django_project.settings_production python  /srv/fwadmin/application/manage.py createsuperuser
+```
+
+Deploy using ansible
+====================
+
+* Deploy the code:
+```
+$ ansible-playbook -u ubuntu deploy.yml
+```
+

@@ -1,0 +1,18 @@
+WSGIPythonPath ${project_root}/application/
+WSGIPythonHome ${project_virtual_env}
+
+<VirtualHost *:80>
+      ServerAdmin ${project_admin_mail}
+      ServerName ${project_name}.uni-trier.de
+      ServerAlias ${project_name}
+
+      DocumentRoot ${project_root}/public_html
+        <Directory ${project_root}/application>
+             Options -Indexes FollowSymLinks -Multiviews
+                AllowOverride None
+                Order allow,deny
+        </Directory>
+
+        WSGIScriptAlias / ${project_root}/application/django_project/wsgi.py
+        Alias /static ${project_root}/public_html/static
+</VirtualHost>

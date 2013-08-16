@@ -1,0 +1,64 @@
+- hosts: servers
+  sudo: yes
+  sudo_user: ${project_user}
+  vars_files:
+    - vars.yml
+
+  tasks:
+    - name: checkout repo
+      git: repo=${project_git_repo}
+           dest=${project_root}/application
+           # FIXME: user master or production here
+           version=feature/ansible
+      notify: reload apache2
+
+    - name: create static data symlink
+      file: state=link 
+            src=${project_root}/application/${project_name}/static/ 
+            dest=${project_root}/public_html/static
+
+    - name: copy the admin css/js in place
+      shell: cp -ar ${project_root}/venv/lib/python2.7/site-packages/django/contrib/admin/static/admin/ ${project_root}/public_html/static/admin 
+
+    - name: Upgrade virtualenv
+      pip: requirements=${project_root}/application/requirements.txt
+           virtualenv=${project_virtual_env} 
+           virtualenv_site_packages=yes
+
+    - name: Run first time init
+      shell: ${project_virtual_env}/bin/python 
+             ${project_root}/application/django_project/first_time_init.py
+
+    - name: create db-password
+      copy: dest=${project_root}/application/django_project/db-password
+            content=${project_db_user_password}
+      vars_prompt:
+        project_db_user_password: "Please enter password for ${project_db_user}"
+
+    - name: set ALLOWED_HOSTS
+      lineinfile: \
+        dest=${project_root}/application/django_project/settings_production.py
+        line="ALLOWED_HOSTS=['${project_server_name}', '${project_server_fqdn}' ]"
+        regexp='^ALLOWED_HOSTS'
+
+    - name: set log dir permissions so that www-data can write to it
+      file: path=${project_root}/application/logs mode=1777 state=directory
+
+    - name: Sync django db
+      shell: DJANGO_SETTINGS_MODULE=django_project.settings_production
+             ${project_virtual_env}/bin/python 
+             ${project_root}/application/manage.py syncdb --noinput
+
+    - name: Migrate django db
+      shell: DJANGO_SETTINGS_MODULE=django_project.settings_production
+             ${project_virtual_env}/bin/python 
+             ${project_root}/application/manage.py migrate
+
+    - name: Update i18n
+      shell: chdir=${project_root}/application/${project_name}
+             DJANGO_SETTINGS_MODULE=django_project.settings_production
+             ${project_virtual_env}/bin/python 
+             ${project_root}/application/manage.py compilemessages
+
+  handlers:
+    - include: handlers.yml
