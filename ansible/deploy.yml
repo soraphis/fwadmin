@@ -1,15 +1,21 @@
 - hosts: servers
-  sudo: yes
-  sudo_user: ${project_user}
   vars_files:
     - vars.yml
+  vars_prompt:
+    - name: "project_db_user_password"
+      prompt: "Please enter password for ${project_db_user_password}"
+      private: "yes"
+    - name: "project_ldap_password"
+      prompt: "Please enter password for ${project_ldap_password}"
+      private: "yes"
+  sudo: yes
+  sudo_user: fwadmin
 
   tasks:
     - name: checkout repo
       git: repo=${project_git_repo}
            dest=${project_root}/application
-           # FIXME: user master or production here
-           version=feature/ansible
+           version=origin/feature/ansible
       notify: reload apache2
 
     - name: create static data symlink
@@ -17,32 +23,45 @@
             src=${project_root}/application/${project_name}/static/ 
             dest=${project_root}/public_html/static
 
-    - name: copy the admin css/js in place
-      shell: cp -ar ${project_root}/venv/lib/python2.7/site-packages/django/contrib/admin/static/admin/ ${project_root}/public_html/static/admin 
-
     - name: Upgrade virtualenv
       pip: requirements=${project_root}/application/requirements.txt
            virtualenv=${project_virtual_env} 
            virtualenv_site_packages=yes
 
+    - name: create ldap-password
+      template: src=templates/ldap-password
+                dest=${project_root}/application/django_project/ldap-password
+
+    - name: create db-password
+      template: src=templates/db-password
+                dest=${project_root}/application/django_project/db-password
+
+    - name: copy the admin css/js in place
+      shell: cp -ar ${project_root}/venv/lib/python2.7/site-packages/django/contrib/admin/static/admin/ ${project_root}/public_html/static/admin 
+
     - name: Run first time init
       shell: ${project_virtual_env}/bin/python 
              ${project_root}/application/django_project/first_time_init.py
 
-    - name: create db-password
-      copy: dest=${project_root}/application/django_project/db-password
-            content=${project_db_user_password}
-      vars_prompt:
-        project_db_user_password: "Please enter password for ${project_db_user}"
-
     - name: set ALLOWED_HOSTS
-      lineinfile: \
-        dest=${project_root}/application/django_project/settings_production.py
-        line="ALLOWED_HOSTS=['${project_server_name}', '${project_server_fqdn}' ]"
-        regexp='^ALLOWED_HOSTS'
+      lineinfile: regexp='^ALLOWED_HOSTS'
+                  dest=${project_root}/application/django_project/settings_production.py
+                  line="ALLOWED_HOSTS=['${project_server_name}', '${project_server_fqdn}' ]"
+        
 
     - name: set log dir permissions so that www-data can write to it
       file: path=${project_root}/application/logs mode=1777 state=directory
+
+    # npm module needs ansible 1.2+
+    - name: install bower
+      #npm: name=bower version=${bower_version}
+      #     path=${project_root}/node_modules
+      shell: chdir=${project_root}
+             npm install bower
+
+    - name: Run bower
+      shell: chdir=${project_root}
+             ${project_root}/node_modules/bower/bin/bower install
 
     - name: Sync django db
       shell: DJANGO_SETTINGS_MODULE=django_project.settings_production

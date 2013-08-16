@@ -5,7 +5,7 @@ project_admin_mail: team_shen@uni-trier.de
 project_user: ${project_name}
 project_db_user: ${project_name}
 project_db_name: ${project_name}
-project_git_repo: git://redmine.uni-trier.de/${project_name}
+project_git_repo: https://github.com/mvo5/fwadmin.git # use ZIMK later
 project_server_name: ${project_name}
 project_server_fqdn: ${project_name}.uni-trier.de
 
@@ -23,3 +23,8 @@ apt_packages:
   - python-virtualenv
   # local db
   - mysql-server
+  # for bower
+  - nodejs
+  # to build venv
+  - libsasl2-dev
+  - libldap2-dev

@@ -5,10 +5,10 @@
 lxc
 
 [lxc]
-10.0.3.21
+10.0.3.158
 
 [production]
 fwadmin
 
 [staging]
-staging.fwadmin
+fwadmin.staging

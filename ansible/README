@@ -4,8 +4,8 @@ Test using a local LXC container
 
 * Create a 12.04 container (and disable ufw):
 ```
-$ sudo lxc-create -t ubuntu -n fwadmin-devel-12.04 -- -r precise
-$ sudo lxc-start -n fwadmin-devel 
+$ sudo lxc-create -t ubuntu -n webapp-devel-12.04 -- -r precise
+$ sudo lxc-start -n webapp-devel-12.04
 ```
 
 * Login to LXC to get IP
