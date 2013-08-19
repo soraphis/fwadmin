@@ -1,13 +1,6 @@
 - hosts: servers
   vars_files:
     - vars.yml
-  vars_prompt:
-    - name: "project_db_user_password"
-      prompt: "Please enter password for ${project_db_user_password}"
-      private: "yes"
-    - name: "project_ldap_password"
-      prompt: "Please enter password for ${project_ldap_password}"
-      private: "yes"
   sudo: yes
   sudo_user: fwadmin
 
@@ -29,12 +22,12 @@
            virtualenv_site_packages=yes
 
     - name: create ldap-password
-      template: src=templates/ldap-password
-                dest=${project_root}/application/django_project/ldap-password
+      copy: src=non-git-files/ldap-password
+            dest=${project_root}/application/django_project/ldap-password
 
     - name: create db-password
-      template: src=templates/db-password
-                dest=${project_root}/application/django_project/db-password
+      copy: src=non-git-files/db-password
+            dest=${project_root}/application/django_project/db-password
 
     - name: copy the admin css/js in place
       shell: cp -ar ${project_root}/venv/lib/python2.7/site-packages/django/contrib/admin/static/admin/ ${project_root}/public_html/static/admin 
@@ -60,7 +53,7 @@
              npm install bower
 
     - name: Run bower
-      shell: chdir=${project_root}
+      shell: chdir=${project_root}/application
              ${project_root}/node_modules/bower/bin/bower install
 
     - name: Sync django db
