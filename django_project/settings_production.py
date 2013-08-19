@@ -5,7 +5,8 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'fwadmin_db',
         'USER': 'fwadmin',
-        'PASSWORD': open("db-password").read(),
+        'PASSWORD': open(os.path.join(
+            os.path.dirname(__file__), "db-password")).read(),
         'HOST': 'localhost',
         'PORT': '',
     }
