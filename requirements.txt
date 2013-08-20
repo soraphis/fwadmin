@@ -3,3 +3,5 @@ django-auth-ldap
 netaddr
 south
 mock
+pep8
+pyflakes

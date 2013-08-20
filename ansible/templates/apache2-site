@@ -10,7 +10,6 @@ WSGIPythonHome ${project_virtual_env}
         <Directory ${project_root}/application>
              Options -Indexes FollowSymLinks -Multiviews
                 AllowOverride None
-                Order allow,deny
         </Directory>
 
         WSGIScriptAlias / ${project_root}/application/django_project/wsgi.py
