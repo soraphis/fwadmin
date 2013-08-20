@@ -12,7 +12,7 @@ LDAP_PW_FILE="$BASEDIR/non-git-files/ldap-password"
 if [ ! -e "$LDAP_PW_FILE" ]; then
     # read -s is a bashism
     read -s -p 'Please enter the ldap password: ' LDAP_PW
-    echo "$LDAP_PW" > $LDAP_PW_FILE
+    echo -n "$LDAP_PW" > $LDAP_PW_FILE
     echo ""
 fi
 
@@ -20,6 +20,6 @@ DB_PW_FILE="$BASEDIR/non-git-files/db-password"
 if [ ! -e "$DB_PW_FILE" ]; then
     # read -s is a bashism
     read -s -p 'Please enter the db password: ' DB_PW
-    echo "$DB_PW" > $DB_PW_FILE
+    echo -n "$DB_PW" > $DB_PW_FILE
     echo ""
 fi

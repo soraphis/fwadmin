@@ -45,8 +45,10 @@
     mysql_db: db=${project_db_name}
   - name: create db user "${project_db_user}"
     mysql_user: name=${project_db_user} 
-                password="{{ lookup('file', 'non-git-files/db-password') }}"
+                password=${item}
                 priv=${project_db_name}.*:ALL
+    with_file:
+      - "non-git-files/db-password"
 
   handlers:
     - include: handlers.yml

@@ -4,7 +4,7 @@ project_virtual_env: ${project_root}/venv
 project_admin_mail: team_shen@uni-trier.de
 project_user: ${project_name}
 project_db_user: ${project_name}
-project_db_name: ${project_name}
+project_db_name: ${project_name}_db
 project_git_repo: https://github.com/mvo5/fwadmin.git # use ZIMK later
 project_server_name: ${project_name}
 project_server_fqdn: ${project_name}.uni-trier.de
@@ -21,6 +21,8 @@ apt_packages:
   # we *could* install those via easy_install too (but why?)
   - python-pip
   - python-virtualenv
+  # for i18n
+  - gettext
   # local db
   - mysql-server
   # for bower
