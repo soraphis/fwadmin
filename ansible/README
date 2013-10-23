@@ -29,6 +29,6 @@ Deploy using ansible
 
 * Deploy the code:
 ```
-$ ansible-playbook -u ubuntu deploy.yml
+$ ansible-playbook deploy.yml
 ```
 

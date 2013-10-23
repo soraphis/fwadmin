@@ -198,8 +198,8 @@ AUTHENTICATION_BACKENDS = (
 #   AUTH_LDAP_USER_DN_TEMPLATE = "%(user)s@emailtest.uni-trier.de"
 # as the LDAP dn is set to the full user name, not to the SAMAccountName
 #
-AUTH_LDAP_SERVER_URI = "ldap://emailtest.uni-trier.de"
-AUTH_LDAP_BIND_DN = "fwadmin@emailtest.uni-trier.de"
+AUTH_LDAP_SERVER_URI = "ldaps://saul.uni-trier.de"
+AUTH_LDAP_BIND_DN = "testpm@uni-trier.de"
 AUTH_LDAP_BIND_PASSWORD = open(os.path.join(os.path.dirname(__file__),
                                             "ldap-password")).read()
 
@@ -207,7 +207,7 @@ AUTH_LDAP_BIND_PASSWORD = open(os.path.join(os.path.dirname(__file__),
 #AUTH_LDAP_SERVER_URI = "ldaps://saul.uni-trier.de:636"
 
 # custom search as the DN uses the full account name
-AUTH_LDAP_USER_SEARCH = LDAPSearch('dc=emailtest,dc=uni-trier,dc=de', 
+AUTH_LDAP_USER_SEARCH = LDAPSearch('cn=Users,dc=uni-trier,dc=de', 
                                    ldap.SCOPE_SUBTREE, 
                                    '(sAMAccountName=%(user)s)')
 

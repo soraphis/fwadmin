@@ -16,13 +16,6 @@
     apt: pkg=${item} state=installed update-cache=yes
     with_items: ${apt_packages}
 
-  # user setup
-  - name: copy user ssh key
-    authorized_key: user=ubuntu key='$FILE(~/.ssh/id_rsa.pub)'
-  - name: enable SUDO without password
-    copy: content='%sudo ALL=(ALL) NOPASSWD:ALL' 
-          dest=/etc/sudoers.d/ansible owner=root group=root mode=0440
-
   # app setup
   - name: create app user
     user: name=${project_user} home=${project_root}

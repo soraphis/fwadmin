@@ -1,14 +1,14 @@
 
 [servers:children]
-#production
+production
 #staging
-lxc
+#lxc
 
 [lxc]
 10.0.3.158
 
 [production]
-fwadmin
+selfservice
 
 [staging]
-fwadmin.staging
+selfservice.staging

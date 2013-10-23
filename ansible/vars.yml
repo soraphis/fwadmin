@@ -17,16 +17,19 @@ apt_packages:
   - libapache2-mod-wsgi
   - python-setuptools
   # db stuff for django
-  - python-mysqldb
+  - python-psycopg2
   # we *could* install those via easy_install too (but why?)
   - python-pip
   - python-virtualenv
   # for i18n
   - gettext
   # local db
-  - mysql-server
+  - postgresql
   # for bower
   - nodejs
   # to build venv
   - libsasl2-dev
   - libldap2-dev
+  # helper
+  - pep8
+  - pyflakes
