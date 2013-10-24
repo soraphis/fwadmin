@@ -30,16 +30,16 @@
 
   # copy ssl keys
   - name: copy ssl chain
-    copy: src="non-git-files/${inventory_hostname}.uni-trier.de/unitrier-ca-chain.pem"
+    copy: src="non-git-files/${project_server_fqdn}/${project_ssl_cert_chain}"
           dest="/etc/ssl/"
     tags: ssl
   - name: copy public key
-    copy: src="non-git-files/${inventory_hostname}.uni-trier.de/server.crt"
-          dest="/etc/ssl/${inventory_hostname}.pem"
+    copy: src="non-git-files/${project_server_fqdn}/server.crt"
+          dest="/etc/ssl/${project_server_name}.pem"
     tags: ssl
   - name: copy private key
-    copy: src="non-git-files/${inventory_hostname}.uni-trier.de/server.key"
-          dest="/etc/ssl/private/${inventory_hostname}.key"
+    copy: src="non-git-files/${project_server_fqdn}/server.key"
+          dest="/etc/ssl/private/${project_server_name}.key"
     tags: ssl
 
   # apache setup

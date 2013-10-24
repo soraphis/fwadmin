@@ -3,13 +3,13 @@
       ServerName ${project_name}.uni-trier.de
       ServerAlias ${project_name}
 
-      RedirectMatch ^/$ https://${inventory_hostname}.uni-trier.de
+      RedirectMatch ^/$ https://${project_server_fqdn}
 </VirtualHost>
 
 <VirtualHost *:443>
       ServerAdmin ${project_admin_mail}
-      ServerName ${project_name}.uni-trier.de
-      ServerAlias ${project_name}
+      ServerName ${project_server_fqdn}
+      ServerAlias ${project_server_name}
 
       DocumentRoot ${project_root}/public_html
         <Directory ${project_root}/application>
@@ -25,8 +25,8 @@
         Alias /static ${project_root}/public_html/static
 
         SSLEngine on
-        SSLCertificateFile    /etc/ssl/${inventory_hostname}.pem
-        SSLCertificateKeyFile /etc/ssl/private/${inventory_hostname}.key
-        SSLCertificateChainFile /etc/ssl/unitrier-ca-chain.pem
+        SSLCertificateFile    /etc/ssl/${project_server_name}.pem
+        SSLCertificateKeyFile /etc/ssl/private/${project_server_name}.key
+        SSLCertificateChainFile /etc/ssl/${project_ssl_cert_chain}
 
 </VirtualHost>
