@@ -28,10 +28,27 @@
       - ${project_root}/application
       - ${project_root}/public_html
 
+  # copy ssl keys
+  - name: copy ssl chain
+    copy: src="non-git-files/${inventory_hostname}.uni-trier.de/unitrier-ca-chain.pem"
+          dest="/etc/ssl/"
+    tags: ssl
+  - name: copy public key
+    copy: src="non-git-files/${inventory_hostname}.uni-trier.de/server.crt"
+          dest="/etc/ssl/${inventory_hostname}.pem"
+    tags: ssl
+  - name: copy private key
+    copy: src="non-git-files/${inventory_hostname}.uni-trier.de/server.key"
+          dest="/etc/ssl/private/${inventory_hostname}.key"
+    tags: ssl
+
   # apache setup
   - name: add apache vhost
     template: owner=root mode=0644 src=templates/apache2-site 
               dest=/etc/apache2/sites-enabled/${project_name}
+    notify: reload apache2
+  - name: enable apache ssl
+    shell: a2enmod ssl
     notify: reload apache2
 
   # create DB

@@ -8,10 +8,30 @@ WSGIPythonHome ${project_virtual_env}
 
       DocumentRoot ${project_root}/public_html
         <Directory ${project_root}/application>
-             Options -Indexes FollowSymLinks -Multiviews
-                AllowOverride None
+             RedirectMatch ^/$ https://${inventory_hostname}.uni-trier.de
+        </Directory>
+
+        WSGIScriptAlias / ${project_root}/application/django_project/wsgi.py
+</VirtualHost>
+
+<VirtualHost *:443>
+      ServerAdmin ${project_admin_mail}
+      ServerName ${project_name}.uni-trier.de
+      ServerAlias ${project_name}
+
+      DocumentRoot ${project_root}/public_html
+        <Directory ${project_root}/application>
+            Options -Indexes FollowSymLinks -Multiviews
+            AllowOverride None
+            Order deny,allow
         </Directory>
 
         WSGIScriptAlias / ${project_root}/application/django_project/wsgi.py
         Alias /static ${project_root}/public_html/static
+
+        SSLEngine on
+        SSLCertificateFile    /etc/ssl/${inventory_hostname}.pem
+        SSLCertificateKeyFile /etc/ssl/private/${inventory_hostname}.key
+        SSLCertificateChainFile /etc/ssl/unitrier-ca-chain.pem
+
 </VirtualHost>
