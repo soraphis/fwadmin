@@ -2,7 +2,7 @@
   vars_files:
     - vars.yml
   sudo: yes
-  sudo_user: fwadmin
+  sudo_user: ${project_user}
 
   tasks:
     - name: checkout repo
