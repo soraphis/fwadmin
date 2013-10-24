@@ -1,6 +1,7 @@
 - hosts: servers
   vars_files:
     - vars.yml
+    - vars_pkgs.yml
   sudo: yes
   sudo_user: ${project_user}
 
@@ -8,7 +9,7 @@
     - name: checkout repo
       git: repo=${project_git_repo}
            dest=${project_root}/application
-           version=origin/feature/ansible
+           version=${project_git_version}
       notify: reload apache2
 
     - name: create static data symlink
@@ -24,6 +25,7 @@
     - name: create ldap-password
       copy: src=non-git-files/ldap-password
             dest=${project_root}/application/django_project/ldap-password
+      when: ${project_uses_ldap}
 
     - name: create db-password
       copy: src=non-git-files/db-password
@@ -33,8 +35,7 @@
       shell: cp -ar ${project_root}/venv/lib/python2.7/site-packages/django/contrib/admin/static/admin/ ${project_root}/public_html/static/admin 
 
     - name: Run first time init
-      shell: ${project_virtual_env}/bin/python 
-             ${project_root}/application/django_project/first_time_init.py
+      shell: if [ -e ${project_root}/application/django_project/first_time_init.py ]; then ${project_virtual_env}/bin/python ${project_root}/application/django_project/first_time_init.py; fi
 
     - name: set ALLOWED_HOSTS
       lineinfile: regexp='^ALLOWED_HOSTS'
@@ -65,6 +66,7 @@
       shell: DJANGO_SETTINGS_MODULE=django_project.settings_production
              ${project_virtual_env}/bin/python 
              ${project_root}/application/manage.py migrate
+      when: ${project_uses_south}
 
     - name: Update i18n
       shell: chdir=${project_root}/application/${project_name}

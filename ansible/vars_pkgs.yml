@@ -1,0 +1,24 @@
+apt_packages:
+  - build-essential
+  - python-dev
+  - git
+  - apache2
+  - libapache2-mod-wsgi
+  - python-setuptools
+  # db stuff for django
+  - python-psycopg2
+  # we *could* install those via easy_install too (but why?)
+  - python-pip
+  - python-virtualenv
+  # for i18n
+  - gettext
+  # local db
+  - mysql-server
+  # for bower
+  - nodejs
+  # to build venv
+  - libsasl2-dev
+  - libldap2-dev
+  # helper
+  - pep8
+  - pyflakes

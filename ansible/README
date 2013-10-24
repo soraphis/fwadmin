@@ -1,3 +1,16 @@
+Deploy using ansible
+====================
+
+* First time provision (use limit as needed):
+```
+$ ansible-playbook provision.yml --limit staging
+```
+
+* Deploy new code (use limit as needed):
+```
+$ ansible-playbook deploy.yml --limit staging
+```
+
 
 Test using a local LXC container
 ================================
@@ -18,17 +31,15 @@ times). The lxc container password is "ubuntu":
 $ ansible-playbook -u ubuntu -k -K provision.yml --limit lxc
 ```
 
-Create a django user in the lxc-container:
-------------------------------------------
+* Deploy code as needed:
+```
+$ ansible-playbook -u ubuntu -k -K deploy.yml --limit lxc
+```
+
+
+Create a django admin user inside the lxc-container:
+------------------------------------------------------
 ```
 $ /srv/fwadmin/venv/bin/activate && DJANGO_SETTINGS_MODULE=django_project.settings_production python  /srv/fwadmin/application/manage.py createsuperuser
-```
-
-Deploy using ansible
-====================
-
-* Deploy the code:
-```
-$ ansible-playbook deploy.yml
 ```
 
