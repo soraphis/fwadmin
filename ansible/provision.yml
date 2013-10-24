@@ -2,6 +2,7 @@
   sudo: true
   vars_files:
     - vars.yml 
+    - vars_pkgs.yml 
 
   tasks:
   # packages

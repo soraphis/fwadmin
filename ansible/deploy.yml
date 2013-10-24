@@ -1,7 +1,6 @@
 - hosts: servers
   vars_files:
     - vars.yml
-    - vars_pkgs.yml
   sudo: yes
   sudo_user: ${project_user}
 
