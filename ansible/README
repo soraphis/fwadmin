@@ -1,6 +1,8 @@
 Deploy using ansible
 ====================
 
+This requires ansible 1.2+
+
 * First time provision (use limit as needed):
 ```
 $ echo "the-actual-database-password" > non-git-files/db-password
@@ -14,6 +16,13 @@ $ ansible-playbook provision.yml --limit staging
 * Deploy new code (use limit as needed):
 ```
 $ ansible-playbook deploy.yml --limit staging
+```
+
+
+Create a django admin user without a browser:
+---------------------------------------------
+```
+$ /srv/fwadmin/venv/bin/activate && DJANGO_SETTINGS_MODULE=django_project.settings_production python  /srv/fwadmin/application/manage.py createsuperuser
 ```
 
 
@@ -41,10 +50,4 @@ $ ansible-playbook -u ubuntu -k -K provision.yml --limit lxc
 $ ansible-playbook -u ubuntu -k -K deploy.yml --limit lxc
 ```
 
-
-Create a django admin user inside the lxc-container:
-------------------------------------------------------
-```
-$ /srv/fwadmin/venv/bin/activate && DJANGO_SETTINGS_MODULE=django_project.settings_production python  /srv/fwadmin/application/manage.py createsuperuser
-```
 
