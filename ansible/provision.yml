@@ -57,14 +57,18 @@
 
   # create DB
   - name: create database "${project_db_name}" db
-    mysql_db: db=${project_db_name}
+    postgresql_db: db=${project_db_name}
+    sudo_user: postgres
   - name: create db user "${project_db_user}"
-    mysql_user: name=${project_db_user} 
-                password=${item}
-                priv=${project_db_name}.*:ALL
+    postgresql_user: db=${project_db_name} 
+                     user=${project_db_user}
+                     password=${item}
+                     priv=ALL
     with_file:
       - "non-git-files/db-password"
+    sudo_user: postgres
 
+  # include handlers
   handlers:
     - include: handlers.yml
 

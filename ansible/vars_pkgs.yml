@@ -13,7 +13,7 @@ apt_packages:
   # for i18n
   - gettext
   # local db
-  - mysql-server
+  - postgresql
   # for bower
   - nodejs
   # to build venv

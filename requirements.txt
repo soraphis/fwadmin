@@ -1,6 +1,7 @@
 django
 django-auth-ldap
 netaddr
+psycopg2
 south
 mock
 pep8
