@@ -111,7 +111,7 @@ The firewall config for machine: 'test' (192.168.1.1) will expire at
 
 Please click on https://fwadmin.uni-trier.de%s to renew.
 """ % (self.host.active_until,
-       reverse("fwadmin:edit_host", args=(self.host.id,)))
+           reverse("fwadmin:edit_host", args=(self.host.id,)))
         mock_f.assert_called_with(
             subject, body, FWADMIN_EMAIL_FROM,
             [self.host.owner.email])

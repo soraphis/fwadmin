@@ -3,11 +3,7 @@ from django.core.mail import send_mail
 from django.core.management.base import BaseCommand
 from django.core.urlresolvers import reverse
 
-from django_project.settings import (
-    FWADMIN_MODERATION_WAITING_MAIL_NAG,
-    FWADMIN_EMAIL_FROM,
-    FWADMIN_HOST_URL_TEMPLATE,
-)
+from django.conf import settings
 
 from fwadmin.models import (
     Host,
@@ -16,7 +12,7 @@ from fwadmin.models import (
 
 def send_moderation_nag_mail():
     path = reverse("fwadmin:moderator_list_unapproved")
-    url = FWADMIN_HOST_URL_TEMPLATE % {'url': path}
+    url = settings.FWADMIN_HOST_URL_TEMPLATE % {'url': path}
     subject = _("fwadmin hosts waiting for moderation")
     hosts_from_db = Host.objects.filter(approved=False)
     if hosts_from_db:
@@ -28,8 +24,8 @@ Hosts waiting for moderation:
 %(hosts)s""") % {'hosts': "\n".join(hosts),
                  'url': url,
                  }
-        send_mail(subject, body, FWADMIN_EMAIL_FROM,
-                  [FWADMIN_MODERATION_WAITING_MAIL_NAG])
+        send_mail(subject, body, settings.FWADMIN_EMAIL_FROM,
+                  [settings.FWADMIN_MODERATION_WAITING_MAIL_NAG])
 
 
 class Command(BaseCommand):

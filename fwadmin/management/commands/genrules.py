@@ -1,7 +1,7 @@
 import datetime
 
 from django.core.management.base import BaseCommand
-from django_project.settings import FWADMIN_ACCESS_LIST_NR
+from django.conf import settings
 
 from fwadmin.models import (
     ComplexRule,
@@ -22,7 +22,7 @@ class BaseRulesWriter:
         l.append("%s fw rules for %s (%s) owned by %s" % (
                 self.COMMENT_CHAR, host.name, host.ip, host.owner))
         # complex rules
-        list_nr = FWADMIN_ACCESS_LIST_NR
+        list_nr = settings.FWADMIN_ACCESS_LIST_NR
         for complex_rule in ComplexRule.objects.filter(host=host):
             s = self._get_fw_string(list_nr=list_nr,
                                     permit=complex_rule.permit,

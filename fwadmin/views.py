@@ -26,11 +26,8 @@ from fwadmin.forms import (
     EditHostForm,
     NewRuleForm,
 )
-from django_project.settings import (
-    FWADMIN_ALLOWED_USER_GROUP,
-    FWADMIN_MODERATORS_USER_GROUP,
-    FWADMIN_DEFAULT_ACTIVE_DAYS,
-)
+
+from django.conf import settings
 
 
 def group_required(group_name):
@@ -56,13 +53,13 @@ class NotOwnerError(HttpResponseForbidden):
 
 
 @login_required
-@group_required(FWADMIN_ALLOWED_USER_GROUP)
+@group_required(settings.FWADMIN_ALLOWED_USER_GROUP)
 def index(request):
     all_hosts = Host.objects.filter(owner=request.user)
     # pass all views that the user owns too
     all_rules = ComplexRule.objects.filter(host__owner=request.user)
     is_moderator = request.user.groups.filter(
-        name=FWADMIN_MODERATORS_USER_GROUP).count()
+        name=settings.FWADMIN_MODERATORS_USER_GROUP).count()
     return render_to_response('fwadmin/index.html',
                               {'all_hosts': all_hosts,
                                'complex_rules': all_rules,
@@ -72,7 +69,7 @@ def index(request):
 
 
 @login_required
-@group_required(FWADMIN_ALLOWED_USER_GROUP)
+@group_required(settings.FWADMIN_ALLOWED_USER_GROUP)
 def new_host(request):
     if request.method == 'POST':
         form = NewHostForm(request.POST)
@@ -81,8 +78,9 @@ def new_host(request):
             host = form.save(commit=False)
             # add the stuff here that the user can't edit
             host.owner = request.user
-            active_until = (datetime.date.today() +
-                            datetime.timedelta(FWADMIN_DEFAULT_ACTIVE_DAYS))
+            active_until = (
+                datetime.date.today() +
+                datetime.timedelta(settings.FWADMIN_DEFAULT_ACTIVE_DAYS))
             host.active_until = active_until
             # and really save
             host.save()
@@ -97,13 +95,13 @@ def new_host(request):
 
 
 @login_required
-@group_required(FWADMIN_ALLOWED_USER_GROUP)
+@group_required(settings.FWADMIN_ALLOWED_USER_GROUP)
 def renew_host(request, pk):
     host = Host.objects.filter(pk=pk)[0]
     if host.owner != request.user:
         return NotOwnerError(request.user)
     active_until = (datetime.date.today() +
-                    datetime.timedelta(FWADMIN_DEFAULT_ACTIVE_DAYS))
+                    datetime.timedelta(settings.FWADMIN_DEFAULT_ACTIVE_DAYS))
     host.active_until = active_until
     host.save()
     return render_to_response('fwadmin/renewed.html',
@@ -113,7 +111,7 @@ def renew_host(request, pk):
 
 
 @login_required
-@group_required(FWADMIN_ALLOWED_USER_GROUP)
+@group_required(settings.FWADMIN_ALLOWED_USER_GROUP)
 def delete_host(request, pk):
     host = Host.objects.get(pk=pk)
     if host.owner != request.user:
@@ -126,7 +124,7 @@ def delete_host(request, pk):
 
 
 @login_required
-@group_required(FWADMIN_ALLOWED_USER_GROUP)
+@group_required(settings.FWADMIN_ALLOWED_USER_GROUP)
 def edit_host(request, pk):
     host = Host.objects.filter(pk=pk)[0]
     if host.owner != request.user:
@@ -148,7 +146,7 @@ def edit_host(request, pk):
 
 
 @login_required
-@group_required(FWADMIN_MODERATORS_USER_GROUP)
+@group_required(settings.FWADMIN_MODERATORS_USER_GROUP)
 def moderator_list_unapproved(request):
     all_hosts = Host.objects.filter(approved=False)
     all_rules = ComplexRule.objects.filter(host__approved=False)
@@ -161,7 +159,7 @@ def moderator_list_unapproved(request):
 
 
 @login_required
-@group_required(FWADMIN_MODERATORS_USER_GROUP)
+@group_required(settings.FWADMIN_MODERATORS_USER_GROUP)
 def moderator_approve_host(request, pk):
     host = Host.objects.get(pk=pk)
     host.approved = True
@@ -171,7 +169,7 @@ def moderator_approve_host(request, pk):
 
 
 @login_required
-@group_required(FWADMIN_ALLOWED_USER_GROUP)
+@group_required(settings.FWADMIN_ALLOWED_USER_GROUP)
 def delete_rule(request, pk):
     if request.method == 'POST':
         rule = ComplexRule.objects.get(pk=pk)
@@ -184,7 +182,7 @@ def delete_rule(request, pk):
 
 
 @login_required
-@group_required(FWADMIN_ALLOWED_USER_GROUP)
+@group_required(settings.FWADMIN_ALLOWED_USER_GROUP)
 def new_rule_for_host(request, hostid):
     host = Host.objects.get(pk=hostid)
     if host.owner != request.user:
