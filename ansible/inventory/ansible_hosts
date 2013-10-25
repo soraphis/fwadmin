@@ -2,10 +2,10 @@
 [servers:children]
 production
 staging
-#lxc
+lxc
 
 [lxc]
-10.0.3.158
+fwadmin-lxc
 
 [production]
 fwadmin
