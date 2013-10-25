@@ -8,13 +8,5 @@ project_uses_south: True
 # maybe customize
 project_admin_mail: team_shen@uni-trier.de
 project_ssl_cert_chain: unitrier-ca-chain.pem
-
-# should not need customizing
-project_root: /srv/${project_name}
-project_virtual_env: ${project_root}/venv
-project_user: ${project_name}
-project_db_user: ${project_name}
-project_db_name: ${project_name}_db
-project_server_name: ${inventory_hostname}
 project_server_fqdn: ${inventory_hostname}.uni-trier.de
 
