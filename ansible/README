@@ -5,7 +5,7 @@ This requires ansible 1.2+
 
 * First time provision (use limit as needed):
 ```
-$ echo "the-actual-database-password" > non-git-files/db-password
+$ printf "$(pwgen 14 1)" > non-git-files/${inventory_hostname}.db-password
 $ echo "the-ldap-password-to-use" > non-git-files/ldap-password
 (use certmaker to generate a ssl key)
 $ cp -ar generate-keys-dir non-git-files/${inventory_hostname}.uni-trier.de

@@ -26,10 +26,6 @@
             dest=${project_root}/application/django_project/ldap-password
       when: ${project_uses_ldap}
 
-    - name: create db-password
-      copy: src=non-git-files/db-password
-            dest=${project_root}/application/django_project/db-password
-
     - name: copy the admin css/js in place
       shell: cp -ar ${project_root}/venv/lib/python2.7/site-packages/django/contrib/admin/static/admin/ ${project_root}/public_html/static/admin 
 
@@ -60,12 +56,14 @@
       shell: DJANGO_SETTINGS_MODULE=django_project.settings_production
              ${project_virtual_env}/bin/python 
              ${project_root}/application/manage.py syncdb --noinput
+      tags: db
 
     - name: Migrate django db
       shell: DJANGO_SETTINGS_MODULE=django_project.settings_production
              ${project_virtual_env}/bin/python 
              ${project_root}/application/manage.py migrate
       when: ${project_uses_south}
+      tags: db
 
     - name: Update i18n
       shell: chdir=${project_root}/application/${project_name}

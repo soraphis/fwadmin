@@ -26,6 +26,7 @@
     with_items:
       - ${project_root}
       - ${project_root}/application
+      - ${project_root}/django_project
       - ${project_root}/public_html
 
   # copy ssl keys
@@ -59,14 +60,21 @@
   - name: create database "${project_db_name}" db
     postgresql_db: db=${project_db_name}
     sudo_user: postgres
+    tags: db
   - name: create db user "${project_db_user}"
     postgresql_user: db=${project_db_name} 
                      user=${project_db_user}
                      password=${item}
                      priv=ALL
     with_file:
-      - "non-git-files/db-password"
+      - "non-git-files/${inventory_hostname}.db-password"
     sudo_user: postgres
+    tags: db
+  # and set the db file in django
+  - name: create db-password
+    copy: src=non-git-files/${inventory_hostname}.db-password
+          dest=${project_root}/application/django_project/db-password
+    tags: db
 
   # include handlers
   handlers:
