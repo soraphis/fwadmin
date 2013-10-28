@@ -78,7 +78,7 @@ msgid ""
 msgstr ""
 "Hallo %(user)s,\n"
 "\n"
-"Die "Firewallkonfiguration des Hosts '%(host)s' (%(ip)s) läuft am\n"
+"Die Firewallkonfiguration des Hosts '%(host)s' (%(ip)s) läuft am\n"
 "'%(expire_date)s' aus.\n"
 "\n"
 "Klicken Sie bitte auf %(url)s um sie zu erneuern.\n"
@@ -248,7 +248,7 @@ msgstr "Zulassen"
 
 #: templates/fwadmin/list-unapproved.html:61
 msgid "No unapproved hosts."
-msgstr Es sind keine nicht zugelassenen Hosts vorhanden."
+msgstr "Es sind keine nicht zugelassenen Hosts vorhanden."
 
 #: templates/fwadmin/new_host.html:8
 msgid "Create a new Host"
@@ -265,7 +265,7 @@ msgstr "Neue Regel für {{ host.name }}"
 #: templates/fwadmin/new_rule.html:13
 #, python-format
 msgid " Please correct the error%(form.errors|pluralize)s below. "
-msgstr "Bitte korrigieren Sie den untenstehenden Fehler {{ form.errors|pluralize }}."
+msgstr "Bitte korrigieren Sie den untenstehenden Fehler %(form.errors|pluralize)s."
 
 #: templates/fwadmin/new_rule.html:23
 msgid "Cancel"
