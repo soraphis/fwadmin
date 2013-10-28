@@ -17,7 +17,11 @@
 </script>
 
 <div class="page-header">
-  <h1>{% trans "Edit {{ host.name }} ({{ host.ip }})" %}</h1>
+  
+  <h1>{% blocktrans with hostname=host.name hostip=host.ip %}
+    Edit {{ hostname }} ({{ hostip }})
+    {% endblocktrans %}
+  </h1>
 </div>
 
 <ul class="nav nav-tabs">

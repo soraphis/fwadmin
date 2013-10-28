@@ -5,16 +5,16 @@
 {% block content %}
 
 <div class="page-header">
-  <h1>Dashboard</h1>
+  <h1>{% trans "Dashboard" %}</h1>
 </div>
 
 <div>
   <div class="row">
     <div class="span8">
   {% if is_moderator %}
-    <h2>{% trans "Welcome Moderator {{ user }}" %}</h2>
+    <h2>{% blocktrans %}Welcome Moderator {{ user }} {% endblocktrans %}</h2>
   {% else %}
-    <h2>{% trans "Welcome {{ user }}" %}</h2>
+    <h2>{% blocktrans %} Welcome {{ user }} {% endblocktrans %}</h2>
   {% endif %}
     </div>
     <div class="span4">
