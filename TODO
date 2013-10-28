@@ -1,13 +1,16 @@
 
- * a common page-header menu via JS etc
- * iptables rules backend
- * move (some) of the settings into the DB so that it can be
-   edited via the admin interface(?)
+Prio1:
  * moderation needs a way to "disapprove" (delete)
+ * user should be able to delete host
+ * user should be able to hand host to different user (?)
 
  * send mail when a new host is waiting for moderation
    (cron or instantly?)
-
  * add log functionality for the edit form and when rules are
    added/removed by the user
-  
+
+Prio-N:
+ * a common page-header menu via JS etc
+ * iptables rules backend (instead of ufw one)
+ * move (some) of the settings into the DB so that it can be
+   edited via the admin interface(?)
