@@ -21,15 +21,15 @@ msgstr ""
 #: forms.py:56
 #, fuzzy
 msgid "Invalid network address"
-msgstr "Ungültige Netzwerkadresse"
+msgstr "UngÃ¼ltige Netzwerkadresse"
 
 #: forms.py:59
 msgid "Need a port number or a stock port"
-msgstr "Es wird eine Portnummer oder ein Stock Port benötigt"
+msgstr "Es wird eine Portnummer oder ein Stock Port benÃ¶tigt"
 
 #: forms.py:61
 msgid "You port and stock port differ"
-msgstr "Ihr Port und der Stock Port stimmen nicht überein."
+msgstr "Ihr Port und der Stock Port stimmen nicht Ã¼berein."
 
 #: models.py:9
 msgid "The port name"
@@ -56,7 +56,7 @@ msgid ""
 "Hosts waiting for moderation:\n"
 "%(hosts)s"
 msgstr ""
-"Die untenstehenden Hosts stellen Moderationsanfragen. Sie können zustimmen via:\n"
+"Die untenstehenden Hosts stellen Moderationsanfragen. Sie kÃ¶nnen zustimmen via:\n"
 "%(url)s\n"
 "\n"
 "Hosts mit ausstehenden Moderationsanfragen:\n"
@@ -65,7 +65,7 @@ msgstr ""
 #: management/commands/warnexpire.py:22
 #, python-format
 msgid "Firewall config for '%s'"
-msgstr "Firewallkonfiguration für '%s'"
+msgstr "Firewallkonfiguration fÃ¼r '%s'"
 
 #: management/commands/warnexpire.py:23
 #, python-format
@@ -79,7 +79,7 @@ msgid ""
 msgstr ""
 "Hallo %(user)s,\n"
 "\n"
-"Die "Firewallkonfiguration des Hosts '%(host)s' (%(ip)s) läuft am\n"
+"Die "Firewallkonfiguration des Hosts '%(host)s' (%(ip)s) lÃ¤uft am\n"
 "'%(expire_date)s' aus.\n"
 "\n"
 "Klicken Sie bitte auf %(url)s um sie zu erneuern.\n"
@@ -103,7 +103,7 @@ msgstr "Firewallregeln"
 
 #: templates/fwadmin/edit.html:14
 msgid "Add rule"
-msgstr "Regel hinzufügen"
+msgstr "Regel hinzufÃ¼gen"
 
 #: templates/fwadmin/edit.html:18 templates/fwadmin/edit_host.html:42
 msgid "Name"
@@ -123,7 +123,7 @@ msgstr "Protokoll"
 
 #: templates/fwadmin/edit.html:29 templates/fwadmin/edit_host.html:60
 msgid "Delete"
-msgstr "Löschen"
+msgstr "LÃ¶schen"
 
 #: templates/fwadmin/edit.html:34 templates/fwadmin/edit_host.html:68
 msgid "No rules."
@@ -155,7 +155,7 @@ msgstr "Erneuern"
 
 #: templates/fwadmin/edit_host.html:86
 msgid "Change host config"
-msgstr "Hostkonfiguration ändern"
+msgstr "Hostkonfiguration Ã¤ndern"
 
 #: templates/fwadmin/edit_host.html:89
 #, python-format
@@ -261,7 +261,7 @@ msgstr "Bitte korrigieren Sie den untenstehenden Fehler {{ form.errors|pluralize
 
 #: templates/fwadmin/new_rule.html:8
 msgid "New rule for {{ host.name }}"
-msgstr "Neue Regel für {{ host.name }}"
+msgstr "Neue Regel fÃ¼r {{ host.name }}"
 
 #: templates/fwadmin/new_rule.html:13
 #, python-format
@@ -274,7 +274,7 @@ msgstr "Abbrechen"
 
 #: templates/fwadmin/new_rule.html:24
 msgid "Add"
-msgstr "Hinzufügen"
+msgstr "HinzufÃ¼gen"
 
 #: templates/fwadmin/renewed.html:8
 msgid "Renew Host"
@@ -283,8 +283,8 @@ msgstr "Host erneuern"
 #: templates/fwadmin/renewed.html:12
 #, python-format
 msgid "Thanks for renewing, host firewall active until %(active_until)s "
-msgstr "Vielen Dank für die Erneuerung des Hosts, die Hostfirewall bleibt aktiv bis %(active_until)s "
+msgstr "Vielen Dank fÃ¼r die Erneuerung des Hosts, die Hostfirewall bleibt aktiv bis %(active_until)s "
 
 #: templates/fwadmin/renewed.html:14
 msgid "Go back"
-msgstr "Zurück"
+msgstr "ZurÃ¼ck"
