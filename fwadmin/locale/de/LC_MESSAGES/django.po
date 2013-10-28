@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-10-28 17:05+0100\n"
+"POT-Creation-Date: 2013-10-28 17:15+0100\n"
 "PO-Revision-Date: 2013-10-28 16:39+0100\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -192,21 +192,31 @@ msgstr "Neue Regel"
 msgid "Action"
 msgstr "Aktion"
 
-#: templates/fwadmin/edit_host.html:83 templates/fwadmin/hosts_list.html:54
+#: templates/fwadmin/edit_host.html:80
+#, fuzzy, python-format
+msgid ""
+"\n"
+"    This host is valid until %(host.active_until)s\n"
+"    "
+msgstr ""
+"Vielen Dank für die Erneuerung des Hosts, die Hostfirewall bleibt aktiv bis "
+"%(active_until)s "
+
+#: templates/fwadmin/edit_host.html:86 templates/fwadmin/hosts_list.html:54
 msgid "Renew"
 msgstr "Erneuern"
 
-#: templates/fwadmin/edit_host.html:90
+#: templates/fwadmin/edit_host.html:93
 msgid "Change host config"
 msgstr "Hostkonfiguration ändern"
 
-#: templates/fwadmin/edit_host.html:93
+#: templates/fwadmin/edit_host.html:96
 #, python-format
 msgid " Please correct the error %(form.errors|pluralize)s below.  "
 msgstr ""
 " Bitte korrigieren Sie den untenstehenden Fehler %(form.errors|pluralize)s.  "
 
-#: templates/fwadmin/edit_host.html:102
+#: templates/fwadmin/edit_host.html:105
 msgid "Update"
 msgstr "Update"
 
