@@ -1,0 +1,278 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2013-10-28 08:41+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: forms.py:56
+msgid "Invalid network address"
+msgstr ""
+
+#: forms.py:59
+msgid "Need a port number or a stock port"
+msgstr ""
+
+#: forms.py:61
+msgid "You port and stock port differ"
+msgstr ""
+
+#: models.py:9
+msgid "The port name"
+msgstr ""
+
+#: models.py:10
+msgid "The port number"
+msgstr ""
+
+#: models.py:13
+msgid "IP Protocol type"
+msgstr ""
+
+#: management/commands/moderationnag.py:16
+msgid "fwadmin hosts waiting for moderation"
+msgstr ""
+
+#: management/commands/moderationnag.py:20
+#, python-format
+msgid ""
+"The hosts below need moderation. You can approve via:\n"
+"%(url)s\n"
+"\n"
+"Hosts waiting for moderation:\n"
+"%(hosts)s"
+msgstr ""
+
+#: management/commands/warnexpire.py:22
+#, python-format
+msgid "Firewall config for '%s'"
+msgstr ""
+
+#: management/commands/warnexpire.py:23
+#, python-format
+msgid ""
+"Dear %(user)s,\n"
+"\n"
+"The firewall config for machine: '%(host)s' (%(ip)s) will expire at\n"
+"'%(expire_date)s'.\n"
+"\n"
+"Please click on %(url)s to renew.\n"
+msgstr ""
+
+#: templates/base.html:7
+msgid "Fwadmin"
+msgstr ""
+
+#: templates/base.html:35
+msgid "Home"
+msgstr ""
+
+#: templates/base.html:38
+msgid "Logout"
+msgstr ""
+
+#: templates/fwadmin/edit.html:11 templates/fwadmin/edit_host.html:24
+#: templates/fwadmin/edit_host.html:32
+msgid "Firewall rules"
+msgstr ""
+
+#: templates/fwadmin/edit.html:14
+msgid "Add rule"
+msgstr ""
+
+#: templates/fwadmin/edit.html:18 templates/fwadmin/edit_host.html:42
+msgid "Name"
+msgstr ""
+
+#: templates/fwadmin/edit.html:19 templates/fwadmin/edit_host.html:43
+msgid "Permit"
+msgstr ""
+
+#: templates/fwadmin/edit.html:20 templates/fwadmin/edit_host.html:44
+msgid "Port"
+msgstr ""
+
+#: templates/fwadmin/edit.html:21 templates/fwadmin/edit_host.html:45
+msgid "Protocol"
+msgstr ""
+
+#: templates/fwadmin/edit.html:29 templates/fwadmin/edit_host.html:60
+msgid "Delete"
+msgstr ""
+
+#: templates/fwadmin/edit.html:34 templates/fwadmin/edit_host.html:68
+msgid "No rules."
+msgstr ""
+
+#: templates/fwadmin/edit_host.html:20
+msgid "Edit {{ host.name }} ({{ host.ip }})"
+msgstr ""
+
+#: templates/fwadmin/edit_host.html:25 templates/fwadmin/edit_host.html:74
+msgid "Active until"
+msgstr ""
+
+#: templates/fwadmin/edit_host.html:26
+msgid "Settings"
+msgstr ""
+
+#: templates/fwadmin/edit_host.html:34
+msgid "New Rule"
+msgstr ""
+
+#: templates/fwadmin/edit_host.html:46
+msgid "Action"
+msgstr ""
+
+#: templates/fwadmin/edit_host.html:79 templates/fwadmin/hosts_list.html:54
+msgid "Renew"
+msgstr ""
+
+#: templates/fwadmin/edit_host.html:86
+msgid "Change host config"
+msgstr ""
+
+#: templates/fwadmin/edit_host.html:89
+#, python-format
+msgid " Please correct the error %(form.errors|pluralize)s below.  "
+msgstr ""
+
+#: templates/fwadmin/edit_host.html:98
+msgid "Update"
+msgstr ""
+
+#: templates/fwadmin/hosts_list.html:23
+msgid "Host"
+msgstr ""
+
+#: templates/fwadmin/hosts_list.html:24
+msgid "Description"
+msgstr ""
+
+#: templates/fwadmin/hosts_list.html:25
+#: templates/fwadmin/list-unapproved.html:29
+msgid "IP"
+msgstr ""
+
+#: templates/fwadmin/hosts_list.html:26
+msgid "Active Rules"
+msgstr ""
+
+#: templates/fwadmin/hosts_list.html:27
+msgid "Approved"
+msgstr ""
+
+#: templates/fwadmin/hosts_list.html:28
+msgid "Active Until"
+msgstr ""
+
+#: templates/fwadmin/hosts_list.html:29
+msgid "Renew Link"
+msgstr ""
+
+#: templates/fwadmin/hosts_list.html:66
+msgid "No hosts yet."
+msgstr ""
+
+#: templates/fwadmin/index.html:15
+msgid "Welcome Moderator {{ user }}"
+msgstr ""
+
+#: templates/fwadmin/index.html:17
+msgid "Welcome {{ user }}"
+msgstr ""
+
+#: templates/fwadmin/index.html:21
+msgid "My Hosts"
+msgstr ""
+
+#: templates/fwadmin/index.html:28
+msgid "List Unapproved"
+msgstr ""
+
+#: templates/fwadmin/index.html:31
+msgid "Create New Host"
+msgstr ""
+
+#: templates/fwadmin/list-unapproved.html:8
+msgid "Unapproved Hosts"
+msgstr ""
+
+#: templates/fwadmin/list-unapproved.html:22
+msgid "All unapproved hosts"
+msgstr ""
+
+#: templates/fwadmin/list-unapproved.html:27
+msgid "Owner"
+msgstr ""
+
+#: templates/fwadmin/list-unapproved.html:28
+msgid ">Host Description"
+msgstr ""
+
+#: templates/fwadmin/list-unapproved.html:30
+msgid "Rules"
+msgstr ""
+
+#: templates/fwadmin/list-unapproved.html:31
+msgid "Approve Link"
+msgstr ""
+
+#: templates/fwadmin/list-unapproved.html:53
+msgid "Approve"
+msgstr ""
+
+#: templates/fwadmin/list-unapproved.html:61
+msgid "No unapproved hosts."
+msgstr ""
+
+#: templates/fwadmin/new_host.html:8
+msgid "Create a new Host"
+msgstr ""
+
+#: templates/fwadmin/new_host.html:14
+msgid "Please correct the error{{ form.errors|pluralize }} below."
+msgstr ""
+
+#: templates/fwadmin/new_rule.html:8
+msgid "New rule for {{ host.name }}"
+msgstr ""
+
+#: templates/fwadmin/new_rule.html:13
+#, python-format
+msgid " Please correct the error%(form.errors|pluralize)s below. "
+msgstr ""
+
+#: templates/fwadmin/new_rule.html:23
+msgid "Cancel"
+msgstr ""
+
+#: templates/fwadmin/new_rule.html:24
+msgid "Add"
+msgstr ""
+
+#: templates/fwadmin/renewed.html:8
+msgid "Renew Host"
+msgstr ""
+
+#: templates/fwadmin/renewed.html:12
+#, python-format
+msgid "Thanks for renewing, host firewall active until %(active_until)s "
+msgstr ""
+
+#: templates/fwadmin/renewed.html:14
+msgid "Go back"
+msgstr ""
