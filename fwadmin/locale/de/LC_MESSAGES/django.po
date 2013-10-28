@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-10-28 16:41+0100\n"
+"POT-Creation-Date: 2013-10-28 17:05+0100\n"
 "PO-Revision-Date: 2013-10-28 16:39+0100\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -30,17 +30,67 @@ msgstr "Es wird eine Portnummer oder ein Stock Port benötigt"
 msgid "You port and stock port differ"
 msgstr "Ihr Port und der Stock Port stimmen nicht überein."
 
+#: models.py:8 models.py:22 models.py:40 templates/fwadmin/edit.html:18
+#: templates/fwadmin/edit_host.html:46
+msgid "Name"
+msgstr "Name"
+
 #: models.py:9
 msgid "The port name"
 msgstr "Der Portname"
 
 #: models.py:10
+msgid "Number"
+msgstr ""
+
+#: models.py:10
 msgid "The port number"
 msgstr "Die Portnummer"
+
+#: models.py:12 models.py:30
+#, fuzzy
+msgid "IP Protocol"
+msgstr "Protokoll"
 
 #: models.py:13
 msgid "IP Protocol type"
 msgstr "IP-Protokolltyp"
+
+#: models.py:25
+msgid "From network"
+msgstr ""
+
+#: models.py:27 templates/fwadmin/edit.html:19
+#: templates/fwadmin/edit_host.html:47
+msgid "Permit"
+msgstr "Zulassen"
+
+#: models.py:32 templates/fwadmin/edit.html:20
+#: templates/fwadmin/edit_host.html:48
+msgid "Port"
+msgstr "Port"
+
+#: models.py:41 templates/fwadmin/hosts_list.html:24
+msgid "Description"
+msgstr "Beschreibung"
+
+#: models.py:43
+msgid "IP Address"
+msgstr ""
+
+#: models.py:44 templates/fwadmin/edit_host.html:29
+#: templates/fwadmin/edit_host.html:78
+msgid "Active until"
+msgstr "Aktiv bis"
+
+#: models.py:47 templates/fwadmin/hosts_list.html:27
+msgid "Approved"
+msgstr "Zugelassen"
+
+#: models.py:49
+#, fuzzy
+msgid "Active"
+msgstr "Aktiv bis"
 
 #: management/commands/moderationnag.py:16
 msgid "fwadmin hosts waiting for moderation"
@@ -110,18 +160,6 @@ msgstr "Firewallregeln"
 msgid "Add rule"
 msgstr "Regel hinzufügen"
 
-#: templates/fwadmin/edit.html:18 templates/fwadmin/edit_host.html:46
-msgid "Name"
-msgstr "Name"
-
-#: templates/fwadmin/edit.html:19 templates/fwadmin/edit_host.html:47
-msgid "Permit"
-msgstr "Zulassen"
-
-#: templates/fwadmin/edit.html:20 templates/fwadmin/edit_host.html:48
-msgid "Port"
-msgstr "Port"
-
 #: templates/fwadmin/edit.html:21 templates/fwadmin/edit_host.html:49
 msgid "Protocol"
 msgstr "Protokoll"
@@ -141,10 +179,6 @@ msgid ""
 "    Edit %(hostname)s (%(hostip)s)\n"
 "    "
 msgstr ""
-
-#: templates/fwadmin/edit_host.html:29 templates/fwadmin/edit_host.html:78
-msgid "Active until"
-msgstr "Aktiv bis"
 
 #: templates/fwadmin/edit_host.html:30
 msgid "Settings"
@@ -180,10 +214,6 @@ msgstr "Update"
 msgid "Host"
 msgstr "Host"
 
-#: templates/fwadmin/hosts_list.html:24
-msgid "Description"
-msgstr "Beschreibung"
-
 #: templates/fwadmin/hosts_list.html:25
 #: templates/fwadmin/list-unapproved.html:29
 msgid "IP"
@@ -192,10 +222,6 @@ msgstr "IP"
 #: templates/fwadmin/hosts_list.html:26
 msgid "Active Rules"
 msgstr ""
-
-#: templates/fwadmin/hosts_list.html:27
-msgid "Approved"
-msgstr "Zugelassen"
 
 #: templates/fwadmin/hosts_list.html:28
 msgid "Active Until"
