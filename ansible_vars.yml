@@ -4,6 +4,7 @@ project_git_repo: https://github.com/mvo5/fwadmin.git # use ZIMK later
 project_git_version: origin/feature/ansible
 project_uses_ldap: True
 project_uses_south: True
+project_uses_ssl: True
 
 # maybe customize
 project_admin_mail: team_shen@uni-trier.de
