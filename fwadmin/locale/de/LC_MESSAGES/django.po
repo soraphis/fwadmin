@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-10-29 11:31+0100\n"
-"PO-Revision-Date: 2013-10-29 11:29+0100\n"
+"POT-Creation-Date: 2013-10-29 12:21+0100\n"
+"PO-Revision-Date: 2013-10-29 12:19+0100\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
@@ -18,15 +18,23 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: forms.py:56
+#: forms.py:38 models.py:13 models.py:31
+msgid "IP Protocol"
+msgstr "IP Protokoll"
+
+#: forms.py:43
+msgid "Standard Port"
+msgstr "Standard Port"
+
+#: forms.py:59
 msgid "Invalid network address"
 msgstr "Ungültige Netzwerkadresse"
 
-#: forms.py:59
+#: forms.py:62
 msgid "Need a port number or a stock port"
 msgstr "Es wird eine Portnummer oder ein Standard Port benötigt"
 
-#: forms.py:61
+#: forms.py:64
 msgid "You port and stock port differ"
 msgstr "Ihr Port und der Stock Port stimmen nicht überein."
 
@@ -46,10 +54,6 @@ msgstr "Nummer"
 #: models.py:11
 msgid "The port number"
 msgstr "Die Portnummer"
-
-#: models.py:13 models.py:31
-msgid "IP Protocol"
-msgstr "IP Protokoll"
 
 #: models.py:14
 msgid "IP Protocol type"
