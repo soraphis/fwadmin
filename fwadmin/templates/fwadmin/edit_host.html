@@ -17,13 +17,17 @@
 </script>
 
 <div class="page-header">
-  <h1>Edit {{ host.name }} ({{ host.ip }})</h1>
+  
+  <h1>{% blocktrans with hostname=host.name hostip=host.ip %}
+    Edit {{ hostname }} ({{ hostip }})
+    {% endblocktrans %}
+  </h1>
 </div>
 
 <ul class="nav nav-tabs">
-  <li class="active"><a href="#tab-rules" data-toggle="tab">Firewall rules</a></li>
-  <li><a href="#tab-renew" data-toggle="tab">Active until</a></li>
-  <li><a href="#tab-settings" data-toggle="tab">Settings</a></li>
+  <li class="active"><a href="#tab-rules" data-toggle="tab">{% trans "Firewall rules" %}</a></li>
+  <li><a href="#tab-renew" data-toggle="tab">{% trans "Active until" %}</a></li>
+  <li><a href="#tab-settings" data-toggle="tab">{% trans "Settings" %}</a></li>
 </ul>
 
 <div class="tab-content">
@@ -31,7 +35,7 @@
   <div class="row">  
     <div class="span10"><h2>{% trans "Firewall rules" %}</h2></div>
     <div class="span2">
-      <a href="{% url 'fwadmin:new_rule_for_host' host.id %}" class="btn pull-right">New Rule</a>
+      <a href="{% url 'fwadmin:new_rule_for_host' host.id %}" class="btn pull-right">{% trans "New Rule" %}</a>
     </div>
   </div>
   <div class="rules-list">
@@ -72,7 +76,10 @@
 
 <div class="tab-pane" id="tab-renew">
   <h2>{% trans "Active until" %}</h2>
-  <p>This host is valid until {{ host.active_until }}
+  <p>
+    {% blocktrans with host.active_until as host_active_until %}
+    This host is valid until {{ host_active_until }}
+    {% endblocktrans %}
     <form action={% url 'fwadmin:renew_host' host.pk %} 
 	  method="post">
       {% csrf_token %}
@@ -95,7 +102,7 @@
     <table>
       {{ form.as_table }}
     </table>
-    <input type="submit" value="Update">
+    <input type="submit" value="{% trans "Update" %}">
   </form>
 </div>
 </div>

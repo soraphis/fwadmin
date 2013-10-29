@@ -5,12 +5,12 @@
 {% block content %}
 
 <div class="page-header">
-  <h1>Renew Host</h1>
+  <h1>{% trans "Renew Host" %}</h1>
 </div>
 
 
 <p>{% blocktrans %}Thanks for renewing, host firewall active until {{ active_until }} {% endblocktrans %}</p>
 
-<a href={% url 'fwadmin:index' %}>Go back</a>
+<a href={% url 'fwadmin:index' %}>{% trans "Go back" %}</a>
 
 {% endblock %}

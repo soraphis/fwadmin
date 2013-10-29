@@ -1,15 +1,16 @@
 from django.db import models
 from django.contrib.auth.models import User
-from django.utils.translation import ugettext as _
+
+from django.utils.translation import ugettext_lazy as _
 
 
 class SamplePort(models.Model):
     """ A open port for the UI """
-    name = models.CharField(
+    name = models.CharField(_("Name"),
         max_length=100, help_text=_("The port name"))
-    number = models.IntegerField(help_text=_("The port number"))
+    number = models.IntegerField(_("Number"), help_text=_("The port number"))
     # TCP/UDP or other IP protocol number
-    ip_protocol = models.CharField(
+    ip_protocol = models.CharField(_("IP Protocol"),
         max_length=5, help_text=_("IP Protocol type"))
 
     def __unicode__(self):
@@ -19,15 +20,17 @@ class SamplePort(models.Model):
 class ComplexRule(models.Model):
     """ Complex(er) allow/deny from net rule for a single host """
     host = models.ForeignKey('Host')
-    name = models.CharField(max_length=100)
+    name = models.CharField(_("Name"), max_length=100)
     # its not a from IP its really a network
-    from_net = models.CharField(default="any", max_length=100)
+    from_net = models.CharField(
+        _("From network"), default="any", max_length=100)
     # allow or deny
-    permit = models.BooleanField(default=True)
+    permit = models.BooleanField(_("Permit"), default=True)
     # TCP, UDP, anything
-    ip_protocol = models.CharField(default="TCP", max_length=10)
+    ip_protocol = models.CharField(
+        _("IP Protocol"), default="TCP", max_length=10)
     # just the integer
-    port = models.IntegerField(blank=True, null=True)
+    port = models.IntegerField(_("Port"), blank=True, null=True)
 
     def __unicode__(self):
         return "complex rule: %s " % self.name
@@ -35,16 +38,17 @@ class ComplexRule(models.Model):
 
 class Host(models.Model):
     """ A single host """
-    name = models.CharField(max_length=200)
-    description = models.TextField(blank=True, null=True)
+    name = models.CharField(_("Name"), max_length=200)
+    description = models.TextField(_("Description"), blank=True, null=True)
     # can be ipv4,ipv6
-    ip = models.GenericIPAddressField(unique=True)
-    active_until = models.DateField()
+    ip = models.GenericIPAddressField(
+        verbose_name=_("IP Address"), unique=True)
+    active_until = models.DateField(_("Active until"))
     owner = models.ForeignKey(User)
     # approved by a admin
-    approved = models.BooleanField(default=False)
+    approved = models.BooleanField(_("Approved"), default=False)
     # no longer active
-    active = models.BooleanField(default=True)
+    active = models.BooleanField(_("Active"), default=True)
 
     def get_rules_for_host(self):
         return ComplexRule.objects.filter(host=self)

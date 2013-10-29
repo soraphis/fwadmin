@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>{% block title %}Fwadmin{% endblock %}</title>
+  <title>{% block title %}{% trans "Fwadmin" %}{% endblock %}</title>
 
   <link rel="stylesheet" href="{{ STATIC_URL }}style.css" />
   <link rel="stylesheet" href="{{ STATIC_URL }}css/datatable.css" />
@@ -32,7 +32,7 @@
     <div class="navbar">
       <div class="navbar-inner">
         <ul class="nav">
-          <li><a href={% url 'fwadmin:index' %}><i class="icon-home pull-left"></i>Home</a></li>
+          <li><a href={% url 'fwadmin:index' %}><i class="icon-home pull-left"></i>{% trans "Home" %}</a></li>
         </ul>
         <ul class="nav pull-right">
           <li><a href="/accounts/logout" class="logout">{% trans "Logout" %}</a></li>
