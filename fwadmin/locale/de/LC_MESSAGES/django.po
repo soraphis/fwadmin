@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-10-28 17:15+0100\n"
-"PO-Revision-Date: 2013-10-28 16:39+0100\n"
+"POT-Creation-Date: 2013-10-29 11:26+0100\n"
+"PO-Revision-Date: 2013-10-29 11:25+0100\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
@@ -30,67 +30,65 @@ msgstr "Es wird eine Portnummer oder ein Stock Port benötigt"
 msgid "You port and stock port differ"
 msgstr "Ihr Port und der Stock Port stimmen nicht überein."
 
-#: models.py:8 models.py:22 models.py:40 templates/fwadmin/edit.html:18
+#: models.py:9 models.py:23 models.py:41 templates/fwadmin/edit.html:18
 #: templates/fwadmin/edit_host.html:46
 msgid "Name"
 msgstr "Name"
 
-#: models.py:9
+#: models.py:10
 msgid "The port name"
 msgstr "Der Portname"
 
-#: models.py:10
+#: models.py:11
 msgid "Number"
-msgstr ""
+msgstr "Nummer"
 
-#: models.py:10
+#: models.py:11
 msgid "The port number"
 msgstr "Die Portnummer"
 
-#: models.py:12 models.py:30
-#, fuzzy
+#: models.py:13 models.py:31
 msgid "IP Protocol"
-msgstr "Protokoll"
+msgstr "IP Protokoll"
 
-#: models.py:13
+#: models.py:14
 msgid "IP Protocol type"
 msgstr "IP-Protokolltyp"
 
-#: models.py:25
+#: models.py:26
 msgid "From network"
-msgstr ""
+msgstr "Vom Netzwerk"
 
-#: models.py:27 templates/fwadmin/edit.html:19
+#: models.py:28 templates/fwadmin/edit.html:19
 #: templates/fwadmin/edit_host.html:47
 msgid "Permit"
 msgstr "Zulassen"
 
-#: models.py:32 templates/fwadmin/edit.html:20
+#: models.py:33 templates/fwadmin/edit.html:20
 #: templates/fwadmin/edit_host.html:48
 msgid "Port"
 msgstr "Port"
 
-#: models.py:41 templates/fwadmin/hosts_list.html:24
+#: models.py:42 templates/fwadmin/hosts_list.html:24
 msgid "Description"
 msgstr "Beschreibung"
 
-#: models.py:43
+#: models.py:45
 msgid "IP Address"
-msgstr ""
+msgstr "IP Adresse"
 
-#: models.py:44 templates/fwadmin/edit_host.html:29
+#: models.py:46 templates/fwadmin/edit_host.html:29
 #: templates/fwadmin/edit_host.html:78
 msgid "Active until"
 msgstr "Aktiv bis"
 
-#: models.py:47 templates/fwadmin/hosts_list.html:27
+#: models.py:49 templates/fwadmin/hosts_list.html:27
 msgid "Approved"
 msgstr "Zugelassen"
 
-#: models.py:49
-#, fuzzy
+#: models.py:51
 msgid "Active"
-msgstr "Aktiv bis"
+msgstr "Aktiv"
 
 #: management/commands/moderationnag.py:16
 msgid "fwadmin hosts waiting for moderation"
@@ -178,7 +176,7 @@ msgid ""
 "\n"
 "    Edit %(hostname)s (%(hostip)s)\n"
 "    "
-msgstr ""
+msgstr "%(hostname)s (%(hostip)s) editieren"
 
 #: templates/fwadmin/edit_host.html:30
 msgid "Settings"
@@ -193,14 +191,12 @@ msgid "Action"
 msgstr "Aktion"
 
 #: templates/fwadmin/edit_host.html:80
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "\n"
-"    This host is valid until %(host.active_until)s\n"
+"    This host is valid until %(host_active_until)s\n"
 "    "
-msgstr ""
-"Vielen Dank für die Erneuerung des Hosts, die Hostfirewall bleibt aktiv bis "
-"%(active_until)s "
+msgstr "Dieser Host ist gültig bis %(active_until)s\\n"
 
 #: templates/fwadmin/edit_host.html:86 templates/fwadmin/hosts_list.html:54
 msgid "Renew"
@@ -218,7 +214,7 @@ msgstr ""
 
 #: templates/fwadmin/edit_host.html:105
 msgid "Update"
-msgstr "Update"
+msgstr "Aktualisieren"
 
 #: templates/fwadmin/hosts_list.html:23
 msgid "Host"
@@ -231,7 +227,7 @@ msgstr "IP"
 
 #: templates/fwadmin/hosts_list.html:26
 msgid "Active Rules"
-msgstr ""
+msgstr "Aktive Regeln"
 
 #: templates/fwadmin/hosts_list.html:28
 msgid "Active Until"
@@ -247,7 +243,7 @@ msgstr "Noch keine Hosts vorhanden."
 
 #: templates/fwadmin/index.html:8
 msgid "Dashboard"
-msgstr ""
+msgstr "Übersicht"
 
 #: templates/fwadmin/index.html:15
 #, python-format
