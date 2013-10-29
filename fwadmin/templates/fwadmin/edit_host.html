@@ -58,7 +58,7 @@
         <td>{{ rule.port }}</td>
         <td>{{ rule.ip_protocol }}</td>
 	<td>
-	  <form	action={% url 'fwadmin:delete_rule' host.id %} 
+	  <form	action={% url 'fwadmin:delete_rule' rule.id %} 
 		method="post">
 	    {% csrf_token %}
 	    <input type="submit" value={% trans "Delete" %}>
