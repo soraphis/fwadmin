@@ -5,27 +5,27 @@
 {% block content %}
 
 <div class="page-header">
-  <h1>Dashboard</h1>
+  <h1>{% trans "Dashboard" %}</h1>
 </div>
 
 <div>
   <div class="row">
     <div class="span8">
   {% if is_moderator %}
-    <h2>Welcome Moderator {{ user }}</h2>
+    <h2>{% blocktrans %}Welcome Moderator {{ user }}{% endblocktrans %}</h2>
   {% else %}
-    <h2>Welcome {{ user }}</h2>
+    <h2>{% blocktrans %}Welcome {{ user }}{% endblocktrans %}</h2>
   {% endif %}
     </div>
     <div class="span4">
-      <h3 class="pull-right">My Hosts</h3>
+      <h3 class="pull-right">{% trans "My Hosts" %}</h3>
     </div> 
 
     <div class="row">
       <div id="controls" class="span2">
         {% if is_moderator %}
         <a class="btn"
-           href={% url 'fwadmin:moderator_list_unapproved' %}>List Unapproved</a>
+           href={% url 'fwadmin:moderator_list_unapproved' %}>{% trans "List Unapproved" %}</a>
         {% endif %}
         <a class="btn" 
            href={% url 'fwadmin:new_host' %}>{% trans "Create New Host" %}</a>

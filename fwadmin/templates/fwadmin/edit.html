@@ -5,13 +5,13 @@
 {% block content %}
 
 <div class="page-header">
-  <h1>Edit Rules for {{ host.name }} ({{ host.ip }})</h1>
+  <h1>{% blocktrans %}Edit Rules for {{ host.name }} ({{ host.ip }}){% endblocktrans %}</h1>
 </div>
 
 <h2>{% trans "Firewall rules" %}</h2>
 <div class="rules-list">
 
-<a href="/fwadmin/newrule/{{ host.id }}/">Add rule</a>
+<a href="/fwadmin/newrule/{{ host.id }}/">{% trans "Add rule" %}</a>
 {% if rules_list %}
     <table border="1" cellpadding="3">
       <tr>
@@ -26,7 +26,7 @@
         <td>{{ rule.permit }}</td>
         <td>{{ rule.port }}</td>
         <td>{{ rule.protocol }}</td>
-	<td><a href="/fwadmin/delrule/{{ host.id }}/">Delete</a></td>
+	<td><a href="/fwadmin/delrule/{{ host.id }}/">{% trans "Delete" %}</a></td>
       </tr>
       {% endfor %}
     </table>
