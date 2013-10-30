@@ -1,9 +1,10 @@
 {% extends "base.html" %}
 {% load url from future %}
+{% load i18n %}
 
 {% block content %}
 
-<h1>{% trans "Welcome to the firwall config tool" %}</h1>
+<h1>{% trans "Welcome to the Firewall config tool" %}</h1>
 
 {% if form.errors %}
 <p style="color: red">
