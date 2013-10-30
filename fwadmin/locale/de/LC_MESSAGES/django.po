@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-10-29 12:21+0100\n"
-"PO-Revision-Date: 2013-10-29 12:19+0100\n"
+"POT-Creation-Date: 2013-10-30 14:46+0100\n"
+"PO-Revision-Date: 2013-10-30 14:46+0100\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
@@ -358,6 +358,20 @@ msgstr ""
 #: templates/fwadmin/renewed.html:14
 msgid "Go back"
 msgstr "Zurück"
+
+#: templates/registration/login.html:6
+msgid "Welcome to the firwall config tool"
+msgstr "Willkommen beim Firewall-Konfigurations-Werkzeug"
+
+#: templates/registration/login.html:10
+msgid "Your username and password didn't match. Please try again."
+msgstr ""
+"Ihr Usernamen und Passwort passen nicht zusammen. Bitte versuchen Sie es "
+"noch einmal."
+
+#: templates/registration/login.html:22
+msgid "login"
+msgstr "Einloggen"
 
 #~ msgid "Please correct the error{{ form.errors|pluralize }} below."
 #~ msgstr ""
