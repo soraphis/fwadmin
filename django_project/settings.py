@@ -174,7 +174,7 @@ LOGGING = {
             'level': 'ERROR',
             'filters': ['require_debug_false'],
             'class': 'django.utils.log.AdminEmailHandler'
-        }
+        },
         'logfile': {
             'level': 'INFO',
             'class': 'logging.handlers.RotatingFileHandler',
