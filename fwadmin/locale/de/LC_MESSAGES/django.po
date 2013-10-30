@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-10-30 14:46+0100\n"
-"PO-Revision-Date: 2013-10-30 14:46+0100\n"
+"POT-Creation-Date: 2013-10-30 15:01+0100\n"
+"PO-Revision-Date: 2013-10-30 15:01+0100\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
@@ -359,17 +359,22 @@ msgstr ""
 msgid "Go back"
 msgstr "Zurück"
 
-#: templates/registration/login.html:6
-msgid "Welcome to the firwall config tool"
+#: templates/registration/login.html:7
+#, fuzzy
+msgid "Welcome to the Firewall config tool"
 msgstr "Willkommen beim Firewall-Konfigurations-Werkzeug"
 
-#: templates/registration/login.html:10
+#: templates/registration/login.html:11
 msgid "Your username and password didn't match. Please try again."
 msgstr ""
 "Ihr Usernamen und Passwort passen nicht zusammen. Bitte versuchen Sie es "
 "noch einmal."
 
-#: templates/registration/login.html:22
+#: templates/registration/login.html:15
+msgid "Please login with your account"
+msgstr "Bitte melden Sie sich mit Ihrem Account an"
+
+#: templates/registration/login.html:23
 msgid "login"
 msgstr "Einloggen"
 
