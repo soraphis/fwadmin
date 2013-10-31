@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-10-30 15:03+0100\n"
-"PO-Revision-Date: 2013-10-30 15:04+0100\n"
+"POT-Creation-Date: 2013-10-31 09:00+0100\n"
+"PO-Revision-Date: 2013-10-31 10:11+0100\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
@@ -358,6 +358,18 @@ msgstr ""
 #: templates/fwadmin/renewed.html:14
 msgid "Go back"
 msgstr "Zurück"
+
+#: templates/registration/logged_out.html:7
+msgid "Logout successful"
+msgstr "Abmelden erfolgreich"
+
+#: templates/registration/logged_out.html:10
+msgid "Thanks for using the firewall admin."
+msgstr "Danke für die Benutzung des Firewall Werkzeugs"
+
+#: templates/registration/logged_out.html:12
+msgid "Log in again"
+msgstr "Erneut anmelden"
 
 #: templates/registration/login.html:7
 msgid "Welcome to the Firewall config tool"
