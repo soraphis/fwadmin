@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-10-31 09:00+0100\n"
-"PO-Revision-Date: 2013-10-31 10:11+0100\n"
+"POT-Creation-Date: 2013-11-05 09:32+0100\n"
+"PO-Revision-Date: 2013-11-05 09:33+0100\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
@@ -208,7 +208,7 @@ msgstr ""
 "Dieser Host ist gültig bis %(host_active_until)s\n"
 " "
 
-#: templates/fwadmin/edit_host.html:86 templates/fwadmin/hosts_list.html:54
+#: templates/fwadmin/edit_host.html:86 templates/fwadmin/hosts_list.html:58
 msgid "Renew"
 msgstr "Erneuern"
 
@@ -247,7 +247,15 @@ msgstr "Aktiv bis"
 msgid "Renew Link"
 msgstr "Link erneuern"
 
-#: templates/fwadmin/hosts_list.html:66
+#: templates/fwadmin/hosts_list.html:48
+msgid "Yes"
+msgstr "Ja"
+
+#: templates/fwadmin/hosts_list.html:50
+msgid "No"
+msgstr "Nein"
+
+#: templates/fwadmin/hosts_list.html:70
 msgid "No hosts yet."
 msgstr "Noch keine Hosts vorhanden."
 
