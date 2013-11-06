@@ -24,6 +24,25 @@
   </h1>
 </div>
 
+<div>
+{% if host.approved %}
+  {% blocktrans with host.active_until as host_active_until %}
+  This host is active until {{ host_active_until }}.
+  {% endblocktrans %}
+{% else %}
+  {% blocktrans %}
+  This host is <strong>not</strong> approved yet.
+  {% endblocktrans %}
+{% endif %}
+
+ <form action={% url 'fwadmin:delete_host' host.id %} 
+      method="post">
+  {% csrf_token %}
+  <input type="submit" value="{% trans "Delete host" %}">
+</form>
+
+</div>
+
 <ul class="nav nav-tabs">
   <li class="active"><a href="#tab-rules" data-toggle="tab">{% trans "Firewall rules" %}</a></li>
   <li><a href="#tab-renew" data-toggle="tab">{% trans "Active until" %}</a></li>
