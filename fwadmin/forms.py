@@ -71,6 +71,6 @@ class NewRuleForm(ModelForm):
             'permit',
             'ip_protocol',
             'port',
-            #'from_net',
+            'from_net',
             )
         model = ComplexRule
