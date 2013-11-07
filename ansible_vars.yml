@@ -6,6 +6,12 @@ project_uses_ldap: True
 project_uses_south: True
 project_uses_ssl: True
 
+project_cron_daily_jobs:
+  - { name: "fwadmin moderation nag email",
+      job: "(cd ${project_root}/application/ && DJANGO_SETTINGS_MODULE=django_project.settings_production ${project_virtual_env}/bin/python ${project_root}/application/manage.py moderationnag)",
+      hour: "6"
+    }
+
 # maybe customize
 project_admin_mail: team_shen@uni-trier.de
 project_ssl_cert_chain: unitrier-ca-chain.pem
