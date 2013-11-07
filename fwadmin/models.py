@@ -4,6 +4,18 @@ from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
 
 
+class StaticRule(models.Model):
+    """A static rule, free form either in the HEADER or FOOTER """
+    HEADER = 0
+    FOOTER = 1
+    TYPE_CHOICES = (
+        (HEADER, _("Header rule")),
+        (FOOTER, _("Footer rule"))
+    )
+    type = models.IntegerField(default=HEADER, choices=TYPE_CHOICES)
+    text = models.TextField()
+
+
 class SamplePort(models.Model):
     """ A open port for the UI """
     name = models.CharField(_("Name"),
