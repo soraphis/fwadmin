@@ -161,6 +161,7 @@ def moderator_list_unapproved(request):
 @login_required
 @group_required(settings.FWADMIN_MODERATORS_USER_GROUP)
 def moderator_approve_host(request, pk):
+    # FIXME: form for CSRF protection (?)
     host = Host.objects.get(pk=pk)
     host.approved = True
     host.save()
