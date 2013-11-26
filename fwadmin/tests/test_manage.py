@@ -23,6 +23,7 @@ from fwadmin.management.commands.moderationnag import (
 from fwadmin.models import (
     Host,
     ComplexRule,
+    StaticRule,
 )
 from django.contrib.auth.models import User
 from django_project.settings import (
@@ -111,7 +112,7 @@ The firewall config for machine: 'test' (192.168.1.1) will expire at
 
 Please click on https://fwadmin.uni-trier.de%s to renew.
 """ % (self.host.active_until,
-       reverse("fwadmin:edit_host", args=(self.host.id,)))
+           reverse("fwadmin:edit_host", args=(self.host.id,)))
         mock_f.assert_called_with(
             subject, body, FWADMIN_EMAIL_FROM,
             [self.host.owner.email])
@@ -163,6 +164,35 @@ class ManagementCommandsTestCase(MyBaseTest):
              "access-list %s deny UDP 192.168.2.0/24 host 192.168.1.1 eq 53" %
                  FWADMIN_ACCESS_LIST_NR,
              ])
+
+    @patch("fwadmin.management.commands.genrules.Command._write_rules")
+    def test_gen_rules_header(self, mock_f):
+        """ Ensure complex rules are written """
+        rule_header = "! my header"
+        StaticRule.objects.create(
+            type=StaticRule.HEADER,
+            text=rule_header,
+        )
+        rule_footer = "! my footer"
+        StaticRule.objects.create(
+            type=StaticRule.FOOTER,
+            text=rule_footer
+        )
+        ComplexRule.objects.create(
+            host=self.host,
+            name="complex", from_net="192.168.2.0/24", permit=False,
+            ip_protocol="UDP", port=53)
+        self.cmd.print_firewall_rules(self.writer)
+        rule_1_comment = "! fw rules for %s (%s) owned by %s" % (
+            self.host.name, self.host.ip, self.owner.username)
+        rule_1 = "access-list %s deny UDP 192.168.2.0/24 host "\
+                 "192.168.1.1 eq 53" % FWADMIN_ACCESS_LIST_NR
+        mock_f.assert_called_with(
+            [rule_header,
+             rule_1_comment,
+             rule_1,
+             rule_footer,
+         ])
 
 
 class GenRulesUfwTestCase(MyBaseTest):

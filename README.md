@@ -59,6 +59,17 @@ and create hosts/rules.
 
 To generate rules run:
 ```
-$ python manange runrules ufw
+$ python manange genrules ufw
 ```
 (supported are currently cisco, ufw)
+
+To compile the i18n strings:
+----------------------------
+```
+$ (cd fwadmin ; python ../manage.py compilemessages)
+```
+
+And to update the i18n strings for new translations do:
+```
+$ (cd fwadmin ; python ../manage.py makemessages -a)
+```

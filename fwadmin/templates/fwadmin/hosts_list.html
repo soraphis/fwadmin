@@ -44,7 +44,11 @@
             {% endif %}
 	  {% endfor %}
 	</td>
-        <td>{{ host.approved }}</td>
+        {% if host.approved %}
+        <td>{% trans "Yes" %}</td>
+        {% else %}
+        <td>{% trans "No" %}</td>
+        {% endif %}
         {% if host.approved %}
           <td>{{ host.active_until }}</td>
           <td>

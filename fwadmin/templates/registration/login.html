@@ -1,17 +1,18 @@
 {% extends "base.html" %}
 {% load url from future %}
+{% load i18n %}
 
 {% block content %}
 
-<h1>Welcome to the firwall config tool</h1>
+<h1>{% trans "Welcome to the Firewall config tool" %}</h1>
 
 {% if form.errors %}
 <p style="color: red">
-  Your username and password didn't match. Please try again.
+  {% trans "Your username and password didn't match. Please try again." %}
 </p>
 {% endif %}
 
-<p>Please login with your account</p>
+<p>{% trans "Please login with your account" %}</p>
 
 <form method="post" action={% url 'django.contrib.auth.views.login' %}>
 {% csrf_token %}
@@ -19,7 +20,7 @@
   {{ form.as_table }}
 </table>
 
-<input type="submit" value="login" />
+<input type="submit" value="{% trans "login" %}" />
 <input type="hidden" name="next" value="{{ next }}" />
 </form>
 

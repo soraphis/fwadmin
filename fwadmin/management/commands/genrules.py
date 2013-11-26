@@ -1,11 +1,12 @@
 import datetime
 
 from django.core.management.base import BaseCommand
-from django_project.settings import FWADMIN_ACCESS_LIST_NR
+from django.conf import settings
 
 from fwadmin.models import (
     ComplexRule,
     Host,
+    StaticRule,
 )
 
 
@@ -22,7 +23,7 @@ class BaseRulesWriter:
         l.append("%s fw rules for %s (%s) owned by %s" % (
                 self.COMMENT_CHAR, host.name, host.ip, host.owner))
         # complex rules
-        list_nr = FWADMIN_ACCESS_LIST_NR
+        list_nr = settings.FWADMIN_ACCESS_LIST_NR
         for complex_rule in ComplexRule.objects.filter(host=host):
             s = self._get_fw_string(list_nr=list_nr,
                                     permit=complex_rule.permit,
@@ -90,12 +91,18 @@ class Command(BaseCommand):
         print "\n".join(rules_list)
 
     def print_firewall_rules(self, writer):
+        rules_list = []
+        for header in StaticRule.objects.filter(type=StaticRule.HEADER):
+            rules_list.append(header.text)
         for host in Host.objects.all():
             if (host.active_until > datetime.date.today() and
                 host.approved and
                 host.active):
-                rules_list = writer.get_rules_list(host)
-                self._write_rules(rules_list)
+                rules_list += writer.get_rules_list(host)
+        for footer in StaticRule.objects.filter(type=StaticRule.FOOTER):
+            rules_list.append(footer.text)
+        if rules_list:
+            self._write_rules(rules_list)
 
     def handle(self, *args, **options):
         # default writer is cisco

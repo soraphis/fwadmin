@@ -2,7 +2,7 @@ import netaddr
 
 import django.forms as forms
 from django.forms import ModelForm
-from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext_lazy as _
 
 from .models import (
     ComplexRule,
@@ -35,11 +35,14 @@ class NewRuleForm(ModelForm):
         )
 
     ip_protocol = forms.CharField(
-            max_length=3,
-            widget=forms.Select(choices=IP_PROTOCOL_CHOICES))
+        label=_("IP Protocol"),
+        max_length=3,
+        widget=forms.Select(choices=IP_PROTOCOL_CHOICES))
 
-    stock_port = forms.ModelChoiceField(queryset=SamplePort.objects.all(),
-                                        required=False)
+    stock_port = forms.ModelChoiceField(
+        label=_("Standard Port"),
+        queryset=SamplePort.objects.all(),
+        required=False)
 
     def clean(self):
         """ Custom validation """
@@ -68,6 +71,6 @@ class NewRuleForm(ModelForm):
             'permit',
             'ip_protocol',
             'port',
-            #'from_net',
+            'from_net',
             )
         model = ComplexRule
