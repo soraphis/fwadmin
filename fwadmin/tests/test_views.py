@@ -54,6 +54,9 @@ class LoggedInViewsTestCase(TestCase):
             ip="192.168.0.2", active_until="2022-01-01",
             owner=self.user)
         self.host.save()
+        self.rule = ComplexRule.objects.create(
+            host=self.host, name="http", permit=True, ip_protocol="TCP",
+            port=80)
 
     def test_index_has_host(self):
         """Test that the index view has a html table with out test host"""
@@ -211,7 +214,7 @@ class LoggedInViewsTestCase(TestCase):
             host=self.host, name="ssh", permit=True, ip_protocol="TCP",
             port=22)
         resp = self.client.post(reverse("fwadmin:delete_rule",
-                                       args=(1,)))
+                                       args=(rule.pk,)))
         # check that its gone
         with self.assertRaises(ComplexRule.DoesNotExist):
             ComplexRule.objects.get(pk=rule.pk)
@@ -241,3 +244,21 @@ class LoggedInViewsTestCase(TestCase):
         self.assertEqual(
             urlsplit(resp["Location"])[2],
             reverse("fwadmin:edit_host", args=(self.host.id,)))
+
+    def test_export_protected(self):
+        resp = self.client.get(reverse("fwadmin:export", args=("cisco",)))
+        self.assertEqual(resp.status_code, 403)
+
+    def test_admin_export(self):
+        moderators = Group.objects.get(name=FWADMIN_MODERATORS_USER_GROUP)
+        self.user.groups.add(moderators)
+        self.host.active = True
+        self.host.approved = True
+        self.host.active_until = (datetime.datetime.today() +
+                                  datetime.timedelta(days=1))
+        self.host.save()
+        resp = self.client.get(reverse("fwadmin:export", args=("cisco",)))
+        self.assertEqual(
+            resp.content,
+            "! fw rules for ahost (192.168.0.2) owned by meep\n"
+            "access-list 120 permit TCP any host 192.168.0.2 eq 80")

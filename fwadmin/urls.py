@@ -6,6 +6,9 @@ urlpatterns = patterns('fwadmin.views',
     # user stuff
     url(r'^$', 'index', name='index'),
 
+    # special
+    url(r'^export/(?P<fwtype>\w+)/$', 'export', name='export'),
+
     # hosts
     url(r'^host/new/$', 'new_host', name='new_host'),
     url(r'^host/(?P<pk>\d+)/edit/$', 'edit_host', name='edit_host'),
