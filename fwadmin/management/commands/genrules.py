@@ -6,6 +6,7 @@ from django.conf import settings
 from fwadmin.models import (
     ComplexRule,
     Host,
+    StaticRule,
 )
 
 
@@ -90,12 +91,18 @@ class Command(BaseCommand):
         print "\n".join(rules_list)
 
     def print_firewall_rules(self, writer):
+        rules_list = []
+        for header in StaticRule.objects.filter(type=StaticRule.HEADER):
+            rules_list.append(header.text)
         for host in Host.objects.all():
             if (host.active_until > datetime.date.today() and
                 host.approved and
                 host.active):
-                rules_list = writer.get_rules_list(host)
-                self._write_rules(rules_list)
+                rules_list += writer.get_rules_list(host)
+        for footer in StaticRule.objects.filter(type=StaticRule.FOOTER):
+            rules_list.append(footer.text)
+        if rules_list:
+            self._write_rules(rules_list)
 
     def handle(self, *args, **options):
         # default writer is cisco

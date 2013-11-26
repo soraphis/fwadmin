@@ -5,6 +5,7 @@ from django_auth_ldap.config import (
     LDAPSearch,
     ActiveDirectoryGroupType,
 )
+from ldap_auto_discover.ldap_auto_discover import ldap_auto_discover
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -209,13 +210,11 @@ AUTHENTICATION_BACKENDS = (
 #   AUTH_LDAP_USER_DN_TEMPLATE = "%(user)s@emailtest.uni-trier.de"
 # as the LDAP dn is set to the full user name, not to the SAMAccountName
 #
-AUTH_LDAP_SERVER_URI = "ldaps://saul.uni-trier.de"
-AUTH_LDAP_BIND_DN = "testpm@uni-trier.de"
+AUTH_LDAP_SERVER_URI = lambda: ldap_auto_discover("uni-trier.de")
+AUTH_LDAP_BIND_DN = "username@uni-trier.de"
 AUTH_LDAP_BIND_PASSWORD = open(os.path.join(os.path.dirname(__file__),
                                             "ldap-password")).read()
 
-# FIXME: use round-robin or something
-#AUTH_LDAP_SERVER_URI = "ldaps://saul.uni-trier.de:636"
 
 # custom search as the DN uses the full account name
 AUTH_LDAP_USER_SEARCH = LDAPSearch('CN=Users,DC=uni-trier,DC=de', 
@@ -238,7 +237,7 @@ AUTH_LDAP_USER_FLAGS_BY_GROUP = {
     "is_staff": "CN=G-zentrale-systeme,CN=Users,DC=uni-trier,DC=de",
 }
 # limit login to "Mitarb", (not needed, see fwadmin/view.py)
-#AUTH_LDAP_REQUIRE_GROUP = "cn=Mitarb,CN=Users,DC=emailtest,dc=uni-trier,dc=de"
+#AUTH_LDAP_REQUIRE_GROUP = "cn=Mitarb,CN=Users,dc=uni-trier,dc=de"
 # have all the groups in the local django group database as well
 AUTH_LDAP_MIRROR_GROUPS = True
 

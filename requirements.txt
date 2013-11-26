@@ -1,8 +1,5 @@
-django
-django-auth-ldap
+django-auth-ldap>=1.1.6
 netaddr
-psycopg2
+dnspython
 south
-mock
-pep8
-pyflakes
+
