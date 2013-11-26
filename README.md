@@ -34,7 +34,7 @@ $ python manage.py test fwadmin
 One time setup:
 ```
 $ echo "my-secret-ldap-password" > django_project/ldap-password
-$ python django_project/first_time_init.py
+$ PYTHONPATH=. python django_project/first_time_init.py
 $ python manage.py syncdb
 ```
 
