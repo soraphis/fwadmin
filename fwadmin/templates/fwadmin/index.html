@@ -26,6 +26,8 @@
         {% if is_moderator %}
         <a class="btn"
            href={% url 'fwadmin:moderator_list_unapproved' %}>{% trans "List Unapproved" %}</a>
+        <a class="btn"
+           href={% url 'fwadmin:moderator_list_all' %}>{% trans "List All" %}</a>
         {% endif %}
         <a class="btn" 
            href={% url 'fwadmin:new_host' %}>{% trans "Create New Host" %}</a>
