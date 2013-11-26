@@ -10,6 +10,8 @@ install:
  - pip install -r REQUIREMENTS --use-mirrors
  - pip install -r TEST_REQUIREMENTS --use-mirrors
 before_script:
+ - git submodule init
+ - git submodule update
  - echo "secret" > django_project/ldap-password
  - python django_project/first_time_init.py
  - python manage.py syncdb --noinput
