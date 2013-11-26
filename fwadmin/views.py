@@ -76,7 +76,7 @@ def index(request):
 def export(request, fwtype):
     outs = StringIO.StringIO()
     gen_firewall_rules(outs, fwtype)
-    return HttpResponse(outs.getvalue())
+    return HttpResponse(outs.getvalue(), content_type="text/plain")
 
 
 @login_required
