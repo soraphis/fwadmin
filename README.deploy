@@ -12,7 +12,7 @@ Deploy
 
 To deploy on staging and run:
 ```
-$ ansible-playbook ansible/deploy.yml --limit staging
+$ ansible-playbook ansible-app-deploy/deploy.yml --limit staging
 ```
 
 

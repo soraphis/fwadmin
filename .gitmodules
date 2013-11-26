@@ -1,3 +1,3 @@
-[submodule "ansible"]
-	path = ansible
+[submodule "ansible-app-deploy"]
+	path = ansible-app-deploy
 	url = https://github.com/ZIMK/ansible-app-deploy.git
