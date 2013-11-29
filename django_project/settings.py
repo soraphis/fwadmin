@@ -214,7 +214,7 @@ AUTHENTICATION_BACKENDS = (
 # as the LDAP dn is set to the full user name, not to the SAMAccountName
 #
 AUTH_LDAP_SERVER_URI = lambda: ldap_auto_discover("uni-trier.de")
-AUTH_LDAP_BIND_DN = "username@uni-trier.de"
+AUTH_LDAP_BIND_DN = "testpm@uni-trier.de"
 AUTH_LDAP_BIND_PASSWORD = open(os.path.join(os.path.dirname(__file__),
                                             "ldap-password")).read()
 
