@@ -5,7 +5,7 @@
 {% block content %}
 
 <div class="page-header">
-  <h1>{% trans "Unapproved Hosts" %}</h1>
+  <h1>{% trans "All Hosts" %}</h1>
 </div>
 
 <script>
@@ -19,7 +19,7 @@
   });
 </script>
 
-<h2>{% trans "All unapproved hosts" %}</h2>
+<h2>{% trans "All hosts" %}</h2>
 {% if all_hosts %}
     <table class="table" id="table_hosts">
       <thead>
@@ -28,7 +28,6 @@
         <th>{% trans "Host Description" %}</th>
         <th>{% trans "IP" %}</th>
         <th>{% trans "Rules" %}</th>
-        <th>{% trans "Approve Link" %}</th>
       </tr>
       </thead>
       <tbody>
@@ -45,12 +44,6 @@
 	  {% endfor %}
         </td>
         <td> 
-	  <form	action={% url 'fwadmin:moderator_approve_host' host.pk %}
-		method="post">
-	    {% csrf_token %}
-	    <input type="submit" value={% trans "Approve" %}>
-	  </form>
-	</td>
       </tr>
       {% endfor %}
       </tbody>
