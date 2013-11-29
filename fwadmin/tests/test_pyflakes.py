@@ -33,6 +33,8 @@ class TestPyflakesClean(unittest.TestCase):
                "-type", "f",
                "!", "-path", "*/components/*",
                "-and",
+               "!", "-path", "*/migrations/*",
+               "-and",
                "-name", "*.py"]
         files = check_output(cmd)
         # canary

@@ -14,6 +14,7 @@ before_script:
  - echo "secret" > django_project/ldap-password
  - PYTHONPATH=. python django_project/first_time_init.py
  - python manage.py syncdb --noinput
+ - python manage.py migrate --noinput
 script:
  - pyflakes -x W fwadmin
  - coverage run manage.py test fwadmin

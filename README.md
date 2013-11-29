@@ -16,6 +16,7 @@ Dependencies to run in production:
  - python-django (tested with 1.4 and 1.5)
  - python-django-auth-ldap
  - python-netaddr
+ - python-django-south
  - [bower](https://github.com/twitter/bower)
 
 Dependencies for testing/development:
@@ -36,6 +37,7 @@ One time setup:
 $ echo "my-secret-ldap-password" > django_project/ldap-password
 $ PYTHONPATH=. python django_project/first_time_init.py
 $ python manage.py syncdb
+$ python manage.py migrate
 ```
 
 How to test interactively:
