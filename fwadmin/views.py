@@ -2,11 +2,13 @@ import datetime
 #from django.utils.translation import ugettext as _
 from django.core.urlresolvers import reverse
 from django.core.exceptions import PermissionDenied
+import StringIO
 
 from django.http import (
     HttpResponseBadRequest,
     HttpResponseRedirect,
     HttpResponseForbidden,
+    HttpResponse,
 )
 from django.shortcuts import (
     render_to_response,
@@ -26,6 +28,7 @@ from fwadmin.forms import (
     EditHostForm,
     NewRuleForm,
 )
+from fwadmin.genrules import gen_firewall_rules
 
 from django.conf import settings
 
@@ -66,6 +69,14 @@ def index(request):
                                'is_moderator': is_moderator,
                               },
                               context_instance=RequestContext(request))
+
+
+@login_required
+@group_required(settings.FWADMIN_MODERATORS_USER_GROUP)
+def export(request, fwtype):
+    outs = StringIO.StringIO()
+    gen_firewall_rules(outs, fwtype)
+    return HttpResponse(outs.getvalue(), content_type="text/plain")
 
 
 @login_required
