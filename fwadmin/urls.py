@@ -21,4 +21,7 @@ urlpatterns = patterns('fwadmin.views',
         name='moderator_approve_host'),
     url(r'^host/list/unapproved/$',
         'moderator_list_unapproved', name='moderator_list_unapproved'),
+    url(r'^host/list/all/$',
+        'moderator_list_all', name='moderator_list_all'),
+
 )

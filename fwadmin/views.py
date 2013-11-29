@@ -149,11 +149,20 @@ def edit_host(request, pk):
 @group_required(settings.FWADMIN_MODERATORS_USER_GROUP)
 def moderator_list_unapproved(request):
     all_hosts = Host.objects.filter(approved=False)
-    all_rules = ComplexRule.objects.filter(host__approved=False)
     # XXX: add a template for list
     return render_to_response('fwadmin/list-unapproved.html',
                               {'all_hosts': all_hosts,
-                               'complex_rules': all_rules,
+                               },
+                              context_instance=RequestContext(request))
+
+
+@login_required
+@group_required(settings.FWADMIN_MODERATORS_USER_GROUP)
+def moderator_list_all(request):
+    all_hosts = Host.objects.all()
+    # XXX: add a template for list
+    return render_to_response('fwadmin/list-all.html',
+                              {'all_hosts': all_hosts,
                                },
                               context_instance=RequestContext(request))
 
