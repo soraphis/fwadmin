@@ -52,7 +52,7 @@ class AnonymousTestCase(TestCase):
         resp = self.client.get(url)
         self.assertEqual(resp.status_code, 200)
         self.assertEqual(json.loads(resp.content), "")
-        
+
 
 class LoggedInViewsTestCase(TestCase):
 
