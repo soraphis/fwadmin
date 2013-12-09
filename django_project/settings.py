@@ -5,7 +5,10 @@ from django_auth_ldap.config import (
     LDAPSearch,
     ActiveDirectoryGroupType,
 )
-from ldap_auto_discover.ldap_auto_discover import ldap_auto_discover
+try:
+    from ldap_auto_discover.ldap_auto_discover import ldap_auto_discover
+except ImportError:
+    print "WARNING: can not import ldap_auto_discover"
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -121,6 +124,8 @@ TEMPLATE_LOADERS = (
 )
 
 MIDDLEWARE_CLASSES = (
+    'django.middleware.common.CommonMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -209,15 +214,15 @@ AUTHENTICATION_BACKENDS = (
 # as the LDAP dn is set to the full user name, not to the SAMAccountName
 #
 AUTH_LDAP_SERVER_URI = lambda: ldap_auto_discover("uni-trier.de")
-AUTH_LDAP_BIND_DN = "username@uni-trier.de"
+AUTH_LDAP_BIND_DN = "testpm@uni-trier.de"
 AUTH_LDAP_BIND_PASSWORD = open(os.path.join(os.path.dirname(__file__),
                                             "ldap-password")).read()
 
 
 # custom search as the DN uses the full account name
-AUTH_LDAP_USER_SEARCH = LDAPSearch('dc=uni-trier,dc=de', 
+AUTH_LDAP_USER_SEARCH = LDAPSearch('CN=Users,DC=uni-trier,DC=de', 
                                    ldap.SCOPE_SUBTREE, 
-                                   '(sAMAccountName=%(user)s)')
+                                   '(CN=%(user)s)')
 
 # needed to make ActiveDirectory work
 AUTH_LDAP_CONNECTION_OPTIONS = {
