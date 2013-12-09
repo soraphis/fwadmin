@@ -19,27 +19,23 @@
   {% csrf_token %}
 
   <div>
-    <table>
-      {% for field in form %}
-      {% if field.name == 'stock_port' %}
-      <div class="fieldWrapper">
-        {{ field.errors }}
-        {{ field.label }}: {{ field }}
-      </div>
-      {% endif %}
-      {% endfor %}
-    </table>
-  </div>
-
-  {# hidden by default so that its not visible for non-JS browsers #}
-  <div class="row">
-    <a id="toggleAdvancedButton" class="btn hide" onclick="toggleAdvanced();">
+    {% for field in form %}
+    {% if field.name == 'stock_port' %}
+    <div class="fieldWrapper">
+      {{ field.errors }}
+      {{ field.label }}: {{ field }}
+    </div>
+    {% endif %}
+    {% endfor %}
+    
+    {# hidden by default so that its not visible for non-JS browsers #}
+    <div class="fieldWrapper">
+    <a id="toggleAdvancedButton" class="btn hide">
       {% trans "Toggle advanced options" %}
     </a>
-  </div>
-
-  <div  id="advanced">
-    <table>
+    </div>
+    
+    <div  id="advanced">
       {% for field in form %}
       {% if field.name != 'stock_port' %}
       <div class="fieldWrapper">
@@ -48,26 +44,27 @@
       </div>
       {% endif %}
       {% endfor %}
-    </table>
+    </div>
   </div>
+  
 
   <div>
-  <a class="btn btn-danger" href="{% url 'fwadmin:edit_host' host.id %}">
-    {% trans "Cancel" %}</a>
-  <input class="btn btn-primary" type="submit" value={% trans "Add" %}>
+    <a class="btn btn-danger" href="{% url 'fwadmin:edit_host' host.id %}">
+      {% trans "Cancel" %}</a>
+    <input class="btn btn-primary" type="submit" value={% trans "Add" %}>
   </div>
 </form>
 
 <script type="text/javascript">
 function toggleAdvanced() {
-  if ($("#advanced").hasClass("hide")) {
-    $("#advanced").removeClass("hide");
-  } else {
-    $("#advanced").addClass("hide");
-  }
+  $("#advanced").toggleClass("hide")
 }
+
 $(document).ready(function(){
   $("#toggleAdvancedButton").removeClass("hide")
+  $("#toggleAdvancedButton").click(function(){
+    toggleAdvanced();
+  });
   toggleAdvanced();
 
   // keep id_stock_port and id_port in sync
