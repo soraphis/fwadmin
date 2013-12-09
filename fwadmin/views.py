@@ -95,7 +95,7 @@ def new_host(request):
             host.active_until = active_until
             # and really save
             host.save()
-            return HttpResponseRedirect(reverse("fwadmin:edit_host",
+            return HttpResponseRedirect(reverse("fwadmin:new_rule_for_host",
                                                 args=(host.id,)))
     else:
         form = NewHostForm()

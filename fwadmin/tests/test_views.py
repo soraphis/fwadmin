@@ -124,7 +124,7 @@ class LoggedInViewsTestCase(TestCase):
         # ensure the redirect to index works works
         self.assertEqual(resp.status_code, 302)
         self.assertEqual(
-            urlsplit(resp["Location"])[2], reverse("fwadmin:edit_host",
+            urlsplit(resp["Location"])[2], reverse("fwadmin:new_rule_for_host",
                                                    args=(host.id,)))
 
     def test_edit_host(self):
