@@ -3,6 +3,7 @@ from settings import *
 DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 
+FWADMIN_REAL_LDAP = True
 
 DATABASES = {
     'default': {
