@@ -1,5 +1,5 @@
+Django==1.6
 django-auth-ldap>=1.1.6
-netaddr
-dnspython
-south
-
+netaddr==0.7.10
+dnspython==1.11.1
+South==0.8.4

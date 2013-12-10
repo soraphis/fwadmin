@@ -4,6 +4,7 @@ DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 
 FWADMIN_REALLY_SEND_MAIL = True
+FWADMIN_REAL_LDAP = True
 
 DATABASES = {
     'default': {
