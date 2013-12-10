@@ -171,6 +171,36 @@ class LoggedInViewsTestCase(TestCase):
             host = Host.objects.get(name=host_name)
             self.assertEqual(host.active_until, active_until)
 
+    def test_same_owner_delete_rules(self):
+        a_user = User.objects.create_user("Alice")
+        host_name = "alice host"
+        active_until = datetime.date(2036, 01, 01)
+        host = Host.objects.create(name=host_name, ip="192.168.1.1",
+                                   owner=a_user, active_until=active_until)
+        rule = ComplexRule.objects.create(host=host, name="ssh", port=22)
+        resp = self.client.post(reverse("fwadmin:delete_rule",
+                                            args=(rule.id,)))
+        self.assertEqual(resp.status_code, 403)
+
+    def test_same_owner_create_rules(self):
+        rule_name = "random rule name"
+        post_data = {"name": rule_name,
+                     "permit": False,
+                     "ip_protocol": "UDP",
+                     "from_net": "any",
+                     "port": 1337,
+                    }
+
+        a_user = User.objects.create_user("Alice")
+        host_name = "alice host"
+        active_until = datetime.date(2036, 01, 01)
+        host = Host.objects.create(name=host_name, ip="192.168.1.1",
+                                   owner=a_user, active_until=active_until)
+        resp = self.client.post(reverse("fwadmin:new_rule_for_host",
+                                        args=(host.id,)),
+                                post_data)
+        self.assertEqual(resp.status_code, 403)
+
     def test_moderator_auth(self):
         resp = self.client.get(
             reverse("fwadmin:moderator_list_unapproved"))
