@@ -20,6 +20,17 @@ from django_project.settings import (
 )
 
 
+def make_new_rule_post_data():
+    rule_name = "random rule name"
+    post_data = {"name": rule_name,
+                 "permit": False,
+                 "ip_protocol": "UDP",
+                 "from_net": "any",
+                 "port": 1337,
+    }
+    return post_data
+
+
 class AnonymousTestCase(TestCase):
 
     def test_index_need_login(self):
@@ -183,14 +194,6 @@ class LoggedInViewsTestCase(TestCase):
         self.assertEqual(resp.status_code, 403)
 
     def test_same_owner_create_rules(self):
-        rule_name = "random rule name"
-        post_data = {"name": rule_name,
-                     "permit": False,
-                     "ip_protocol": "UDP",
-                     "from_net": "any",
-                     "port": 1337,
-                    }
-
         a_user = User.objects.create_user("Alice")
         host_name = "alice host"
         active_until = datetime.date(2036, 01, 01)
@@ -198,7 +201,7 @@ class LoggedInViewsTestCase(TestCase):
                                    owner=a_user, active_until=active_until)
         resp = self.client.post(reverse("fwadmin:new_rule_for_host",
                                         args=(host.id,)),
-                                post_data)
+                                make_new_rule_post_data())
         self.assertEqual(resp.status_code, 403)
 
     def test_moderator_auth(self):
@@ -255,18 +258,12 @@ class LoggedInViewsTestCase(TestCase):
             reverse("fwadmin:edit_host", args=(self.host.id,)))
 
     def test_new_rule_for_host(self):
-        rule_name = "random rule name"
-        post_data = {"name": rule_name,
-                     "permit": False,
-                     "ip_protocol": "UDP",
-                     "from_net": "any",
-                     "port": 1337,
-                    }
+        post_data = make_new_rule_post_data()
         resp = self.client.post(reverse("fwadmin:new_rule_for_host",
                                         args=(self.host.id,)),
                                 post_data)
         # ensure we have the new rule
-        rule = ComplexRule.objects.get(name=rule_name)
+        rule = ComplexRule.objects.get(name=post_data["name"])
         for k, v in post_data.items():
             self.assertEqual(getattr(rule, k), v)
         # check redirect
