@@ -1,5 +1,6 @@
 import datetime
 import re
+import json
 
 from urlparse import urlsplit
 
@@ -50,6 +51,18 @@ class AnonymousTestCase(TestCase):
         url = reverse("fwadmin:index")
         resp = self.client.get(url)
         self.assertEqual(resp.status_code, 403)
+
+    def test_gethostbyname(self):
+        url = reverse("fwadmin:gethostbyname", args=("localhost",))
+        resp = self.client.get(url)
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(json.loads(resp.content), "127.0.0.1")
+
+    def test_gethostbyname_invalid(self):
+        url = reverse("fwadmin:gethostbyname", args=("dsakfjdfjsadfdsaf",))
+        resp = self.client.get(url)
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(json.loads(resp.content), "")
 
 
 class BaseLoggedInTestCase(TestCase):
