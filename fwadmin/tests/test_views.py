@@ -1,6 +1,7 @@
 import datetime
 import re
 import json
+from mock import patch
 
 from urlparse import urlsplit
 
@@ -57,6 +58,15 @@ class AnonymousTestCase(TestCase):
         resp = self.client.get(url)
         self.assertEqual(resp.status_code, 200)
         self.assertEqual(json.loads(resp.content), "127.0.0.1")
+
+    @patch("socket.gethostbyname")
+    def test_gethostbyname_inet(self, mock_gethostbyname):
+        mock_gethostbyname.return_value = "8.8.8.8"
+        url = reverse("fwadmin:gethostbyname",
+                      args=("www.vielen_dank-peter.de",))
+        resp = self.client.get(url)
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(json.loads(resp.content), "8.8.8.8")
 
     def test_gethostbyname_invalid(self):
         url = reverse("fwadmin:gethostbyname", args=("dsakfjdfjsadfdsaf",))
@@ -162,7 +172,7 @@ class LoggedInViewsTestCase(BaseLoggedInTestCase):
         # ensure the redirect to index works works
         self.assertEqual(resp.status_code, 302)
         self.assertEqual(
-            urlsplit(resp["Location"])[2], reverse("fwadmin:edit_host",
+            urlsplit(resp["Location"])[2], reverse("fwadmin:new_rule_for_host",
                                                    args=(host.id,)))
 
     def test_edit_host(self):
