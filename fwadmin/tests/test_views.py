@@ -55,7 +55,9 @@ class AnonymousTestCase(TestCase):
 class BaseLoggedInTestCase(TestCase):
 
     def setUp(self):
+        # basic setup
         allowed_group = Group.objects.get(name=FWADMIN_ALLOWED_USER_GROUP)
+        # create user with a initial host/rule
         self.user = User.objects.create_user("meep", password="lala")
         self.user.groups.add(allowed_group)
         res = self.client.login(username="meep", password="lala")
@@ -68,6 +70,15 @@ class BaseLoggedInTestCase(TestCase):
         self.rule = ComplexRule.objects.create(
             host=self.host, name="http", permit=True, ip_protocol="TCP",
             port=80)
+        # create other user with host/rule
+        self.other_user = User.objects.create_user("Alice")
+        self.other_host_name = "alice host"
+        self.other_active_until = datetime.date(2036, 01, 01)
+        self.other_host = Host.objects.create(
+            name=self.other_host_name, ip="192.168.1.77",
+            owner=self.other_user, active_until=self.other_active_until)
+        self.other_rule = ComplexRule.objects.create(
+            host=self.other_host, name="ssh", port=22)
 
 
 class LoggedInViewsTestCase(BaseLoggedInTestCase):
@@ -169,11 +180,8 @@ class LoggedInViewsTestCase(BaseLoggedInTestCase):
             urlsplit(resp["Location"])[2], reverse("fwadmin:index"))
 
     def test_same_owner_actions(self):
-        a_user = User.objects.create_user("Alice")
-        host_name = "alice host"
-        active_until = datetime.date(2036, 01, 01)
-        host = Host.objects.create(name=host_name, ip="192.168.1.1",
-                                   owner=a_user, active_until=active_until)
+        host = self.other_host
+        host_name = self.other_host_name
         for action in ["renew_host", "edit_host", "delete_host"]:
             resp = self.client.post(reverse("fwadmin:%s" % action,
                                             args=(host.id,)))
@@ -183,27 +191,17 @@ class LoggedInViewsTestCase(BaseLoggedInTestCase):
             self.assertTrue("are not owner of this object" in resp.content)
             # ensure the active_until date is not modified
             host = Host.objects.get(name=host_name)
-            self.assertEqual(host.active_until, active_until)
+            self.assertEqual(
+                self.other_host.active_until, self.other_active_until)
 
     def test_same_owner_delete_rules(self):
-        a_user = User.objects.create_user("Alice")
-        host_name = "alice host"
-        active_until = datetime.date(2036, 01, 01)
-        host = Host.objects.create(name=host_name, ip="192.168.1.1",
-                                   owner=a_user, active_until=active_until)
-        rule = ComplexRule.objects.create(host=host, name="ssh", port=22)
         resp = self.client.post(reverse("fwadmin:delete_rule",
-                                            args=(rule.id,)))
+                                            args=(self.other_rule.id,)))
         self.assertEqual(resp.status_code, 403)
 
     def test_same_owner_create_rules(self):
-        a_user = User.objects.create_user("Alice")
-        host_name = "alice host"
-        active_until = datetime.date(2036, 01, 01)
-        host = Host.objects.create(name=host_name, ip="192.168.1.1",
-                                   owner=a_user, active_until=active_until)
         resp = self.client.post(reverse("fwadmin:new_rule_for_host",
-                                        args=(host.id,)),
+                                        args=(self.other_host.id,)),
                                 make_new_rule_post_data())
         self.assertEqual(resp.status_code, 403)
 
@@ -294,3 +292,32 @@ class ModeratorTestCase(BaseLoggedInTestCase):
             resp.content,
             "! fw rules for ahost (192.168.0.2) owned by meep\n"
             "access-list 120 permit TCP any host 192.168.0.2 eq 80")
+
+    def test_moderator_can_edit_other_host(self):
+        for action in ["renew_host", "edit_host"]:
+            resp = self.client.get(reverse("fwadmin:%s" % action,
+                                       args=(self.other_host.id,)))
+            self.assertEqual(resp.status_code, 200)
+
+    def test_moderator_can_delete_other_host(self):
+        resp = self.client.post(reverse("fwadmin:delete_host",
+                                        args=(self.other_host.id,)))
+        self.assertEqual(resp.status_code, 302)
+        with self.assertRaises(Host.DoesNotExist):
+            Host.objects.get(pk=self.other_host.id)
+
+    def test_moderator_can_delete_other_rules(self):
+        resp = self.client.post(reverse("fwadmin:delete_rule",
+                                        args=(self.other_rule.id,)))
+        self.assertEqual(resp.status_code, 302)
+        with self.assertRaises(ComplexRule.DoesNotExist):
+            ComplexRule.objects.get(pk=self.other_rule.id)
+
+    def test_moderator_can_create_other_rules(self):
+        post_data = make_new_rule_post_data()
+        resp = self.client.post(reverse("fwadmin:new_rule_for_host",
+                                        args=(self.other_host.id,)),
+                                post_data)
+        self.assertEqual(resp.status_code, 302)
+        rule = ComplexRule.objects.get(name=post_data["name"])
+        self.assertEqual(rule.host, self.other_host)

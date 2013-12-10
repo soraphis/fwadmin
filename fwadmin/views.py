@@ -61,8 +61,8 @@ def is_moderator(user):
         name=settings.FWADMIN_MODERATORS_USER_GROUP).count() > 0
 
 
-def user_is_owner(host, user):
-    return host.owner == user
+def user_has_permssion_for_host(host, user):
+    return host.owner == user or is_moderator(user)
 
 
 @login_required
@@ -117,7 +117,7 @@ def new_host(request):
 @group_required(settings.FWADMIN_ALLOWED_USER_GROUP)
 def renew_host(request, pk):
     host = Host.objects.filter(pk=pk)[0]
-    if not user_is_owner(host, request.user):
+    if not user_has_permssion_for_host(host, request.user):
         return NotOwnerError(request.user)
     active_until = (datetime.date.today() +
                     datetime.timedelta(settings.FWADMIN_DEFAULT_ACTIVE_DAYS))
@@ -133,7 +133,7 @@ def renew_host(request, pk):
 @group_required(settings.FWADMIN_ALLOWED_USER_GROUP)
 def delete_host(request, pk):
     host = Host.objects.get(pk=pk)
-    if not user_is_owner(host, request.user):
+    if not user_has_permssion_for_host(host, request.user):
         return NotOwnerError(request.user)
     if request.method == 'POST':
         host.delete()
@@ -146,7 +146,7 @@ def delete_host(request, pk):
 @group_required(settings.FWADMIN_ALLOWED_USER_GROUP)
 def edit_host(request, pk):
     host = Host.objects.filter(pk=pk)[0]
-    if not user_is_owner(host, request.user):
+    if not user_has_permssion_for_host(host, request.user):
         return NotOwnerError(request.user)
     if request.method == 'POST':
         form = EditHostForm(request.POST, instance=host)
@@ -203,7 +203,7 @@ def delete_rule(request, pk):
     if request.method == 'POST':
         rule = ComplexRule.objects.get(pk=pk)
         host = rule.host
-        if not user_is_owner(host, request.user):
+        if not user_has_permssion_for_host(host, request.user):
             return NotOwnerError(request.user)
         rule.delete()
         return redirect(reverse("fwadmin:edit_host", args=(host.id,)))
@@ -214,7 +214,7 @@ def delete_rule(request, pk):
 @group_required(settings.FWADMIN_ALLOWED_USER_GROUP)
 def new_rule_for_host(request, hostid):
     host = Host.objects.get(pk=hostid)
-    if not user_is_owner(host, request.user):
+    if not user_has_permssion_for_host(host, request.user):
         return NotOwnerError(request.user)
     if request.method == 'POST':
         form = NewRuleForm(request.POST)
