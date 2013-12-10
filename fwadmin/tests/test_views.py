@@ -52,7 +52,7 @@ class AnonymousTestCase(TestCase):
         self.assertEqual(resp.status_code, 403)
 
 
-class LoggedInViewsTestCase(TestCase):
+class BaseLoggedInTestCase(TestCase):
 
     def setUp(self):
         allowed_group = Group.objects.get(name=FWADMIN_ALLOWED_USER_GROUP)
@@ -68,6 +68,9 @@ class LoggedInViewsTestCase(TestCase):
         self.rule = ComplexRule.objects.create(
             host=self.host, name="http", permit=True, ip_protocol="TCP",
             port=80)
+
+
+class LoggedInViewsTestCase(BaseLoggedInTestCase):
 
     def test_index_has_host(self):
         """Test that the index view has a html table with out test host"""
@@ -204,7 +207,7 @@ class LoggedInViewsTestCase(TestCase):
                                 make_new_rule_post_data())
         self.assertEqual(resp.status_code, 403)
 
-    def test_moderator_auth(self):
+    def test_moderator_needs_auth(self):
         resp = self.client.get(
             reverse("fwadmin:moderator_list_unapproved"))
         self.assertEqual(resp.status_code, 403)
@@ -212,11 +215,21 @@ class LoggedInViewsTestCase(TestCase):
             reverse("fwadmin:moderator_approve_host", args=(1,)))
         self.assertEqual(resp.status_code, 403)
 
-    def test_moderator_approve(self):
+    def test_export_protected(self):
+        resp = self.client.get(reverse("fwadmin:export", args=("cisco",)))
+        self.assertEqual(resp.status_code, 403)
+
+
+class ModeratorTestCase(BaseLoggedInTestCase):
+
+    def setUp(self):
+        super(ModeratorTestCase, self).setUp()
         moderators = Group.objects.get(name=FWADMIN_MODERATORS_USER_GROUP)
         self.user.groups.add(moderators)
         self.host.approved = False
         self.host.save()
+
+    def test_moderator_approve(self):
         resp = self.client.post(reverse("fwadmin:moderator_approve_host",
                                         args=(self.host.id,)))
         self.assertEqual(resp.status_code, 302)
@@ -228,10 +241,6 @@ class LoggedInViewsTestCase(TestCase):
         self.assertEqual(host.approved, True)
 
     def test_moderator_list_unapproved(self):
-        moderators = Group.objects.get(name=FWADMIN_MODERATORS_USER_GROUP)
-        self.user.groups.add(moderators)
-        self.host.approved = False
-        self.host.save()
         # check that the unapproved one is listed
         resp = self.client.post(reverse("fwadmin:moderator_list_unapproved"))
         self.assertEqual(resp.status_code, 200)
@@ -271,10 +280,6 @@ class LoggedInViewsTestCase(TestCase):
         self.assertEqual(
             urlsplit(resp["Location"])[2],
             reverse("fwadmin:edit_host", args=(self.host.id,)))
-
-    def test_export_protected(self):
-        resp = self.client.get(reverse("fwadmin:export", args=("cisco",)))
-        self.assertEqual(resp.status_code, 403)
 
     def test_admin_export(self):
         moderators = Group.objects.get(name=FWADMIN_MODERATORS_USER_GROUP)
