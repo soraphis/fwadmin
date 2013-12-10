@@ -62,7 +62,8 @@ class AnonymousTestCase(TestCase):
     @patch("socket.gethostbyname")
     def test_gethostbyname_inet(self, mock_gethostbyname):
         mock_gethostbyname.return_value = "8.8.8.8"
-        url = reverse("fwadmin:gethostbyname", args=("www.google.com",))
+        url = reverse("fwadmin:gethostbyname",
+                      args=("www.vielen_dank-peter.de",))
         resp = self.client.get(url)
         self.assertEqual(resp.status_code, 200)
         self.assertEqual(json.loads(resp.content), "8.8.8.8")
