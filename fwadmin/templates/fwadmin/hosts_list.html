@@ -22,6 +22,9 @@
       <tr>
         <th>{% trans "Host" %}</th>
         <th>{% trans "Description" %}</th>
+{% if is_moderator %}
+        <th>{% trans "Owner" %}</th>
+{% endif %}
         <th>{% trans "IP" %}</th>
 	<th>{% trans "Active Rules" %}
         <th>{% trans "Approved"  %}</th>
@@ -34,6 +37,9 @@
       <tr>
         <td>{{ host.name }}</td>
         <td>{{ host.description|truncatechars:60 }}</td>
+{% if is_moderator %}
+        <th>{{ host.owner.username }}</th>
+{% endif %}
         <td><a href="{% url 'fwadmin:edit_host' host.pk %}">{{ host.ip }}</a></td>
 	<td>
 	  {% for rule in host.get_rules_for_host %}
