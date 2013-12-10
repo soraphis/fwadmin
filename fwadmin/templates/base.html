@@ -6,40 +6,30 @@
 <head>
   <title>{% block title %}{% trans "Fwadmin" %}{% endblock %}</title>
 
-  <link rel="stylesheet" href="{{ STATIC_URL }}style.css" />
+  <link rel="stylesheet" href="{{ STATIC_URL }}components/bootstrap/dist/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="{{ STATIC_URL }}components/datatables/media/css/jquery.dataTables.css" />
   <link rel="stylesheet" href="{{ STATIC_URL }}css/datatable.css" />
+  <link rel="stylesheet" href="{{ STATIC_URL }}style.css" />
 
-  <script src="{{ STATIC_URL }}components/jquery/jquery.min.js">
-  </script>
-
-  <link rel="stylesheet" 
-        href="{{ STATIC_URL }}components/bootstrap.css/css/bootstrap.min.css" />
-  <script 
-     src="{{ STATIC_URL }}components/bootstrap.css/js/bootstrap.min.js">
-  </script> 
-
-  <script 
-     src="{{ STATIC_URL }}components/datatables/media/js/jquery.dataTables.js">
-  </script> 
-
-  <script 
-     src="{{ STATIC_URL }}js/datatable.bootstrap.js">
-  </script> 
+  <script src="{{ STATIC_URL }}components/jquery/jquery.min.js"></script>
+  <script src="{{ STATIC_URL }}components/bootstrap/dist/js/bootstrap.min.js"></script> 
+  <script src="{{ STATIC_URL }}components/datatables/media/js/jquery.dataTables.js"></script> 
+  <script src="{{ STATIC_URL }}js/datatable.bootstrap.js"></script>
 </head>
 
 <body>
-  <div class="container">
-    <div class="navbar">
-      <div class="navbar-inner">
-        <ul class="nav">
-          <li><a href={% url 'fwadmin:index' %}><i class="icon-home pull-left"></i>{% trans "Home" %}</a></li>
-        </ul>
-        <ul class="nav pull-right">
-          <li><a href="/accounts/logout" class="logout">{% trans "Logout" %}</a></li>
-        </ul>
-      </div>
+  <div class="navbar">
+    <div class="navbar-inner">
+      <ul class="nav">
+        <li><a href={% url 'fwadmin:index' %}><i class="icon-home pull-left"></i>{% trans "Home" %}</a></li>
+      </ul>
+      <ul class="nav pull-right">
+        <li><a href="/accounts/logout" class="logout">{% trans "Logout" %}</a></li>
+      </ul>
     </div>
+  </div>
 
+  <div class="container">
     {% block content %}{% endblock %}
   </div>
 
