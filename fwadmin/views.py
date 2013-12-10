@@ -4,6 +4,8 @@ from django.core.urlresolvers import reverse
 from django.core.exceptions import PermissionDenied
 
 import StringIO
+import json
+import socket
 
 from django.http import (
     HttpResponseBadRequest,
@@ -235,3 +237,11 @@ def new_rule_for_host(request, hostid):
                                'form': form,
                               },
                               context_instance=RequestContext(request))
+
+
+def gethostbyname(request, hostname):
+    try:
+        ip = socket.gethostbyname(hostname)
+    except socket.gaierror:
+        ip = ""
+    return HttpResponse(json.dumps(ip), content_type="application/json")

@@ -3,8 +3,8 @@ from settings import *
 DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 
-FWADMIN_REALLY_SEND_MAIL = True
-FWADMIN_REAL_LDAP = True
+FWADMIN_REALLY_SEND_MAIL = False
+
 
 DATABASES = {
     'default': {
