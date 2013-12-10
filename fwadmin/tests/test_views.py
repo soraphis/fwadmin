@@ -1,6 +1,7 @@
 import datetime
 import re
 import json
+from mock import patch
 
 from urlparse import urlsplit
 
@@ -46,6 +47,14 @@ class AnonymousTestCase(TestCase):
         resp = self.client.get(url)
         self.assertEqual(resp.status_code, 200)
         self.assertEqual(json.loads(resp.content), "127.0.0.1")
+
+    @patch("socket.gethostbyname")
+    def test_gethostbyname_inet(self, mock_gethostbyname):
+        mock_gethostbyname.return_value = "8.8.8.8"
+        url = reverse("fwadmin:gethostbyname", args=("www.google.com",))
+        resp = self.client.get(url)
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(json.loads(resp.content), "8.8.8.8")
 
     def test_gethostbyname_invalid(self):
         url = reverse("fwadmin:gethostbyname", args=("dsakfjdfjsadfdsaf",))
