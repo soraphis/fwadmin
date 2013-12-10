@@ -1,7 +1,7 @@
 # customize
 project_name: fwadmin
 project_git_repo: https://github.com/mvo5/fwadmin.git # use ZIMK later
-project_git_version: origin/feature/ansible
+project_git_version: master
 project_uses_ldap: True
 project_uses_south: True
 project_uses_ssl: True

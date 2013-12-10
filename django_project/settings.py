@@ -31,6 +31,7 @@ FWADMIN_DEFAULT_ACTIVE_DAYS = 365
 # mail about moderation requests
 FWADMIN_MODERATION_WAITING_MAIL_NAG = "netz@uni-trier.de"
 
+FWADMIN_REALLY_SEND_MAIL = False
 
 ADMINS = (
     # ('Your Name', 'your_email@example.com'),
