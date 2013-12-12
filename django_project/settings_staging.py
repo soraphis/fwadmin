@@ -5,6 +5,8 @@ TEMPLATE_DEBUG = DEBUG
 
 FWADMIN_REALLY_SEND_MAIL = False
 
+from ldap_auto_discover.ldap_auto_discover import ldap_auto_discover
+AUTH_LDAP_SERVER_URI = lambda: ldap_auto_discover("uni-trier.de")
 
 DATABASES = {
     'default': {
