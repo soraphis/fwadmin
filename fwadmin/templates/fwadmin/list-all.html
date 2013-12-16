@@ -20,36 +20,11 @@
 </script>
 
 <h2>{% trans "All hosts" %}</h2>
-{% if all_hosts %}
-    <table class="table" id="table_hosts">
-      <thead>
-      <tr>
-        <th>{% trans "Owner" %}</th>
-        <th>{% trans "Host Description" %}</th>
-        <th>{% trans "IP" %}</th>
-        <th>{% trans "Rules" %}</th>
-      </tr>
-      </thead>
-      <tbody>
-      {% for host in all_hosts  %}
-      <tr>
-        <td>{{ host.owner }}</td>
-        <td>{{ host.name }}</td>
-        <td>{{ host.ip }}</td>
-        <td>
-	  {# XXX: meeeeh, is there a better way to do this than to loop here N-times ? #}
-	  {% for rule in host.get_rules_for_host %}
-	      <p>name:{{ rule.name }} from:{{ rule.from_net }} permit:{{ rule.permit }} protocol:{{ rule.ip_protocol }} port:{{ rule.port }}
-	      </p>
-	  {% endfor %}
-        </td>
-        <td> 
-      </tr>
-      {% endfor %}
-      </tbody>
-    </table>
-{% else %}
-    <p>{% trans "No unapproved hosts." %}</p>
-{% endif %}
+
+<div class="span10">
+  {% include "fwadmin/hosts_list.html" %}
+</div>
+
+
 
 {% endblock %}
