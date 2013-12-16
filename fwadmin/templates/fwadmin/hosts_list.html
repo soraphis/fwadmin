@@ -1,6 +1,5 @@
 {% load i18n %}
 {% load url from future %}
-
 <script>
   $(function() {
     $("#table_my_hosts").dataTable({
@@ -13,7 +12,6 @@
     });
   });
 </script>
-
 
 <div class="hosts-list">
 {% if all_hosts %}
@@ -61,7 +59,7 @@
 	    <form action={% url 'fwadmin:renew_host' host.pk %} 
 		  method="post">
 	      {% csrf_token %}
-	      <input type="submit" value={% trans "Renew" %}>
+	      <input type="submit" value={% trans "Renew" %} class="btn btn-primary">
 	    </form>
 	  </td>
 	{% else %}
