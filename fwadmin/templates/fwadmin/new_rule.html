@@ -6,7 +6,7 @@
 {% block content %}
 
 <div class="page-header">
-  <h1>{% blocktrans %}New rule for {{ host.name }}{% endblocktrans %}</h1>
+  <h1>{% blocktrans with hostname=host.name %}New rule for {{ hostname }}{% endblocktrans %}</h1>
 </div>
 
 {% if form.errors %}

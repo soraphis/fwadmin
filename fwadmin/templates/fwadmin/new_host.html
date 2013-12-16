@@ -8,7 +8,6 @@
   <h1>{% trans "Create a new Host" %}</h1>
 </div>
 
-
 {% if form.errors %}
 <p style="color: red;">
  {% blocktrans %} "Please correct the error{{ form.errors|pluralize }} below."
@@ -18,10 +17,34 @@
 
 <form action="" method="post">
   {% csrf_token %}
-  <table>
-    {{ form.as_table }}
-  </table>
+  {% for field in form %}
+  <div class="{{ field.id_for_label }}">
+    {{ field.errors }}
+    {{ field.label_tag }} {{ field }}
+    {% if field.id_for_label == "id_ip" %}
+      <button id="gethostbyname">{% trans "Resolve" %}</button>
+    {% endif %}
+  </div>
+  {% endfor %}
   <input class="btn" type="submit" value="{% trans "Create" %}">
 </form>
+
+<script type="text/javascript">                                         
+$(document).ready(function(){
+
+  $("#gethostbyname").on("click", function() {
+     var hostname = $("#id_ip").val()
+     var url = "{% url 'fwadmin:gethostbyname' 'xxxyyy' %}".replace("xxxyyy", hostname)
+     $.getJSON(url, function( data ) {
+        if(data) {
+          $("#id_ip").val(data)
+        }
+     });
+     return false;
+  });
+
+});
+ </script>   
+
 
 {% endblock %}

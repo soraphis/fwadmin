@@ -1,2 +1,9 @@
-*~
 *.pyc
+*.log
+*.mo
+*~
+django_project/ldap-password
+django_project/secret.txt
+fwadmin/static/components/
+fwadmin.db
+env-fwadmin/

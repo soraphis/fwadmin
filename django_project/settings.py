@@ -13,6 +13,8 @@ except ImportError:
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
+FWADMIN_REAL_LDAP = False
+
 # XXX: can we do better? e.g. via socket.gethostbyname(me)
 FWADMIN_HOST_URL_TEMPLATE = "https://fwadmin.uni-trier.de%(url)s"
 
@@ -31,6 +33,7 @@ FWADMIN_DEFAULT_ACTIVE_DAYS = 365
 # mail about moderation requests
 FWADMIN_MODERATION_WAITING_MAIL_NAG = "netz@uni-trier.de"
 
+FWADMIN_REALLY_SEND_MAIL = False
 
 ADMINS = (
     # ('Your Name', 'your_email@example.com'),
@@ -213,7 +216,9 @@ AUTHENTICATION_BACKENDS = (
 #   AUTH_LDAP_USER_DN_TEMPLATE = "%(user)s@emailtest.uni-trier.de"
 # as the LDAP dn is set to the full user name, not to the SAMAccountName
 #
-AUTH_LDAP_SERVER_URI = lambda: ldap_auto_discover("uni-trier.de")
+if FWADMIN_REAL_LDAP:
+    from ldap_auto_discover.ldap_auto_discover import ldap_auto_discover
+    AUTH_LDAP_SERVER_URI = lambda: ldap_auto_discover("uni-trier.de")
 AUTH_LDAP_BIND_DN = "testpm@uni-trier.de"
 AUTH_LDAP_BIND_PASSWORD = open(os.path.join(os.path.dirname(__file__),
                                             "ldap-password")).read()

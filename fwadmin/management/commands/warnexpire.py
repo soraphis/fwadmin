@@ -2,13 +2,14 @@ import datetime
 import os
 
 from django.core.management.base import BaseCommand
-from django.core.mail import send_mail
 from django.utils.translation import ugettext as _
 from django.core.urlresolvers import reverse
 
 from django.conf import settings
 
+from fwadmin.mail import send_mail
 from fwadmin.models import Host
+
 
 # run command as:
 #   python manage.py warnexpire 14
