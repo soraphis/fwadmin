@@ -64,18 +64,19 @@ def is_moderator(user):
 
 
 def user_has_permssion_for_host(host, user):
-    return host.owner == user or is_moderator(user)
+    return (host.owner == user or
+            host.owner2 == user or
+            is_moderator(user))
 
 
 @login_required
 @group_required(settings.FWADMIN_ALLOWED_USER_GROUP)
 def index(request):
     all_hosts = Host.objects.filter(owner=request.user)
+    all_hosts |= Host.objects.filter(owner2=request.user)
     # pass all views that the user owns too
-    all_rules = ComplexRule.objects.filter(host__owner=request.user)
     return render_to_response('fwadmin/index.html',
                               {'all_hosts': all_hosts,
-                               'complex_rules': all_rules,
                                'is_moderator': is_moderator(request.user),
                               },
                               context_instance=RequestContext(request))
@@ -173,6 +174,7 @@ def moderator_list_unapproved(request):
     # XXX: add a template for list
     return render_to_response('fwadmin/list-unapproved.html',
                               {'all_hosts': all_hosts,
+                               'is_moderator': is_moderator(request.user),
                                },
                               context_instance=RequestContext(request))
 

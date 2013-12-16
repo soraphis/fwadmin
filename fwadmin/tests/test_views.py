@@ -88,10 +88,12 @@ class BaseLoggedInTestCase(TestCase):
         self.user2.groups.add(allowed_group)
         res = self.client.login(username="meep", password="lala")
         self.assertTrue(res)
+        self.loggedin_user = self.user
+        # hosts
         self.host = Host.objects.create(
             name="ahost", description="some description",
             ip="192.168.0.2", active_until="2022-01-01",
-            owner=self.user)
+            owner=self.user, owner2=self.user2)
         self.host.save()
         self.rule = ComplexRule.objects.create(
             host=self.host, name="http", permit=True, ip_protocol="TCP",
@@ -146,7 +148,7 @@ class LoggedInViewsTestCase(BaseLoggedInTestCase):
                                    # XXX: should we disallow renew after
                                    #      some time?
                                    active_until="1789-01-01",
-                                   owner=self.user)
+                                   owner=self.loggedin_user)
         # post to renew url
         resp = self.client.post(reverse("fwadmin:renew_host", args=(host.id,)))
         # ensure we get something of the right message
@@ -166,7 +168,7 @@ class LoggedInViewsTestCase(BaseLoggedInTestCase):
         # check the data
         host = Host.objects.get(name=post_data["name"])
         self.assertEqual(host.ip, post_data["ip"])
-        self.assertEqual(host.owner, self.user)
+        self.assertEqual(host.owner, self.loggedin_user)
         self.assertEqual(host.approved, False)
         self.assertEqual(
             host.active_until,
@@ -347,3 +349,16 @@ class ModeratorTestCase(BaseLoggedInTestCase):
         self.assertEqual(resp.status_code, 302)
         rule = ComplexRule.objects.get(name=post_data["name"])
         self.assertEqual(rule.host, self.other_host)
+
+
+# note that it inherits from the LoggedInView, so all the tests for
+# "owner" are run again for "owner2"
+class Owner2TestCase(LoggedInViewsTestCase):
+
+    def setUp(self):
+        super(Owner2TestCase, self).setUp()
+        # for the tests
+        self.loggedin_user = self.user2
+        # login as *owner2*
+        self.client.login(
+            username=self.user2.username, password="lala")

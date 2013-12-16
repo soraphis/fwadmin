@@ -23,6 +23,10 @@ urlpatterns = patterns('fwadmin.views',
     url(r'^gethostbyname/(?P<hostname>[\w_.-]+)/$',
         'gethostbyname', name="gethostbyname"),
 
+    # lookup
+    url(r'^gethostbyname/(?P<hostname>[\w_.-]+)/$',
+        'gethostbyname', name="gethostbyname"),
+
     # moderator views
     url(r'^host/(?P<pk>\d+)/approve/$', 'moderator_approve_host',
         name='moderator_approve_host'),
