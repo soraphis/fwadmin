@@ -86,10 +86,11 @@ class BaseLoggedInTestCase(TestCase):
         # add secondary user
         self.user2 = User.objects.create_user("owner2", password="lala")
         self.user2.groups.add(allowed_group)
-        res = self.client.login(username="meep", password="lala")
+        # login
+        res = self.client.login(username=self.user.username, password="lala")
         self.assertTrue(res)
         self.loggedin_user = self.user
-        # hosts
+        # host
         self.host = Host.objects.create(
             name="ahost", description="some description",
             ip="192.168.0.2", active_until="2022-01-01",
