@@ -19,6 +19,10 @@ urlpatterns = patterns('fwadmin.views',
         name="new_rule_for_host"),
     url(r'^rule/(?P<pk>\d+)/delete/', 'delete_rule', name="delete_rule"),
 
+    # lookup
+    url(r'^gethostbyname/(?P<hostname>[\w_.-]+)/$',
+        'gethostbyname', name="gethostbyname"),
+
     # moderator views
     url(r'^host/(?P<pk>\d+)/approve/$', 'moderator_approve_host',
         name='moderator_approve_host'),
