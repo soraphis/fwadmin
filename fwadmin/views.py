@@ -174,7 +174,6 @@ def moderator_list_unapproved(request):
     # XXX: add a template for list
     return render_to_response('fwadmin/list-unapproved.html',
                               {'all_hosts': all_hosts,
-                               'is_moderator': is_moderator(request.user),
                                },
                               context_instance=RequestContext(request))
 
