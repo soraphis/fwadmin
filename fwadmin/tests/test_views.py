@@ -45,8 +45,12 @@ class LoggedInViewsTestCase(TestCase):
 
     def setUp(self):
         allowed_group = Group.objects.get(name=FWADMIN_ALLOWED_USER_GROUP)
+        # add main user
         self.user = User.objects.create_user("meep", password="lala")
         self.user.groups.add(allowed_group)
+        # add secondary user
+        self.user2 = User.objects.create_user("owner2", password="lala")
+        self.user2.groups.add(allowed_group)
         res = self.client.login(username="meep", password="lala")
         self.assertTrue(res)
         self.host = Host.objects.create(
