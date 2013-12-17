@@ -94,7 +94,7 @@ def export(request, fwtype):
 @group_required(settings.FWADMIN_ALLOWED_USER_GROUP)
 def new_host(request):
     if request.method == 'POST':
-        form = NewHostForm(request.POST)
+        form = NewHostForm(request.POST, owner_username=request.user)
         if form.is_valid():
             # do not commit just yet, we need to add more stuff
             host = form.save(commit=False)
@@ -109,7 +109,7 @@ def new_host(request):
             return HttpResponseRedirect(reverse("fwadmin:new_rule_for_host",
                                                 args=(host.id,)))
     else:
-        form = NewHostForm()
+        form = NewHostForm(owner_username=request.user)
     return render_to_response('fwadmin/new_host.html',
                               {'form': form,
                               },

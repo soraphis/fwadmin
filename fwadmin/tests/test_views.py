@@ -86,6 +86,8 @@ class BaseLoggedInTestCase(TestCase):
         # add secondary user
         self.user2 = User.objects.create_user("owner2", password="lala")
         self.user2.groups.add(allowed_group)
+        # and a user that is *not* in the right group
+        self.non_fwadmin_user = User.objects.create_user("non-fwadmin-user")
         # login
         res = self.client.login(username=self.user.username, password="lala")
         self.assertTrue(res)
@@ -179,6 +181,28 @@ class LoggedInViewsTestCase(BaseLoggedInTestCase):
         self.assertEqual(
             urlsplit(resp["Location"])[2], reverse("fwadmin:new_rule_for_host",
                                                    args=(host.id,)))
+
+    def test_new_host_owner_and_owner2_different(self):
+        post_data = {"name": "newhost",
+                     "ip": "192.168.1.1",
+                     "owner2": self.loggedin_user.id,
+                    }
+        resp = self.client.post(reverse("fwadmin:new_host"), post_data)
+        self.assertTrue(
+            "Owner and Secondary Owner can not be the same" in resp.content)
+        with self.assertRaises(Host.DoesNotExist):
+            Host.objects.get(ip=post_data["ip"])
+
+    def test_new_host_owner2_has_correct_group(self):
+        post_data = {"name": "newhost",
+                     "ip": "192.168.1.1",
+                     "owner2": self.non_fwadmin_user.id,
+                    }
+        resp = self.client.post(reverse("fwadmin:new_host"), post_data)
+        self.assertTrue(
+            "Secondary Owner must be in group" in resp.content)
+        with self.assertRaises(Host.DoesNotExist):
+            Host.objects.get(ip=post_data["ip"])
 
     def test_edit_host(self):
         # create a new host
