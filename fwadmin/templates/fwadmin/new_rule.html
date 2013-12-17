@@ -20,14 +20,12 @@
   {% csrf_token %}
 
   <div>
-    {% for field in form %}
-    {% if field.name == 'stock_port' %}
-    <div class="fieldWrapper">
-      {{ field.errors }}
-      {{ field.label }}: {{ field }}
+    <div id="quickRuleButtons" class="hide">
+      <span>Allow Port:</span>
+      <button id="sshQuickButton">{% trans "SSH" %}</button>
+      <button id="httpQuickButton">{% trans "HTTP" %}</button>
+      <button id="httpsQuickButton">{% trans "HTTPS" %}</button>
     </div>
-    {% endif %}
-    {% endfor %}
     
     {# hidden by default so that its not visible for non-JS browsers #}
     <div class="fieldWrapper">
@@ -37,14 +35,7 @@
     </div>
     
     <div  id="advanced">
-      {% for field in form %}
-      {% if field.name != 'stock_port' %}
-      <div class="fieldWrapper">
-        {{ field.errors }}
-        {{ field.label }}: {{ field }}
-      </div>
-      {% endif %}
-      {% endfor %}
+      {{ form|bootstrap_horizontal }}
     </div>
   </div>
   
@@ -62,11 +53,30 @@ function toggleAdvanced() {
 }
 
 $(document).ready(function(){
+  $("#quickRuleButtons").removeClass("hide")
   $("#toggleAdvancedButton").removeClass("hide")
+  toggleAdvanced();
+
+  // callbacks
+  $("#sshQuickButton").click(function() {
+    $("#id_ip_protocol").val("TCP");
+    $("#id_port").val("22");
+    $("#id_name").val("ssh");
+  });
+  $("#httpQuickButton").click(function() {
+    $("#id_ip_protocol").val("TCP");
+    $("#id_port").val("80");
+    $("#id_name").val("http");
+  });
+  $("#httpsQuickButton").click(function() {
+    $("#id_ip_protocol").val("TCP");
+    $("#id_port").val("443");
+    $("#id_name").val("https");
+  });
+
   $("#toggleAdvancedButton").click(function(){
     toggleAdvanced();
   });
-  toggleAdvanced();
 
   // keep id_stock_port and id_port in sync
   $("#id_stock_port").change(function() {
