@@ -36,14 +36,26 @@
       <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
         {% if user.is_authenticated %}
         <ul class="nav navbar-nav">
-          <li><a href={% url 'fwadmin:index' %}>{% trans "Home" %}</a></li>
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">{% trans "Hosts" %}<b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li><a href={% url 'fwadmin:index' %}>{% trans "List" %}</a></li>
+              <li class="divider"></li>
+              <li><a href={% url 'fwadmin:new_host' %}>{% trans "Create New Host" %}</a></li>
+            </ul>
+          </li>
+  
           {# TODO: is there a better way for this? #}
           {% do_moderator_check as is_mod %}
           {% if is_mod %}
-          <li><a href={% url 'fwadmin:moderator_list_unapproved' %}>{% trans "List Unapproved" %}</a></li>
-          <li><a href={% url 'fwadmin:moderator_list_all' %}>{% trans "List All" %}</a></li>
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">{% trans "Administration" %}<b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li><a href={% url 'fwadmin:moderator_list_unapproved' %}>{% trans "List Unapproved" %}</a></li>
+              <li><a href={% url 'fwadmin:moderator_list_all' %}>{% trans "List All" %}</a></li>
+            </ul>
+          </li>
           {% endif %}
-          <li><a href={% url 'fwadmin:new_host' %}>{% trans "Create New Host" %}</a></li>
         </ul>
         {% endif %}
         <ul class="nav navbar-nav pull-right">
