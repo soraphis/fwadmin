@@ -18,33 +18,37 @@
 
 <form id="new_rule_for_host_form" class="form-horizontal" action="" method="post">
   {% csrf_token %}
-
-  <div>
     <div id="quickRuleButtons" class="hide">
-      <span>Allow Port:</span>
-      {% for button in quick_buttons %}
-        <button id="{{ button.name }}QuickButton">{{ button.description }}</button>
-      {% endfor %}
+      <div class="form-group">
+        <label class="col-md-2 control-label">Allow Port</label>
+        <div class="col-md-10">
+          {% for button in quick_buttons %}
+            <button id="{{ button.name }}QuickButton" class="btn btn-primary">{{ button.description }}</button>
+          {% endfor %}
+        </div>
+      </div>
     </div>
     
     {# hidden by default so that its not visible for non-JS browsers #}
     <div class="fieldWrapper">
-    <a id="toggleAdvancedButton" class="btn hide">
-      {% trans "Toggle advanced options" %}
-    </a>
+      <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+          <a id="toggleAdvancedButton" class="btn btn-default hide" data-toggle="button">
+            {% trans "Toggle advanced options" %}
+          </a>
+        </div>
+      </div>
     </div>
     
     <div  id="advanced">
       {{ form|bootstrap_horizontal }}
     </div>
-  </div>
-  
 
-  <div>
-    <a class="btn btn-danger" href="{% url 'fwadmin:edit_host' host.id %}">
-      {% trans "Cancel" %}</a>
-    <input class="btn btn-primary" type="submit" value={% trans "Add" %}>
-  </div>
+    <div class="pull-right">
+      <a class="btn btn-danger" href="{% url 'fwadmin:edit_host' host.id %}">
+        {% trans "Cancel" %}</a>
+      <input class="btn btn-primary" type="submit" value={% trans "Add" %}>
+    </div>
 </form>
 
 <script type="text/javascript">
