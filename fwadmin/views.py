@@ -206,7 +206,6 @@ def new_rule_for_host(request, hostid):
         return NotOwnerError(request.user)
     if request.method == 'POST':
         form = NewRuleForm(request.POST)
-        print form.data
         if form.is_valid():
             rule = form.save(commit=False)
             rule.host = host
