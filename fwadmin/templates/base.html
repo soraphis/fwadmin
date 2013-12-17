@@ -34,6 +34,7 @@
       </div>
 
       <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+        {% if user.is_authenticated %}
         <ul class="nav navbar-nav">
           <li><a href={% url 'fwadmin:index' %}>{% trans "Home" %}</a></li>
           {# TODO: is there a better way for this? #}
@@ -44,8 +45,13 @@
           {% endif %}
           <li><a href={% url 'fwadmin:new_host' %}>{% trans "Create New Host" %}</a></li>
         </ul>
+        {% endif %}
         <ul class="nav navbar-nav pull-right">
+        {% if user.is_authenticated %}
           <li><a href="/accounts/logout" class="logout">{% trans "Logout" %}</a></li>
+        {% else %}
+          <li><a href="/accounts/login" class="login">{% trans "Login" %}</a></li>
+        {% endif %}
         </ul>
       </div>
     </div>
