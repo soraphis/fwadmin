@@ -1,4 +1,5 @@
 {% load url from future %}
+{% load user_management %}
 {% load i18n %}
 
 <!DOCTYPE html>
@@ -35,8 +36,9 @@
       <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
         <ul class="nav navbar-nav">
           <li><a href={% url 'fwadmin:index' %}>{% trans "Home" %}</a></li>
-          {# TODO: need is_moderator on every page #}
-          {% if is_moderator %}
+          {# TODO: is there a better way for this? #}
+          {% do_moderator_check as is_mod %}
+          {% if is_mod %}
           <li><a href={% url 'fwadmin:moderator_list_unapproved' %}>{% trans "List Unapproved" %}</a></li>
           <li><a href={% url 'fwadmin:moderator_list_all' %}>{% trans "List All" %}</a></li>
           {% endif %}

@@ -90,7 +90,6 @@ def index(request):
     return render_to_response('fwadmin/index.html',
                               {'all_hosts': all_hosts,
                                'complex_rules': all_rules,
-                               'is_moderator': is_moderator(request.user),
                               },
                               context_instance=RequestContext(request))
 
@@ -198,7 +197,6 @@ def moderator_list_all(request):
     # XXX: add a template for list
     return render_to_response('fwadmin/list-all.html',
                               {'all_hosts': all_hosts,
-                               'is_moderator': is_moderator(request.user),
                                },
                               context_instance=RequestContext(request))
 
