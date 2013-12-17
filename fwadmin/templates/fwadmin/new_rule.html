@@ -18,14 +18,66 @@
 
 <form id="new_rule_for_host_form" class="form-horizontal" action="" method="post">
   {% csrf_token %}
-  {{ form|bootstrap_horizontal }}
-  <a class="btn btn-danger" href="{% url 'fwadmin:edit_host' host.id %}">
-    {% trans "Cancel" %}</a>
-  <input class="btn btn-primary" type="submit" value={% trans "Add" %}>
+  <div class="form-group panel-group" id="accordion">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h4 class="panel-title">
+          <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+            Simple Rule
+          </a>
+        </h4>
+      </div>
+      <div id="collapseOne" class="panel-collapse collapse in">
+        <div class="panel-body">
+          <div class="form-group">
+            <label class="col-md-2 control-label">Allow Port</label>
+            <div class="col-md-10">
+              {% for button in quick_buttons %}
+                <button id="{{ button.name }}QuickButton" class="btn btn-primary">{{ button.description }}</button>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h4 class="panel-title">
+          <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" class="collapsed">
+            Advanced Options
+          </a>
+        </h4>
+      </div>
+      <div id="collapseTwo" class="panel-collapse collapse">
+        <div class="panel-body">
+          {{ form|bootstrap_horizontal }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+    <div class="form-group">
+      <div class="pull-right">
+        <a class="btn btn-danger" href="{% url 'fwadmin:edit_host' host.id %}">
+          {% trans "Cancel" %}</a>
+        <input class="btn btn-primary" type="submit" value={% trans "Add" %}>
+      </div>
+    </div>
 </form>
 
-<script type="text/javascript">                                         
+<script type="text/javascript">
 $(document).ready(function(){
+  $("#quickRuleButtons").removeClass("hide")
+
+  // callbacks
+  {% for button in quick_buttons %}
+    $("#{{ button.name }}QuickButton").click(function() {
+      $("#id_ip_protocol").val("{{ button.ip_protocol }}");
+      $("#id_port").val("{{ button.port }}");
+      $("#id_name").val("{{ button.name }}");
+    });
+  {% endfor %}
+
   // keep id_stock_port and id_port in sync
   $("#id_stock_port").change(function() {
     var selected_str = $("#id_stock_port option:selected").text();
