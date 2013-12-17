@@ -6,40 +6,50 @@
 <head>
   <title>{% block title %}{% trans "Fwadmin" %}{% endblock %}</title>
 
-  <link rel="stylesheet" href="{{ STATIC_URL }}style.css" />
+  <link rel="stylesheet" href="{{ STATIC_URL }}components/bootstrap/dist/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="{{ STATIC_URL }}components/datatables/media/css/jquery.dataTables.css" />
   <link rel="stylesheet" href="{{ STATIC_URL }}css/datatable.css" />
+  <link rel="stylesheet" href="{{ STATIC_URL }}style.css" />
 
-  <script src="{{ STATIC_URL }}components/jquery/jquery.min.js">
-  </script>
-
-  <link rel="stylesheet" 
-        href="{{ STATIC_URL }}components/bootstrap.css/css/bootstrap.min.css" />
-  <script 
-     src="{{ STATIC_URL }}components/bootstrap.css/js/bootstrap.min.js">
-  </script> 
-
-  <script 
-     src="{{ STATIC_URL }}components/datatables/media/js/jquery.dataTables.js">
-  </script> 
-
-  <script 
-     src="{{ STATIC_URL }}js/datatable.bootstrap.js">
-  </script> 
+  <script src="{{ STATIC_URL }}components/jquery/jquery.min.js"></script>
+  <script src="{{ STATIC_URL }}components/bootstrap/dist/js/bootstrap.min.js"></script> 
+  <script src="{{ STATIC_URL }}components/datatables/media/js/jquery.dataTables.js"></script> 
+  <script src="{{ STATIC_URL }}js/datatable.bootstrap.js"></script>
 </head>
 
 <body>
-  <div class="container">
-    <div class="navbar">
-      <div class="navbar-inner">
-        <ul class="nav">
-          <li><a href={% url 'fwadmin:index' %}><i class="icon-home pull-left"></i>{% trans "Home" %}</a></li>
+  <nav class="navbar navbar-default" role="navigation">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="#">
+          {% block brand %}{% trans "FWAdmin" %}{% endblock %}
+        </a>
+      </div>
+
+      <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+        <ul class="nav navbar-nav">
+          <li><a href={% url 'fwadmin:index' %}>{% trans "Home" %}</a></li>
+          {# TODO: need is_moderator on every page #}
+          {% if is_moderator %}
+          <li><a href={% url 'fwadmin:moderator_list_unapproved' %}>{% trans "List Unapproved" %}</a></li>
+          <li><a href={% url 'fwadmin:moderator_list_all' %}>{% trans "List All" %}</a></li>
+          {% endif %}
+          <li><a href={% url 'fwadmin:new_host' %}>{% trans "Create New Host" %}</a></li>
         </ul>
-        <ul class="nav pull-right">
+        <ul class="nav navbar-nav pull-right">
           <li><a href="/accounts/logout" class="logout">{% trans "Logout" %}</a></li>
         </ul>
       </div>
     </div>
+  </nav>
 
+  <div class="container">
     {% block content %}{% endblock %}
   </div>
 

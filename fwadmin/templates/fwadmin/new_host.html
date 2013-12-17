@@ -1,13 +1,13 @@
 {% extends "base.html" %}
 {% load i18n %}
+{% load bootstrap %}
 {% load url from future %}
 
+{% block brand %}
+{% trans "Create a new Host" %}
+{% endblock %}
+
 {% block content %}
-
-<div class="page-header">
-  <h1>{% trans "Create a new Host" %}</h1>
-</div>
-
 {% if form.errors %}
 <p style="color: red;">
  {% blocktrans %} "Please correct the error{{ form.errors|pluralize }} below."
@@ -15,23 +15,27 @@
 </p>
 {% endif %}
 
-<form action="" method="post">
+<form action="" method="post" class="form-horizontal">
+  <legend>{% trans "Create a new Host" %}</legend>
   {% csrf_token %}
   {% for field in form %}
   <div class="{{ field.id_for_label }}">
     {{ field.errors }}
-    {{ field.label_tag }} {{ field }}
+    {{ field|bootstrap_horizontal }}
     {% if field.id_for_label == "id_ip" %}
-      <button id="gethostbyname">{% trans "Resolve" %}</button>
+      <div class="form-group">
+        <div class="col-md-offset-2 col-sm-10">
+           <button id="gethostbyname" class="btn btn-default">{% trans "Resolve" %}</button>
+        </div>
+      </div>
     {% endif %}
   </div>
   {% endfor %}
-  <input class="btn" type="submit" value="{% trans "Create" %}">
+  <input class="btn btn-primary" type="submit" value="{% trans "Create" %}">
 </form>
 
 <script type="text/javascript">                                         
 $(document).ready(function(){
-
   $("#gethostbyname").on("click", function() {
      var hostname = $("#id_ip").val()
      var url = "{% url 'fwadmin:gethostbyname' 'xxxyyy' %}".replace("xxxyyy", hostname)
@@ -44,7 +48,5 @@ $(document).ready(function(){
   });
 
 });
- </script>   
-
-
+</script>   
 {% endblock %}

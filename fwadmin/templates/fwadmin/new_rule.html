@@ -1,13 +1,14 @@
 {% extends "base.html" %}
 {% load url from future %}
 {% load i18n %}
+{% load bootstrap %}
 {% load url from future %}
 
-{% block content %}
+{% block brand %}
+{% blocktrans with hostname=host.name %}New rule for {{ hostname }}{% endblocktrans %}
+{% endblock %}
 
-<div class="page-header">
-  <h1>{% blocktrans with hostname=host.name %}New rule for {{ hostname }}{% endblocktrans %}</h1>
-</div>
+{% block content %}
 
 {% if form.errors %}
 <p style="color: red;">
@@ -15,7 +16,7 @@
 </p>
 {% endif %}
 
-<form id="new_rule_for_host_form" action="" method="post">
+<form id="new_rule_for_host_form" class="form-horizontal" action="" method="post">
   {% csrf_token %}
 
   <div>
@@ -86,10 +87,6 @@ $(document).ready(function(){
   $("#id_port").change(function() {
      $("#id_stock_port").val(0);
   });
-
 });
- </script>   
-
-
-
+</script>  
 {% endblock %}

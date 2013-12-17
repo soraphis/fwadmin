@@ -2,12 +2,11 @@
 {% load i18n %}
 {% load url from future %}
 
+{% block brand %}
+{% trans "Unapproved Hosts" %}
+{% endblock %}
+
 {% block content %}
-
-<div class="page-header">
-  <h1>{% trans "Unapproved Hosts" %}</h1>
-</div>
-
 <script>
   $(function() {
     $("#table_hosts").dataTable({
@@ -20,6 +19,7 @@
 </script>
 
 <h2>{% trans "All unapproved hosts" %}</h2>
+
 {% if all_hosts %}
     <table class="table" id="table_hosts">
       <thead>
@@ -48,7 +48,7 @@
 	  <form	action={% url 'fwadmin:moderator_approve_host' host.pk %}
 		method="post">
 	    {% csrf_token %}
-	    <input type="submit" value={% trans "Approve" %}>
+	    <input type="submit" value={% trans "Approve" %} class="btn btn-primary">
 	  </form>
 	</td>
       </tr>

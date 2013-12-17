@@ -1,9 +1,15 @@
 {% extends "base.html" %}
 {% load i18n %}
+{% load bootstrap %}
 {% load url from future %}
 
-{% block content %}
+{% block brand %}
+{% blocktrans with hostname=host.name hostip=host.ip %}
+Edit {{ hostname }} ({{ hostip }})
+{% endblocktrans %}
+{% endblock %}
 
+{% block content %}
 <script>
   $(function() {
     $("#table_rules").dataTable({
@@ -16,116 +22,106 @@
   });
 </script>
 
-<div class="page-header">
-  
-  <h1>{% blocktrans with hostname=host.name hostip=host.ip %}
-    Edit {{ hostname }} ({{ hostip }})
-    {% endblocktrans %}
-  </h1>
-</div>
-
-<div>
-{% if host.approved %}
-  {% blocktrans with host.active_until as host_active_until %}
-  This host is active until {{ host_active_until }}.
-  {% endblocktrans %}
-{% else %}
-  {% blocktrans %}
-  This host is <strong>not</strong> approved yet.
-  {% endblocktrans %}
-{% endif %}
-
- <form action={% url 'fwadmin:delete_host' host.id %} 
-      method="post">
-  {% csrf_token %}
-  <input type="submit" value="{% trans "Delete host" %}">
-</form>
-
-</div>
-
 <ul class="nav nav-tabs">
-  <li class="active"><a href="#tab-rules" data-toggle="tab">{% trans "Firewall rules" %}</a></li>
+  <li class="active"><a href="#tab-status" data-toggle="tab">{% trans "Status" %}</a></li>
+  <li><a href="#tab-rules" data-toggle="tab">{% trans "Firewall rules" %}</a></li>
   <li><a href="#tab-renew" data-toggle="tab">{% trans "Active until" %}</a></li>
   <li><a href="#tab-settings" data-toggle="tab">{% trans "Settings" %}</a></li>
 </ul>
 
 <div class="tab-content">
-  <div class="tab-pane active" id="tab-rules">
-  <div class="row">  
-    <div class="span10"><h2>{% trans "Firewall rules" %}</h2></div>
-    <div class="span2">
-      <a href="{% url 'fwadmin:new_rule_for_host' host.id %}" class="btn pull-right">{% trans "New Rule" %}</a>
+  <div class="tab-pane active" id="tab-status">
+    <h2>{% trans "Status" %}</h2>
+    <p>
+      {% if host.approved %}
+        {% blocktrans with host.active_until as host_active_until %}
+        This host is active until {{ host_active_until }}.
+        {% endblocktrans %}
+      {% else %}
+        {% blocktrans %}
+        This host is <strong>not</strong> approved yet.
+        {% endblocktrans %}
+      {% endif %}
+
+        <form action={% url 'fwadmin:delete_host' host.id %} method="post">
+          {% csrf_token %}
+          <input type="submit" value="{% trans "Delete host" %}" class="btn btn-danger">
+        </form>
+    </p>
+  </div>
+
+  <div class="tab-pane" id="tab-rules">
+    <div class="col-md-10"><h2>{% trans "Firewall rules" %}</h2></div>
+    <div class="pull-right">
+      <a href="{% url 'fwadmin:new_rule_for_host' host.id %}" class="btn btn-primary">{% trans "New Rule" %}</a>
+    </div>
+    <div class="rules-list col-md-12">
+      {% if rules_list %}
+      <table class="table table-condensed" id="table_rules">
+        <thead>
+        <tr>
+  	      <th>{% trans "Name"  %}</th>
+          <th>{% trans "Permit"  %}</th>
+          <th>{% trans "Port" %}</th>
+          <th>{% trans "Protocol" %}</th>
+  	      <th>{% trans "Action" %}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for rule in rules_list  %}
+        <tr>
+          <td>{{ rule.name }}</td>
+          <td>{{ rule.permit }}</td>
+          <td>{{ rule.port }}</td>
+          <td>{{ rule.ip_protocol }}</td>
+  	      <td>
+            <form	action={% url 'fwadmin:delete_rule' rule.id %} method="post">
+              {% csrf_token %}
+              <input type="submit" value={% trans "Delete" %} class="btn btn-danger">
+            </form>
+  	      </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+      {% else %}
+      <p>{% trans "No rules."  %}</p>
+      {% endif %}
     </div>
   </div>
-  <div class="rules-list">
-    {% if rules_list %}
-    <table class="table table-condensed" id="table_rules">
-      <thead>
-      <tr>
-	<th>{% trans "Name"  %}</th>
-        <th>{% trans "Permit"  %}</th>
-        <th>{% trans "Port" %}</th>
-        <th>{% trans "Protocol" %}</th>
-	<th>{% trans "Action" %}</th>
-      </tr>
-      </thead>
-      <tbody>
-      {% for rule in rules_list  %}
-      <tr>
-        <td>{{ rule.name }}</td>
-        <td>{{ rule.permit }}</td>
-        <td>{{ rule.port }}</td>
-        <td>{{ rule.ip_protocol }}</td>
-	<td>
-	  <form	action={% url 'fwadmin:delete_rule' rule.id %} 
-		method="post">
-	    {% csrf_token %}
-	    <input type="submit" value={% trans "Delete" %}>
-	  </form>
-	</td>
-      </tr>
-      {% endfor %}
-      </tbody>
-    </table>
-    {% else %}
-    <p>{% trans "No rules."  %}</p>
+
+  <div class="tab-pane" id="tab-renew">
+    <h2>{% trans "Active until" %}</h2>
+    <p>
+      {% blocktrans with host.active_until as host_active_until %}
+      This host is valid until {{ host_active_until }}
+      {% endblocktrans %}
+      <form action={% url 'fwadmin:renew_host' host.pk %} method="post">
+        {% csrf_token %}
+        <input type="submit" value={% trans "Renew" %} class="btn btn-primary">
+      </form>
+    </p>
+  </div>
+
+  <div class="tab-pane" id="tab-settings">
+    <h2>{% trans "Change host config" %}</h2>
+    {% if form.errors %}
+    <p style="color: red;">
+      {% blocktrans %} Please correct the error {{ form.errors|pluralize }} below.  {% endblocktrans %}
+    </p>
     {% endif %}
+    
+    <form class="form-horizontal" action="" method="post">
+      {% csrf_token %}
+      {{ form|bootstrap_horizontal }}
+      <input type="submit" value="{% trans "Update" %}" class="btn btn-primary">
+    </form>
+
+    <form action={% url 'fwadmin:delete_host' host.id %} method="post">
+      {% csrf_token %}
+      <input type="submit" value="{% trans "Delete host" %}" class="btn btn-danger">
+    </form>
   </div>
 </div>
-
-<div class="tab-pane" id="tab-renew">
-  <h2>{% trans "Active until" %}</h2>
-  <p>
-    {% blocktrans with host.active_until as host_active_until %}
-    This host is valid until {{ host_active_until }}
-    {% endblocktrans %}
-    <form action={% url 'fwadmin:renew_host' host.pk %} 
-	  method="post">
-      {% csrf_token %}
-      <input type="submit" value={% trans "Renew" %}>
-    </form>
-  </p>
-</div>
-
-
-<div class="tab-pane" id="tab-settings">
-  <h2>{% trans "Change host config" %}</h2>
-  {% if form.errors %}
-  <p style="color: red;">
-    {% blocktrans %} Please correct the error {{ form.errors|pluralize }} below.  {% endblocktrans %}
-  </p>
-  {% endif %}
-  
-  <form action="" method="post">
-    {% csrf_token %}
-    <table>
-      {{ form.as_table }}
-    </table>
-    <input type="submit" value="{% trans "Update" %}">
-  </form>
-</div>
-</div>
-
-
 {% endblock %}
 
