@@ -121,9 +121,10 @@ Edit {{ hostname }} ({{ hostip }})
     <form class="form-horizontal" action="" method="post">
       {% csrf_token %}
       {{ form|bootstrap_horizontal }}
+
       <div class="form-group">
         <div class="col-md-offset-2 col-md-10">
-          <input type="submit" value="{% trans "Update" %}" class="btn btn-primary pull-right">
+          <input type="submit" value="{% trans "Update" %}" class="btn btn-primary">
         </div>
       </div>
     </form>
