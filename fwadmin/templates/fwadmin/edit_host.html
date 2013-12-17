@@ -57,10 +57,11 @@ Edit {{ hostname }} ({{ hostip }})
   </div>
 
   <div class="tab-pane" id="tab-rules">
-    <div class="col-md-10"><h2>{% trans "Firewall rules" %}</h2></div>
+    <div class="row"><h2>{% trans "Firewall rules" %}
     <div class="pull-right">
       <a href="{% url 'fwadmin:new_rule_for_host' host.id %}" class="btn btn-primary">{% trans "New Rule" %}</a>
     </div>
+    </h2></div>
     <div class="rules-list col-md-12">
       {% if rules_list %}
       <table class="table table-condensed" id="table_rules">
