@@ -2,7 +2,10 @@ import datetime
 #from django.utils.translation import ugettext as _
 from django.core.urlresolvers import reverse
 from django.core.exceptions import PermissionDenied
+
 import StringIO
+import json
+import socket
 
 from django.http import (
     HttpResponseBadRequest,
@@ -55,18 +58,25 @@ class NotOwnerError(HttpResponseForbidden):
             "You (%s) are not owner of this object" % user.username)
 
 
+def is_moderator(user):
+    return user.groups.filter(
+        name=settings.FWADMIN_MODERATORS_USER_GROUP).count() > 0
+
+
+def user_has_permssion_for_host(host, user):
+    return host.owner == user or is_moderator(user)
+
+
 @login_required
 @group_required(settings.FWADMIN_ALLOWED_USER_GROUP)
 def index(request):
     all_hosts = Host.objects.filter(owner=request.user)
     # pass all views that the user owns too
     all_rules = ComplexRule.objects.filter(host__owner=request.user)
-    is_moderator = request.user.groups.filter(
-        name=settings.FWADMIN_MODERATORS_USER_GROUP).count()
     return render_to_response('fwadmin/index.html',
                               {'all_hosts': all_hosts,
                                'complex_rules': all_rules,
-                               'is_moderator': is_moderator,
+                               'is_moderator': is_moderator(request.user),
                               },
                               context_instance=RequestContext(request))
 
@@ -95,7 +105,7 @@ def new_host(request):
             host.active_until = active_until
             # and really save
             host.save()
-            return HttpResponseRedirect(reverse("fwadmin:edit_host",
+            return HttpResponseRedirect(reverse("fwadmin:new_rule_for_host",
                                                 args=(host.id,)))
     else:
         form = NewHostForm()
@@ -109,7 +119,7 @@ def new_host(request):
 @group_required(settings.FWADMIN_ALLOWED_USER_GROUP)
 def renew_host(request, pk):
     host = Host.objects.filter(pk=pk)[0]
-    if host.owner != request.user:
+    if not user_has_permssion_for_host(host, request.user):
         return NotOwnerError(request.user)
     active_until = (datetime.date.today() +
                     datetime.timedelta(settings.FWADMIN_DEFAULT_ACTIVE_DAYS))
@@ -125,7 +135,7 @@ def renew_host(request, pk):
 @group_required(settings.FWADMIN_ALLOWED_USER_GROUP)
 def delete_host(request, pk):
     host = Host.objects.get(pk=pk)
-    if host.owner != request.user:
+    if not user_has_permssion_for_host(host, request.user):
         return NotOwnerError(request.user)
     if request.method == 'POST':
         host.delete()
@@ -138,7 +148,7 @@ def delete_host(request, pk):
 @group_required(settings.FWADMIN_ALLOWED_USER_GROUP)
 def edit_host(request, pk):
     host = Host.objects.filter(pk=pk)[0]
-    if host.owner != request.user:
+    if not user_has_permssion_for_host(host, request.user):
         return NotOwnerError(request.user)
     if request.method == 'POST':
         form = EditHostForm(request.POST, instance=host)
@@ -174,6 +184,7 @@ def moderator_list_all(request):
     # XXX: add a template for list
     return render_to_response('fwadmin/list-all.html',
                               {'all_hosts': all_hosts,
+                               'is_moderator': is_moderator(request.user),
                                },
                               context_instance=RequestContext(request))
 
@@ -181,6 +192,7 @@ def moderator_list_all(request):
 @login_required
 @group_required(settings.FWADMIN_MODERATORS_USER_GROUP)
 def moderator_approve_host(request, pk):
+    # FIXME: form for CSRF protection (?)
     host = Host.objects.get(pk=pk)
     host.approved = True
     host.save()
@@ -194,8 +206,8 @@ def delete_rule(request, pk):
     if request.method == 'POST':
         rule = ComplexRule.objects.get(pk=pk)
         host = rule.host
-        if host.owner != request.user:
-            return NotOwnerError()
+        if not user_has_permssion_for_host(host, request.user):
+            return NotOwnerError(request.user)
         rule.delete()
         return redirect(reverse("fwadmin:edit_host", args=(host.id,)))
     return HttpResponseBadRequest("Only POST supported here")
@@ -205,8 +217,8 @@ def delete_rule(request, pk):
 @group_required(settings.FWADMIN_ALLOWED_USER_GROUP)
 def new_rule_for_host(request, hostid):
     host = Host.objects.get(pk=hostid)
-    if host.owner != request.user:
-        return HttpResponseForbidden("you are not the owner of the host")
+    if not user_has_permssion_for_host(host, request.user):
+        return NotOwnerError(request.user)
     if request.method == 'POST':
         form = NewRuleForm(request.POST)
         if form.is_valid():
@@ -226,3 +238,11 @@ def new_rule_for_host(request, hostid):
                                'form': form,
                               },
                               context_instance=RequestContext(request))
+
+
+def gethostbyname(request, hostname):
+    try:
+        ip = socket.gethostbyname(hostname)
+    except socket.gaierror:
+        ip = ""
+    return HttpResponse(json.dumps(ip), content_type="application/json")

@@ -1,0 +1,14 @@
+
+[servers:children]
+production
+staging
+lxc
+
+[lxc]
+fwadmin-lxc
+
+[production]
+fwadmin
+
+[staging]
+fwadmin-staging

@@ -1,5 +1,4 @@
 from django.utils.translation import ugettext as _
-from django.core.mail import send_mail
 from django.core.management.base import BaseCommand
 from django.core.urlresolvers import reverse
 
@@ -8,6 +7,7 @@ from django.conf import settings
 from fwadmin.models import (
     Host,
 )
+from fwadmin.mail import send_mail
 
 
 def send_moderation_nag_mail():

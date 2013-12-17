@@ -1,0 +1,5 @@
+-r requirements.txt
+pep8==1.4.6
+-e git+https://github.com/dcramer/pyflakes.git#egg=pyflakes==0.4.5
+mock==1.0.1
+coveralls==0.3

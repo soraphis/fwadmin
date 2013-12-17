@@ -1,3 +1,6 @@
+[submodule "ansible-app-deploy"]
+	path = ansible-app-deploy
+	url = https://github.com/ZIMK/ansible-app-deploy.git
 [submodule "ldap_auto_discover"]
 	path = ldap_auto_discover
 	url = https://github.com/mvo5/django-auth-ldap-auto-discover-server.git
