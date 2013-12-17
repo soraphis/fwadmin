@@ -64,18 +64,19 @@ def is_moderator(user):
 
 
 def user_has_permssion_for_host(host, user):
-    return host.owner == user or is_moderator(user)
+    return (host.owner == user or
+            host.owner2 == user or
+            is_moderator(user))
 
 
 @login_required
 @group_required(settings.FWADMIN_ALLOWED_USER_GROUP)
 def index(request):
     all_hosts = Host.objects.filter(owner=request.user)
+    all_hosts |= Host.objects.filter(owner2=request.user)
     # pass all views that the user owns too
-    all_rules = ComplexRule.objects.filter(host__owner=request.user)
     return render_to_response('fwadmin/index.html',
                               {'all_hosts': all_hosts,
-                               'complex_rules': all_rules,
                                'is_moderator': is_moderator(request.user),
                               },
                               context_instance=RequestContext(request))
@@ -93,7 +94,7 @@ def export(request, fwtype):
 @group_required(settings.FWADMIN_ALLOWED_USER_GROUP)
 def new_host(request):
     if request.method == 'POST':
-        form = NewHostForm(request.POST)
+        form = NewHostForm(request.POST, owner_username=request.user)
         if form.is_valid():
             # do not commit just yet, we need to add more stuff
             host = form.save(commit=False)
@@ -108,7 +109,7 @@ def new_host(request):
             return HttpResponseRedirect(reverse("fwadmin:new_rule_for_host",
                                                 args=(host.id,)))
     else:
-        form = NewHostForm()
+        form = NewHostForm(owner_username=request.user)
     return render_to_response('fwadmin/new_host.html',
                               {'form': form,
                               },

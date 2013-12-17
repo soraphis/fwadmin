@@ -4,6 +4,8 @@ import django.forms as forms
 from django.forms import ModelForm
 from django.utils.translation import ugettext_lazy as _
 
+from django.conf import settings
+
 from .models import (
     ComplexRule,
     Host,
@@ -12,6 +14,29 @@ from .models import (
 
 
 class NewHostForm(ModelForm):
+
+    owner_username = None
+
+    def __init__(self, *args, **kwargs):
+        self.owner_username = kwargs.pop('owner_username', None)
+        super(NewHostForm, self).__init__(*args, **kwargs)
+
+    def clean_owner2(self):
+        """ Custom validation for owner2 """
+        # ensure owners are differernt
+        data = self.cleaned_data.get("owner2")
+        if data is None:
+            return data
+        # owner != owner2
+        if self.owner_username == data:
+            raise forms.ValidationError(
+                _("Owner and Secondary Owner can not be the same."))
+        # check correct group for owner2
+        required_group = settings.FWADMIN_ALLOWED_USER_GROUP
+        if not data.groups.filter(name=required_group):
+            raise forms.ValidationError(
+                _("Secondary Owner must be in group '%s'.") % required_group)
+        return data
 
     class Meta:
         model = Host
