@@ -209,7 +209,7 @@ def delete_rule(request, pk):
         if not user_has_permssion_for_host(host, request.user):
             return NotOwnerError(request.user)
         rule.delete()
-        return redirect(reverse("fwadmin:edit_host", args=(host.id,)))
+        return redirect("%s#tab-rules" % reverse("fwadmin:edit_host", args=(host.id,)))
     return HttpResponseBadRequest("Only POST supported here")
 
 

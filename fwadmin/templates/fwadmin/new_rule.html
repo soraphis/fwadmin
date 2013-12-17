@@ -19,7 +19,7 @@
 <form id="new_rule_for_host_form" class="form-horizontal" action="" method="post">
   {% csrf_token %}
   {{ form|bootstrap_horizontal }}
-  <a class="btn btn-danger" href="{% url 'fwadmin:edit_host' host.id %}">
+  <a class="btn btn-danger" href="{% url 'fwadmin:edit_host' host.id %}#tab-rules">
     {% trans "Cancel" %}</a>
   <input class="btn btn-primary" type="submit" value={% trans "Add" %}>
 </form>
