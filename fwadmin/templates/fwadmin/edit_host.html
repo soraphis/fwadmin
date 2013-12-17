@@ -120,12 +120,11 @@ Edit {{ hostname }} ({{ hostip }})
     <form class="form-horizontal" action="" method="post">
       {% csrf_token %}
       {{ form|bootstrap_horizontal }}
-      <input type="submit" value="{% trans "Update" %}" class="btn btn-primary">
-    </form>
-
-    <form action={% url 'fwadmin:delete_host' host.id %} method="post">
-      {% csrf_token %}
-      <input type="submit" value="{% trans "Delete host" %}" class="btn btn-danger">
+      <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+          <input type="submit" value="{% trans "Update" %}" class="btn btn-primary pull-right">
+        </div>
+      </div>
     </form>
   </div>
 </div>
