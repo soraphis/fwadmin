@@ -18,14 +18,58 @@
 
 <form id="new_rule_for_host_form" class="form-horizontal" action="" method="post">
   {% csrf_token %}
-  {{ form|bootstrap_horizontal }}
-  <a class="btn btn-danger" href="{% url 'fwadmin:edit_host' host.id %}">
-    {% trans "Cancel" %}</a>
-  <input class="btn btn-primary" type="submit" value={% trans "Add" %}>
+
+  <div>
+    <div id="quickRuleButtons" class="hide">
+      <span>Allow Port:</span>
+      {% for button in quick_buttons %}
+        <button id="{{ button.name }}QuickButton">{{ button.description }}</button>
+      {% endfor %}
+    </div>
+    
+    {# hidden by default so that its not visible for non-JS browsers #}
+    <div class="fieldWrapper">
+    <a id="toggleAdvancedButton" class="btn hide">
+      {% trans "Toggle advanced options" %}
+    </a>
+    </div>
+    
+    <div  id="advanced">
+      {{ form|bootstrap_horizontal }}
+    </div>
+  </div>
+  
+
+  <div>
+    <a class="btn btn-danger" href="{% url 'fwadmin:edit_host' host.id %}">
+      {% trans "Cancel" %}</a>
+    <input class="btn btn-primary" type="submit" value={% trans "Add" %}>
+  </div>
 </form>
 
-<script type="text/javascript">                                         
+<script type="text/javascript">
+function toggleAdvanced() {
+  $("#advanced").toggleClass("hide")
+}
+
 $(document).ready(function(){
+  $("#quickRuleButtons").removeClass("hide")
+  $("#toggleAdvancedButton").removeClass("hide")
+  toggleAdvanced();
+
+  // callbacks
+  {% for button in quick_buttons %}
+    $("#{{ button.name }}QuickButton").click(function() {
+      $("#id_ip_protocol").val("{{ button.ip_protocol }}");
+      $("#id_port").val("{{ button.port }}");
+      $("#id_name").val("{{ button.name }}");
+    });
+  {% endfor %}
+
+  $("#toggleAdvancedButton").click(function(){
+    toggleAdvanced();
+  });
+
   // keep id_stock_port and id_port in sync
   $("#id_stock_port").change(function() {
     var selected_str = $("#id_stock_port option:selected").text();
