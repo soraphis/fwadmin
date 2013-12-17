@@ -229,7 +229,7 @@ def new_rule_for_host(request, hostid):
                 rule.ip_protocol = stock_port.ip_protocol
                 rule.port = stock_port.number
             rule.save()
-            return HttpResponseRedirect(reverse("fwadmin:edit_host",
+            return HttpResponseRedirect("%s#tab-rules" % reverse("fwadmin:edit_host",
                                                 args=(host.id,)))
     else:
         form = NewRuleForm()
