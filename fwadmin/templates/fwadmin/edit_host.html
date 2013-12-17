@@ -57,10 +57,11 @@ Edit {{ hostname }} ({{ hostip }})
   </div>
 
   <div class="tab-pane" id="tab-rules">
-    <div class="col-md-10"><h2>{% trans "Firewall rules" %}</h2></div>
+    <div class="row"><h2>{% trans "Firewall rules" %}
     <div class="pull-right">
       <a href="{% url 'fwadmin:new_rule_for_host' host.id %}" class="btn btn-primary">{% trans "New Rule" %}</a>
     </div>
+    </h2></div>
     <div class="rules-list col-md-12">
       {% if rules_list %}
       <table class="table table-condensed" id="table_rules">
@@ -120,9 +121,10 @@ Edit {{ hostname }} ({{ hostip }})
     <form class="form-horizontal" action="" method="post">
       {% csrf_token %}
       {{ form|bootstrap_horizontal }}
+
       <div class="form-group">
         <div class="col-md-offset-2 col-md-10">
-          <input type="submit" value="{% trans "Update" %}" class="btn btn-primary pull-right">
+          <input type="submit" value="{% trans "Update" %}" class="btn btn-primary">
         </div>
       </div>
     </form>
