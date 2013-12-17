@@ -42,7 +42,7 @@ def get_quick_buttons():
     Button = collections.namedtuple(
         "Button", ["name", "description", "ip_protocol", "port"]
     )
-    quick_buttons = [ 
+    quick_buttons = [
         Button("ssh", "Secure Shell (SSH)", "TCP", "22"),
         Button("http", "Hypertext (HTTP)", "TCP", "80"),
         Button("https", "Secure Hypertext (HTTPS)", "TCP", "443"),
@@ -71,6 +71,7 @@ class NotOwnerError(HttpResponseForbidden):
     def __init__(self, user):
         super(HttpResponseForbidden, self).__init__(
             "You (%s) are not owner of this object" % user.username)
+
 
 def is_moderator(user):
     return user.groups.filter(
@@ -221,7 +222,8 @@ def delete_rule(request, pk):
         if not user_has_permssion_for_host(host, request.user):
             return NotOwnerError(request.user)
         rule.delete()
-        return redirect("%s#tab-rules" % reverse("fwadmin:edit_host", args=(host.id,)))
+        return redirect("%s#tab-rules" %
+            reverse("fwadmin:edit_host", args=(host.id,)))
     return HttpResponseBadRequest("Only POST supported here")
 
 
@@ -242,8 +244,8 @@ def new_rule_for_host(request, hostid):
                 rule.ip_protocol = stock_port.ip_protocol
                 rule.port = stock_port.number
             rule.save()
-            return HttpResponseRedirect("%s#tab-rules" % reverse("fwadmin:edit_host",
-                                                args=(host.id,)))
+            return HttpResponseRedirect("%s#tab-rules" %
+                reverse("fwadmin:edit_host", args=(host.id,)))
     else:
         form = NewRuleForm()
     return render_to_response('fwadmin/new_rule.html',
