@@ -37,6 +37,20 @@ from fwadmin.genrules import gen_firewall_rules
 from django.conf import settings
 
 
+# FIXME: find a even better location
+def get_quick_buttons():
+    Button = collections.namedtuple(
+        "Button", ["name", "description", "ip_protocol", "port"]
+    )
+    quick_buttons = [ 
+        Button("ssh", "Secure Shell (SSH)", "TCP", "22"),
+        Button("http", "Hypertext (HTTP)", "TCP", "80"),
+        Button("https", "Secure Hypertext (HTTPS)", "TCP", "443"),
+    ]
+    return quick_buttons
+
+
+# auth releated stuff
 def group_required(group_name):
     """ Custom decorator that will raise a PermissionDendied if not in the
         right group
@@ -57,7 +71,6 @@ class NotOwnerError(HttpResponseForbidden):
     def __init__(self, user):
         super(HttpResponseForbidden, self).__init__(
             "You (%s) are not owner of this object" % user.username)
-
 
 def is_moderator(user):
     return user.groups.filter(
@@ -235,19 +248,10 @@ def new_rule_for_host(request, hostid):
                                                 args=(host.id,)))
     else:
         form = NewRuleForm()
-    # FIXME: better location
-    Button = collections.namedtuple(
-        "Button", ["name", "description", "ip_protocol", "port"]
-    )
-    quick_buttons = [ 
-        Button("ssh", "Secure Shell (SSH)", "TCP", "22"),
-        Button("http", "Hypertext (HTTP)", "TCP", "80"),
-        Button("https", "Secure Hypertext (HTTPS)", "TCP", "443"),
-    ]
     return render_to_response('fwadmin/new_rule.html',
                               {'host': host,
                                'form': form,
-                               'quick_buttons': quick_buttons,
+                               'quick_buttons': get_quick_buttons(),
                               },
                               context_instance=RequestContext(request))
 
