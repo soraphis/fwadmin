@@ -22,9 +22,9 @@
   <div>
     <div id="quickRuleButtons" class="hide">
       <span>Allow Port:</span>
-      <button id="sshQuickButton">{% trans "SSH" %}</button>
-      <button id="httpQuickButton">{% trans "HTTP" %}</button>
-      <button id="httpsQuickButton">{% trans "HTTPS" %}</button>
+      {% for button in quick_buttons %}
+        <button id="{{ button.name }}QuickButton">{{ button.description }}</button>
+      {% endfor %}
     </div>
     
     {# hidden by default so that its not visible for non-JS browsers #}
@@ -58,21 +58,13 @@ $(document).ready(function(){
   toggleAdvanced();
 
   // callbacks
-  $("#sshQuickButton").click(function() {
-    $("#id_ip_protocol").val("TCP");
-    $("#id_port").val("22");
-    $("#id_name").val("ssh");
-  });
-  $("#httpQuickButton").click(function() {
-    $("#id_ip_protocol").val("TCP");
-    $("#id_port").val("80");
-    $("#id_name").val("http");
-  });
-  $("#httpsQuickButton").click(function() {
-    $("#id_ip_protocol").val("TCP");
-    $("#id_port").val("443");
-    $("#id_name").val("https");
-  });
+  {% for button in quick_buttons %}
+    $("#{{ button.name }}QuickButton").click(function() {
+      $("#id_ip_protocol").val("{{ button.ip_protocol }}");
+      $("#id_port").val("{{ button.port }}");
+      $("#id_name").val("{{ button.name }}");
+    });
+  {% endfor %}
 
   $("#toggleAdvancedButton").click(function(){
     toggleAdvanced();

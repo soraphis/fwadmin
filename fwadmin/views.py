@@ -1,11 +1,12 @@
+import collections
 import datetime
+import json
+import StringIO
+import socket
+
 #from django.utils.translation import ugettext as _
 from django.core.urlresolvers import reverse
 from django.core.exceptions import PermissionDenied
-
-import StringIO
-import json
-import socket
 
 from django.http import (
     HttpResponseBadRequest,
@@ -221,6 +222,7 @@ def new_rule_for_host(request, hostid):
         return NotOwnerError(request.user)
     if request.method == 'POST':
         form = NewRuleForm(request.POST)
+        print form.data
         if form.is_valid():
             rule = form.save(commit=False)
             rule.host = host
@@ -233,9 +235,19 @@ def new_rule_for_host(request, hostid):
                                                 args=(host.id,)))
     else:
         form = NewRuleForm()
+    # FIXME: better location
+    Button = collections.namedtuple(
+        "Button", ["name", "description", "ip_protocol", "port"]
+    )
+    quick_buttons = [ 
+        Button("ssh", "Secure Shell (SSH)", "TCP", "22"),
+        Button("http", "Hypertext (HTTP)", "TCP", "80"),
+        Button("https", "Secure Hypertext (HTTPS)", "TCP", "443"),
+    ]
     return render_to_response('fwadmin/new_rule.html',
                               {'host': host,
                                'form': form,
+                               'quick_buttons': quick_buttons,
                               },
                               context_instance=RequestContext(request))
 
