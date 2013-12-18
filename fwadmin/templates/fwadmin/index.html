@@ -8,7 +8,7 @@
 
 {% block content %}
 <div class="col-md-8">
-{% if is_moderator %}
+{% if user_is_moderator %}
   <h2>{% blocktrans %}Welcome Moderator {{ user }}{% endblocktrans %}</h2>
 {% else %}
   <h2>{% blocktrans %}Welcome {{ user }}{% endblocktrans %}</h2>

@@ -37,4 +37,6 @@ def is_moderator(user):
 
 
 def user_has_permssion_for_host(host, user):
-    return host.owner == user or is_moderator(user)
+    return (host.owner == user or
+            host.owner2 == user or
+            is_moderator(user))
