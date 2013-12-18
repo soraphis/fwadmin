@@ -5,10 +5,6 @@ from django_auth_ldap.config import (
     LDAPSearch,
     ActiveDirectoryGroupType,
 )
-try:
-    from ldap_auto_discover.ldap_auto_discover import ldap_auto_discover
-except ImportError:
-    print "WARNING: can not import ldap_auto_discover"
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
