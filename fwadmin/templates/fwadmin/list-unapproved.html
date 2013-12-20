@@ -38,7 +38,6 @@
         <td>{{ host.name }}</td>
         <td>{{ host.ip }}</td>
         <td>
-	  {# XXX: meeeeh, is there a better way to do this than to loop here N-times ? #}
 	  {% for rule in host.get_rules_for_host %}
 	      <p>name:{{ rule.name }} from:{{ rule.from_net }} permit:{{ rule.permit }} protocol:{{ rule.ip_protocol }} port:{{ rule.port }}
 	      </p>
