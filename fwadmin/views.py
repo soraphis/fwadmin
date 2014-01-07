@@ -23,6 +23,7 @@ from django.contrib.auth.decorators import (
     user_passes_test,
 )
 from fwadmin.models import (
+    ChangeLog,
     ComplexRule,
     Host,
 )
@@ -105,6 +106,12 @@ def new_host(request):
             host.active_until = active_until
             # and really save
             host.save()
+            
+            # and log
+            what = "New host %s (%s) created" % (host.name, host.ip)
+            change = ChangeLog(host=host, who=request.user, what=what)
+            change.save()
+
             return HttpResponseRedirect(reverse("fwadmin:new_rule_for_host",
                                                 args=(host.id,)))
     else:

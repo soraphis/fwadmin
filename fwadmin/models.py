@@ -4,6 +4,14 @@ from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
 
 
+class ChangeLog(models.Model):
+    """ Store all changes to the hosts in the DB """
+    host = models.ForeignKey('Host')
+    who = models.ForeignKey(User)
+    what = models.TextField()
+    when = models.DateTimeField(auto_now_add=True)
+
+
 class StaticRule(models.Model):
     """A static rule, free form either in the HEADER or FOOTER """
     HEADER = 0
