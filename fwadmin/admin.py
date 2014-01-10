@@ -6,15 +6,20 @@ from fwadmin.models import (
     StaticRule,
 )
 
+
 class HostAdmin(admin.ModelAdmin):
     search_fields = ['name', 'description', 'owner__username']
+
 
 class SamplePortAdmin(admin.ModelAdmin):
     search_fields = ['name', 'ip_protocol']
 
 
 class ComplexRuleAdmin(admin.ModelAdmin):
-    search_fields = ['host__name', 'host__owner__username', 'name', 'ip_protocol']
+    search_fields = ['host__name',
+                     'host__owner__username',
+                     'name',
+                     'ip_protocol']
 
 admin.site.register(Host, HostAdmin)
 admin.site.register(SamplePort, SamplePortAdmin)
