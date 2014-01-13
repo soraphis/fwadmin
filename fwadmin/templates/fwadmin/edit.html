@@ -2,37 +2,35 @@
 {% load i18n %}
 {% load url from future %}
 
+{% block brand %}
+{% blocktrans %}Edit Rules for {{ host.name }} ({{ host.ip }}){% endblocktrans %}
+{% endblock %}
+
 {% block content %}
-
-<div class="page-header">
-  <h1>{% blocktrans %}Edit Rules for {{ host.name }} ({{ host.ip }}){% endblocktrans %}</h1>
-</div>
-
 <h2>{% trans "Firewall rules" %}</h2>
 <div class="rules-list">
 
-<a href="/fwadmin/newrule/{{ host.id }}/">{% trans "Add rule" %}</a>
+  <a href="/fwadmin/newrule/{{ host.id }}/">{% trans "Add rule" %}</a>
 {% if rules_list %}
-    <table border="1" cellpadding="3">
-      <tr>
-	<th>{% trans "Name"  %}</th>
-        <th>{% trans "Permit"  %}</th>
-        <th>{% trans "Port" %}</th>
-        <th>{% trans "Protocol" %}</th>
-      </tr>
-      {% for rule in rules_list  %}
-      <tr>
-        <td>{{ rule.name }}</td>
-        <td>{{ rule.permit }}</td>
-        <td>{{ rule.port }}</td>
-        <td>{{ rule.protocol }}</td>
-	<td><a href="/fwadmin/delrule/{{ host.id }}/">{% trans "Delete" %}</a></td>
-      </tr>
-      {% endfor %}
-    </table>
+  <table border="1" cellpadding="3">
+    <tr>
+      <th>{% trans "Name"  %}</th>
+      <th>{% trans "Permit"  %}</th>
+      <th>{% trans "Port" %}</th>
+      <th>{% trans "Protocol" %}</th>
+    </tr>
+    {% for rule in rules_list  %}
+    <tr>
+      <td>{{ rule.name }}</td>
+      <td>{{ rule.permit }}</td>
+      <td>{{ rule.port }}</td>
+      <td>{{ rule.protocol }}</td>
+      <td><a href="/fwadmin/delrule/{{ host.id }}/">{% trans "Delete" %}</a></td>
+    </tr>
+    {% endfor %}
+  </table>
 {% else %}
     <p>{% trans "No rules."  %}</p>
 {% endif %}
 </div>
-
 {% endblock %}

@@ -1,5 +1,4 @@
 body {
-    background-color: #33f5f5;
 }
 
 .page-header {
@@ -33,4 +32,23 @@ footer {
 #controls > * {
     margin-bottom: 1em;
     width: 100px;
+}
+
+/* accordion indicator */
+#accordion .panel-title a {
+    text-decoration: none;
+}
+
+#accordion .panel-title a:before {
+    font-size: 0.9em;
+    vertical-align: 0.1em;
+}
+
+#accordion .panel-title a:not(.collapsed):before {
+    content: "▾";
+    margin-right: 0px;
+}
+#accordion .panel-title a.collapsed:before {
+    content: "▸";
+    margin-right: 0px;
 }

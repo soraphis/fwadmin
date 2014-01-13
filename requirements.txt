@@ -3,3 +3,4 @@ django-auth-ldap>=1.1.6
 netaddr==0.7.10
 dnspython==1.11.1
 South==0.8.4
+django-bootstrap-form

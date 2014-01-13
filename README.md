@@ -18,9 +18,17 @@ Dependencies to run in production:
  - python-netaddr
  - python-django-south
  - [bower](https://github.com/twitter/bower)
+ - django-bootstrapforms
 
 Dependencies for testing/development:
  - python-mock
+
+Setup virtualenv
+```
+$ virtualenv env-fwadmin
+$ . env-fwadmin/bin/activate
+$ pip install -r requirements_dev.txt
+```
 
 How to install javascript dependencies:
 ```
