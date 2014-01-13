@@ -17,6 +17,8 @@ class NewHostForm(ModelForm):
 
     owner_username = None
 
+    sla = forms.BooleanField(label=_("SLA"), required=True)
+
     def __init__(self, *args, **kwargs):
         self.owner_username = kwargs.pop('owner_username', None)
         super(NewHostForm, self).__init__(*args, **kwargs)
