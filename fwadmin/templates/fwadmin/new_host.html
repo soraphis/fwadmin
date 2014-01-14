@@ -87,7 +87,7 @@
                     } else {
                         $('#ip_list').empty()
                         data.forEach(function(item) {
-                            $('#ip_list').append($("<option></option").attr("value", item).text(item));
+                            $('#ip_list').append($("<option></option>").attr("value", item).text(item));
                         });
                         $('#modalIPSelectionDialog').modal({});
                     }
