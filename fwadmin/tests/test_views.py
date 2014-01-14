@@ -57,7 +57,8 @@ class AnonymousTestCase(TestCase):
         url = reverse("fwadmin:gethostbyname", args=("localhost",))
         resp = self.client.get(url)
         self.assertEqual(resp.status_code, 200)
-        self.assertEqual(json.loads(resp.content), ["127.0.0.1"])
+        # travis is a bit strange and returns ["127.0.0.1", "127.0.0.1"]
+        self.assertEqual(set(json.loads(resp.content)), set(["127.0.0.1"]))
 
     @patch("socket.gethostbyname_ex")
     def test_gethostbyname_inet(self, mock_gethostbyname_ex):
