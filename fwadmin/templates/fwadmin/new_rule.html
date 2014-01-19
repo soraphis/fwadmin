@@ -23,14 +23,14 @@
       <div class="panel-heading">
         <h4 class="panel-title">
           <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
-            Simple Rule
+            {% trans "Simple Rule" %}
           </a>
         </h4>
       </div>
       <div id="collapseOne" class="panel-collapse collapse in">
         <div class="panel-body">
           <div class="form-group">
-            <label class="col-md-2 control-label">Allow Port</label>
+            <label class="col-md-2 control-label">{% trans "Allow Port" %}</label>
             <div class="col-md-10">
               {% for button in quick_buttons %}
                 <button id="{{ button.name }}QuickButton" class="btn btn-primary">{{ button.description }}</button>
@@ -44,7 +44,7 @@
       <div class="panel-heading">
         <h4 class="panel-title">
           <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" class="collapsed">
-            Advanced Options
+            {% trans "Advanced Options" %}
           </a>
         </h4>
       </div>
