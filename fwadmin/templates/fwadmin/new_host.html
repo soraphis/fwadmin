@@ -17,6 +17,27 @@
         </p>
     {% endif %}
 
+    <!-- multiple IPs dialog -->
+    <div class="modal" id="modalIPSelectionDialog" tabindex="-1" role="dialog" aria-labelledby="modalIPSelectionDialogLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="modalIPSelectionDialogLabel">{% trans "Select IP" %}</h4>
+          </div>
+          <div class="modal-body">
+            {% trans "Please select a IP from the list: " %}
+            <select id="ip_list">
+            </select>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">{% trans "Cancel" %}</button>
+            <button id="button_select_ip" type="button" class="btn btn-primary">{% trans "OK" %}</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
     <form action="" method="post" class="form-horizontal">
         <legend>{% trans "Create a new Host" %}</legend>
         {% csrf_token %}
@@ -30,7 +51,7 @@
                             <div class="input-group">
                                 {{field|addcss:"form-control"}}
                     <span class="input-group-btn">
-                        <button id="gethostbyname" class="btn btn-default">{% trans "Resolve" %}</button>
+                        <button id="gethostbyname" class="btn btn-default hide">{% trans "Resolve" %}</button>
                     </span>
                             </div>
                         </div>
@@ -49,12 +70,26 @@
 
     <script type="text/javascript">
         $(document).ready(function(){
+
+            $("#gethostbyname").toggleClass("hide");
+
+            $("#button_select_ip").on("click", function() {
+                $('#id_ip').val($('#ip_list').find(":selected").text());
+                $('#modalIPSelectionDialog').modal('hide');     
+            });
+
             $("#gethostbyname").on("click", function() {
                 var hostname = $("#id_ip").val()
                 var url = "{% url 'fwadmin:gethostbyname' 'xxxyyy' %}".replace("xxxyyy", hostname)
                 $.getJSON(url, function( data ) {
-                    if(data) {
-                        $("#id_ip").val(data)
+                    if(data.length === 1) {
+                        $("#id_ip").val(data[0])
+                    } else {
+                        $('#ip_list').empty()
+                        data.forEach(function(item) {
+                            $('#ip_list').append($("<option></option>").attr("value", item).text(item));
+                        });
+                        $('#modalIPSelectionDialog').modal({});
                     }
                 });
                 return false;

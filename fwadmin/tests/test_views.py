@@ -57,22 +57,24 @@ class AnonymousTestCase(TestCase):
         url = reverse("fwadmin:gethostbyname", args=("localhost",))
         resp = self.client.get(url)
         self.assertEqual(resp.status_code, 200)
-        self.assertEqual(json.loads(resp.content), "127.0.0.1")
+        # travis is a bit strange and returns ["127.0.0.1", "127.0.0.1"]
+        self.assertEqual(set(json.loads(resp.content)), set(["127.0.0.1"]))
 
-    @patch("socket.gethostbyname")
-    def test_gethostbyname_inet(self, mock_gethostbyname):
-        mock_gethostbyname.return_value = "8.8.8.8"
+    @patch("socket.gethostbyname_ex")
+    def test_gethostbyname_inet(self, mock_gethostbyname_ex):
+        mock_gethostbyname_ex.return_value = (
+            "www", [], ["8.8.8.8", "9.9.9.9"])
         url = reverse("fwadmin:gethostbyname",
                       args=("www.vielen_dank-peter.de",))
         resp = self.client.get(url)
         self.assertEqual(resp.status_code, 200)
-        self.assertEqual(json.loads(resp.content), "8.8.8.8")
+        self.assertEqual(json.loads(resp.content), ["8.8.8.8", "9.9.9.9"])
 
     def test_gethostbyname_invalid(self):
         url = reverse("fwadmin:gethostbyname", args=("dsakfjdfjsadfdsaf",))
         resp = self.client.get(url)
         self.assertEqual(resp.status_code, 200)
-        self.assertEqual(json.loads(resp.content), "")
+        self.assertEqual(json.loads(resp.content), [])
 
 
 class BaseLoggedInTestCase(TestCase):

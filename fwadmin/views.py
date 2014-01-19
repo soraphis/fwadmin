@@ -227,7 +227,8 @@ def new_rule_for_host(request, hostid):
 
 def gethostbyname(request, hostname):
     try:
-        ip = socket.gethostbyname(hostname)
+        addresslist = socket.gethostbyname_ex(hostname)[2]
     except socket.gaierror:
-        ip = ""
-    return HttpResponse(json.dumps(ip), content_type="application/json")
+        addresslist = []
+    return HttpResponse(
+        json.dumps(addresslist), content_type="application/json")
