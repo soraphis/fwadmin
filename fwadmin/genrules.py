@@ -86,7 +86,8 @@ def gen_firewall_rules(output, fwtype):
     fw_writer_class = globals()["%sRulesWriter" % fwtype.capitalize()]
     writer = fw_writer_class()
     rules_list = []
-    for header in StaticRule.objects.filter(type=StaticRule.HEADER):
+    for header in StaticRule.objects.filter(type=StaticRule.HEADER,
+                                            fw_type=fwtype):
         rules_list.append(header.text)
     for host in Host.objects.all():
         if (host.active_until > datetime.date.today() and
