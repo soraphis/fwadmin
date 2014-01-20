@@ -64,7 +64,12 @@ class Host(models.Model):
     ip = models.GenericIPAddressField(
         verbose_name=_("IP Address"), unique=True)
     active_until = models.DateField(_("Active until"))
-    owner = models.ForeignKey(User)
+    # main owner
+    owner = models.ForeignKey(
+        User, verbose_name=_("Owner"), related_name='host_owner')
+    # secondary owner
+    owner2 = models.ForeignKey(User, verbose_name=_("Secondary Owner"),
+        null=True, blank=True, related_name='host_owner2')
     # approved by a admin
     approved = models.BooleanField(_("Approved"), default=False)
     # no longer active

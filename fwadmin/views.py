@@ -1,16 +1,21 @@
+import collections
 import datetime
+import json
+import StringIO
+import socket
+
 #from django.utils.translation import ugettext as _
 from django.core.urlresolvers import reverse
-from django.core.exceptions import PermissionDenied
 
-import StringIO
-import json
-import socket
+from .auth import (
+    group_required,
+    NotOwnerError,
+    user_has_permssion_for_host
+)
 
 from django.http import (
     HttpResponseBadRequest,
     HttpResponseRedirect,
-    HttpResponseForbidden,
     HttpResponse,
 )
 from django.shortcuts import (
@@ -20,7 +25,6 @@ from django.shortcuts import (
 from django.template import RequestContext
 from django.contrib.auth.decorators import (
     login_required,
-    user_passes_test,
 )
 from fwadmin.models import (
     ChangeLog,
@@ -37,47 +41,27 @@ from fwadmin.genrules import gen_firewall_rules
 from django.conf import settings
 
 
-def group_required(group_name):
-    """ Custom decorator that will raise a PermissionDendied if not in the
-        right group
-    """
-    def is_in_group(user, group_name):
-        if user:
-            if user.groups.filter(name=group_name).count() == 1:
-                return True
-        # XXX: add template with logout form here
-        raise PermissionDenied("You are not in group '%s'" % group_name)
-    return user_passes_test(lambda u: is_in_group(u, group_name))
-
-
-class NotOwnerError(HttpResponseForbidden):
-    """A error if the user is not the owner of the object he/she tries
-       to modify
-    """
-    def __init__(self, user):
-        super(HttpResponseForbidden, self).__init__(
-            "You (%s) are not owner of this object" % user.username)
-
-
-def is_moderator(user):
-    return user.groups.filter(
-        name=settings.FWADMIN_MODERATORS_USER_GROUP).count() > 0
-
-
-def user_has_permssion_for_host(host, user):
-    return host.owner == user or is_moderator(user)
+# FIXME: find a even better location
+def get_quick_buttons():
+    Button = collections.namedtuple(
+        "Button", ["name", "description", "ip_protocol", "port"]
+    )
+    quick_buttons = [
+        Button("ssh", "Secure Shell (SSH)", "TCP", "22"),
+        Button("http", "Hypertext (HTTP)", "TCP", "80"),
+        Button("https", "Secure Hypertext (HTTPS)", "TCP", "443"),
+    ]
+    return quick_buttons
 
 
 @login_required
 @group_required(settings.FWADMIN_ALLOWED_USER_GROUP)
 def index(request):
     all_hosts = Host.objects.filter(owner=request.user)
+    all_hosts |= Host.objects.filter(owner2=request.user)
     # pass all views that the user owns too
-    all_rules = ComplexRule.objects.filter(host__owner=request.user)
     return render_to_response('fwadmin/index.html',
                               {'all_hosts': all_hosts,
-                               'complex_rules': all_rules,
-                               'is_moderator': is_moderator(request.user),
                               },
                               context_instance=RequestContext(request))
 
@@ -94,7 +78,7 @@ def export(request, fwtype):
 @group_required(settings.FWADMIN_ALLOWED_USER_GROUP)
 def new_host(request):
     if request.method == 'POST':
-        form = NewHostForm(request.POST)
+        form = NewHostForm(request.POST, owner_username=request.user)
         if form.is_valid():
             # do not commit just yet, we need to add more stuff
             host = form.save(commit=False)
@@ -115,7 +99,7 @@ def new_host(request):
             return HttpResponseRedirect(reverse("fwadmin:new_rule_for_host",
                                                 args=(host.id,)))
     else:
-        form = NewHostForm()
+        form = NewHostForm(owner_username=request.user)
     return render_to_response('fwadmin/new_host.html',
                               {'form': form,
                               },
@@ -191,7 +175,6 @@ def moderator_list_all(request):
     # XXX: add a template for list
     return render_to_response('fwadmin/list-all.html',
                               {'all_hosts': all_hosts,
-                               'is_moderator': is_moderator(request.user),
                                },
                               context_instance=RequestContext(request))
 
@@ -216,7 +199,8 @@ def delete_rule(request, pk):
         if not user_has_permssion_for_host(host, request.user):
             return NotOwnerError(request.user)
         rule.delete()
-        return redirect(reverse("fwadmin:edit_host", args=(host.id,)))
+        return redirect("%s#tab-rules" %
+            reverse("fwadmin:edit_host", args=(host.id,)))
     return HttpResponseBadRequest("Only POST supported here")
 
 
@@ -236,20 +220,22 @@ def new_rule_for_host(request, hostid):
                 rule.ip_protocol = stock_port.ip_protocol
                 rule.port = stock_port.number
             rule.save()
-            return HttpResponseRedirect(reverse("fwadmin:edit_host",
-                                                args=(host.id,)))
+            return HttpResponseRedirect("%s#tab-rules" %
+                reverse("fwadmin:edit_host", args=(host.id,)))
     else:
         form = NewRuleForm()
     return render_to_response('fwadmin/new_rule.html',
                               {'host': host,
                                'form': form,
+                               'quick_buttons': get_quick_buttons(),
                               },
                               context_instance=RequestContext(request))
 
 
 def gethostbyname(request, hostname):
     try:
-        ip = socket.gethostbyname(hostname)
+        addresslist = socket.gethostbyname_ex(hostname)[2]
     except socket.gaierror:
-        ip = ""
-    return HttpResponse(json.dumps(ip), content_type="application/json")
+        addresslist = []
+    return HttpResponse(
+        json.dumps(addresslist), content_type="application/json")

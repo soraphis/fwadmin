@@ -5,10 +5,6 @@ from django_auth_ldap.config import (
     LDAPSearch,
     ActiveDirectoryGroupType,
 )
-try:
-    from ldap_auto_discover.ldap_auto_discover import ldap_auto_discover
-except ImportError:
-    print "WARNING: can not import ldap_auto_discover"
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -126,6 +122,11 @@ TEMPLATE_LOADERS = (
 #     'django.template.loaders.eggs.Loader',
 )
 
+from django.conf import global_settings
+TEMPLATE_CONTEXT_PROCESSORS = global_settings.TEMPLATE_CONTEXT_PROCESSORS + (
+    'fwadmin.ctxprocessor.user_auth',
+)
+
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.middleware.locale.LocaleMiddleware',
@@ -162,6 +163,7 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
+    'bootstrapform',
     'south',
     'fwadmin',
 )

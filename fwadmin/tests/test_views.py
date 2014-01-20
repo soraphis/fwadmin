@@ -65,22 +65,24 @@ class AnonymousTestCase(TestCase):
         url = reverse("fwadmin:gethostbyname", args=("localhost",))
         resp = self.client.get(url)
         self.assertEqual(resp.status_code, 200)
-        self.assertEqual(json.loads(resp.content), "127.0.0.1")
+        # travis is a bit strange and returns ["127.0.0.1", "127.0.0.1"]
+        self.assertEqual(set(json.loads(resp.content)), set(["127.0.0.1"]))
 
-    @patch("socket.gethostbyname")
-    def test_gethostbyname_inet(self, mock_gethostbyname):
-        mock_gethostbyname.return_value = "8.8.8.8"
+    @patch("socket.gethostbyname_ex")
+    def test_gethostbyname_inet(self, mock_gethostbyname_ex):
+        mock_gethostbyname_ex.return_value = (
+            "www", [], ["8.8.8.8", "9.9.9.9"])
         url = reverse("fwadmin:gethostbyname",
                       args=("www.vielen_dank-peter.de",))
         resp = self.client.get(url)
         self.assertEqual(resp.status_code, 200)
-        self.assertEqual(json.loads(resp.content), "8.8.8.8")
+        self.assertEqual(json.loads(resp.content), ["8.8.8.8", "9.9.9.9"])
 
     def test_gethostbyname_invalid(self):
         url = reverse("fwadmin:gethostbyname", args=("dsakfjdfjsadfdsaf",))
         resp = self.client.get(url)
         self.assertEqual(resp.status_code, 200)
-        self.assertEqual(json.loads(resp.content), "")
+        self.assertEqual(json.loads(resp.content), [])
 
 
 class BaseLoggedInTestCase(TestCase):
@@ -88,15 +90,23 @@ class BaseLoggedInTestCase(TestCase):
     def setUp(self):
         # basic setup
         allowed_group = Group.objects.get(name=FWADMIN_ALLOWED_USER_GROUP)
-        # create user with a initial host/rule
+        # create main user with a initial host/rule
         self.user = User.objects.create_user("meep", password="lala")
         self.user.groups.add(allowed_group)
-        res = self.client.login(username="meep", password="lala")
+        # add secondary user
+        self.user2 = User.objects.create_user("owner2", password="lala")
+        self.user2.groups.add(allowed_group)
+        # and a user that is *not* in the right group
+        self.non_fwadmin_user = User.objects.create_user("non-fwadmin-user")
+        # login
+        res = self.client.login(username=self.user.username, password="lala")
         self.assertTrue(res)
+        self.loggedin_user = self.user
+        # host
         self.host = Host.objects.create(
             name="ahost", description="some description",
             ip="192.168.0.2", active_until="2022-01-01",
-            owner=self.user)
+            owner=self.user, owner2=self.user2)
         self.host.save()
         self.rule = ComplexRule.objects.create(
             host=self.host, name="http", permit=True, ip_protocol="TCP",
@@ -117,8 +127,7 @@ class LoggedInViewsTestCase(BaseLoggedInTestCase):
     def test_index_has_host(self):
         """Test that the index view has a html table with out test host"""
         resp = self.client.get(reverse("fwadmin:index"))
-        needle = r'<td>ahost</td>\s+<td>some description</td>\s+'\
-                  '<td><a href="/fwadmin/host/%s/edit/">%s</a></td>' % (
+        needle = r'<a href="/fwadmin/host/%s/edit/">%s</a>' % (
                       self.host.id, self.host.ip)
         self.assertEqual(resp.status_code, 200)
         self.assertTrue(re.search(needle, resp.content))
@@ -151,7 +160,7 @@ class LoggedInViewsTestCase(BaseLoggedInTestCase):
                                    # XXX: should we disallow renew after
                                    #      some time?
                                    active_until="1789-01-01",
-                                   owner=self.user)
+                                   owner=self.loggedin_user)
         # post to renew url
         resp = self.client.post(reverse("fwadmin:renew_host", args=(host.id,)))
         # ensure we get something of the right message
@@ -169,7 +178,7 @@ class LoggedInViewsTestCase(BaseLoggedInTestCase):
         # check the data
         host = Host.objects.get(name=post_data["name"])
         self.assertEqual(host.ip, post_data["ip"])
-        self.assertEqual(host.owner, self.user)
+        self.assertEqual(host.owner, self.loggedin_user)
         self.assertEqual(host.approved, False)
         self.assertEqual(
             host.active_until,
@@ -181,11 +190,34 @@ class LoggedInViewsTestCase(BaseLoggedInTestCase):
             urlsplit(resp["Location"])[2], reverse("fwadmin:new_rule_for_host",
                                                    args=(host.id,)))
 
+    def test_new_host_owner_and_owner2_different(self):
+        post_data = {"name": "newhost",
+                     "ip": "192.168.1.1",
+                     "owner2": self.loggedin_user.id,
+                    }
+        resp = self.client.post(reverse("fwadmin:new_host"), post_data)
+        self.assertTrue(
+            "Owner and Secondary Owner can not be the same" in resp.content)
+        with self.assertRaises(Host.DoesNotExist):
+            Host.objects.get(ip=post_data["ip"])
+
+    def test_new_host_owner2_has_correct_group(self):
+        post_data = {"name": "newhost",
+                     "ip": "192.168.1.1",
+                     "owner2": self.non_fwadmin_user.id,
+                    }
+        resp = self.client.post(reverse("fwadmin:new_host"), post_data)
+        self.assertTrue(
+            "Secondary Owner must be in group" in resp.content)
+        with self.assertRaises(Host.DoesNotExist):
+            Host.objects.get(ip=post_data["ip"])
+
     def test_edit_host(self):
         # create a new host
         initial_hostname = "My initial hostname"
         new_post_data = {"name": initial_hostname,
                          "ip": "192.168.1.1",
+                         "sla": True,
                          }
         resp = self.client.post(reverse("fwadmin:new_host"), new_post_data)
         pk = Host.objects.get(name=initial_hostname).pk
@@ -369,3 +401,16 @@ class ModeratorTestCase(BaseLoggedInTestCase):
         self.assertEqual(resp.status_code, 302)
         rule = ComplexRule.objects.get(name=post_data["name"])
         self.assertEqual(rule.host, self.other_host)
+
+
+# note that it inherits from the LoggedInView, so all the tests for
+# "owner" are run again for "owner2"
+class Owner2TestCase(LoggedInViewsTestCase):
+
+    def setUp(self):
+        super(Owner2TestCase, self).setUp()
+        # for the tests
+        self.loggedin_user = self.user2
+        # login as *owner2*
+        self.client.login(
+            username=self.user2.username, password="lala")

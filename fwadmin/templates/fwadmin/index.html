@@ -2,42 +2,23 @@
 {% load i18n %}
 {% load url from future %}
 
+{% block brand %}
+{% trans "Dashboard" %}
+{% endblock %}
+
 {% block content %}
-
-<div class="page-header">
-  <h1>{% trans "Dashboard" %}</h1>
+<div class="col-md-8">
+{% if user_is_moderator %}
+  <h2>{% blocktrans %}Welcome Moderator {{ user }}{% endblocktrans %}</h2>
+{% else %}
+  <h2>{% blocktrans %}Welcome {{ user }}{% endblocktrans %}</h2>
+{% endif %}
 </div>
+<div class="col-md-4">
+  <h3 class="pull-right">{% trans "My Hosts" %}</h3>
+</div> 
 
-<div>
-  <div class="row">
-    <div class="span8">
-  {% if is_moderator %}
-    <h2>{% blocktrans %}Welcome Moderator {{ user }}{% endblocktrans %}</h2>
-  {% else %}
-    <h2>{% blocktrans %}Welcome {{ user }}{% endblocktrans %}</h2>
-  {% endif %}
-    </div>
-    <div class="span4">
-      <h3 class="pull-right">{% trans "My Hosts" %}</h3>
-    </div> 
-
-    <div class="row">
-      <div id="controls" class="span2">
-        {% if is_moderator %}
-        <a class="btn"
-           href={% url 'fwadmin:moderator_list_unapproved' %}>{% trans "List Unapproved" %}</a>
-        <a class="btn"
-           href={% url 'fwadmin:moderator_list_all' %}>{% trans "List All" %}</a>
-        {% endif %}
-        <a class="btn" 
-           href={% url 'fwadmin:new_host' %}>{% trans "Create New Host" %}</a>
-      </div>
-      
-      <div class="span10">
-        {% include "fwadmin/hosts_list.html" %}
-      </div>
-    </div>
-  </div>
+<div class="col-md-12">
+  {% include "fwadmin/hosts_list.html" %}
 </div>
-
 {% endblock %}

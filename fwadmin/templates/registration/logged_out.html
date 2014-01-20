@@ -2,11 +2,11 @@
 {% load url from future %}
 {% load i18n %}
 
+{% block brand %}
+{% trans "Logout" %}
+{% endblock %}
 
 {% block content %}
-<div class="page-header">
-	<h1>{% trans "Logout successful" %}</h1>
-</div>
 
 <p>{% trans "Thanks for using the firewall admin." %}</p>
 
