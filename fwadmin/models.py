@@ -3,6 +3,8 @@ from django.contrib.auth.models import User
 
 from django.utils.translation import ugettext_lazy as _
 
+import datetime
+
 
 class StaticRule(models.Model):
     """A static rule, free form either in the HEADER or FOOTER """
@@ -59,6 +61,8 @@ class ComplexRule(models.Model):
 
 class Host(models.Model):
     """ A single host """
+    created_at = models.DateTimeField(auto_now_add=True,
+                                default=datetime.datetime.now())
     name = models.CharField(_("Name"), max_length=200)
     description = models.TextField(_("Description"), blank=True, null=True)
     # can be ipv4,ipv6
