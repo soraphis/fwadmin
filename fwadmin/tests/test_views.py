@@ -167,6 +167,7 @@ class LoggedInViewsTestCase(BaseLoggedInTestCase):
     def test_new_host(self):
         post_data = {"name": "newhost",
                      "ip": "192.168.1.1",
+                     "sla": True,
                     }
         resp = self.client.post(reverse("fwadmin:new_host"), post_data)
         # check the data
@@ -211,6 +212,7 @@ class LoggedInViewsTestCase(BaseLoggedInTestCase):
         initial_hostname = "My initial hostname"
         new_post_data = {"name": initial_hostname,
                          "ip": "192.168.1.1",
+                         "sla": True,
                          }
         resp = self.client.post(reverse("fwadmin:new_host"), new_post_data)
         pk = Host.objects.get(name=initial_hostname).pk
