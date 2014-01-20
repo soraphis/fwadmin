@@ -11,8 +11,9 @@ class Migration(SchemaMigration):
         # Adding model 'ChangeLog'
         db.create_table(u'fwadmin_changelog', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('host', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['fwadmin.Host'])),
-            ('who', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['auth.User'])),
+            ('host_name', self.gf('django.db.models.fields.CharField')(default='', max_length=255)),
+            ('host_ip', self.gf('django.db.models.fields.CharField')(default='', max_length=255)),
+            ('who', self.gf('django.db.models.fields.CharField')(default='', max_length=255)),
             ('what', self.gf('django.db.models.fields.TextField')()),
             ('when', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
         ))
@@ -63,11 +64,12 @@ class Migration(SchemaMigration):
         },
         u'fwadmin.changelog': {
             'Meta': {'object_name': 'ChangeLog'},
-            'host': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['fwadmin.Host']"}),
+            'host_ip': ('django.db.models.fields.CharField', [], {'default': "''", 'max_length': '255'}),
+            'host_name': ('django.db.models.fields.CharField', [], {'default': "''", 'max_length': '255'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'what': ('django.db.models.fields.TextField', [], {}),
             'when': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
-            'who': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['auth.User']"})
+            'who': ('django.db.models.fields.CharField', [], {'default': "''", 'max_length': '255'})
         },
         u'fwadmin.complexrule': {
             'Meta': {'object_name': 'ComplexRule'},

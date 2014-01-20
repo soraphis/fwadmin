@@ -27,7 +27,6 @@ from django.contrib.auth.decorators import (
     login_required,
 )
 from fwadmin.models import (
-    ChangeLog,
     ComplexRule,
     Host,
 )
@@ -37,7 +36,7 @@ from fwadmin.forms import (
     NewRuleForm,
 )
 from fwadmin.genrules import gen_firewall_rules
-
+from fwadmin.utils import log
 from django.conf import settings
 
 
@@ -90,11 +89,11 @@ def new_host(request):
             host.active_until = active_until
             # and really save
             host.save()
-            
+
             # and log
-            what = "New host %s (%s) created" % (host.name, host.ip)
-            change = ChangeLog(host=host, who=request.user, what=what)
-            change.save()
+            log(host,
+                request.user,
+                "New host %s (%s) created" % (host.name, host.ip))
 
             return HttpResponseRedirect(reverse("fwadmin:new_rule_for_host",
                                                 args=(host.id,)))
@@ -116,6 +115,12 @@ def renew_host(request, pk):
                     datetime.timedelta(settings.FWADMIN_DEFAULT_ACTIVE_DAYS))
     host.active_until = active_until
     host.save()
+
+    # and log
+    log(host,
+        request.user,
+        "Renew host %s (%s)" % (host.name, host.ip))
+
     return render_to_response('fwadmin/renewed.html',
                               {'active_until': active_until,
                               },
@@ -129,7 +134,13 @@ def delete_host(request, pk):
     if not user_has_permssion_for_host(host, request.user):
         return NotOwnerError(request.user)
     if request.method == 'POST':
+        # and log
+        log(host,
+            request.user,
+            "Delete host %s (%s)" % (host.name, host.ip))
+
         host.delete()
+
         return redirect(reverse("fwadmin:index"),
                         context_instance=RequestContext(request))
     return HttpResponseBadRequest("Only POST supported here")
@@ -145,6 +156,12 @@ def edit_host(request, pk):
         form = EditHostForm(request.POST, instance=host)
         if form.is_valid():
             form.save()
+
+            # and log
+            log(host,
+                request.user,
+                "Edit host %s (%s)" % (host.name, host.ip))
+
             return HttpResponseRedirect(reverse("fwadmin:index"))
     else:
         form = EditHostForm(instance=host)
@@ -186,6 +203,12 @@ def moderator_approve_host(request, pk):
     host = Host.objects.get(pk=pk)
     host.approved = True
     host.save()
+
+    # and log
+    log(host,
+        request.user,
+        "Host %s (%s) approved" % (host.name, host.ip))
+
     return redirect(reverse("fwadmin:moderator_list_unapproved"),
                     context_instance=RequestContext(request))
 
@@ -199,6 +222,12 @@ def delete_rule(request, pk):
         if not user_has_permssion_for_host(host, request.user):
             return NotOwnerError(request.user)
         rule.delete()
+
+        # and log
+        log(host,
+            request.user,
+            "Delete Rule %s (%s/%s)" % (rule, host.name, host.ip))
+
         return redirect("%s#tab-rules" %
             reverse("fwadmin:edit_host", args=(host.id,)))
     return HttpResponseBadRequest("Only POST supported here")
@@ -220,6 +249,11 @@ def new_rule_for_host(request, hostid):
                 rule.ip_protocol = stock_port.ip_protocol
                 rule.port = stock_port.number
             rule.save()
+
+            log(rule.host,
+                request.user,
+                "New rule %s" % rule)
+
             return HttpResponseRedirect("%s#tab-rules" %
                 reverse("fwadmin:edit_host", args=(host.id,)))
     else:

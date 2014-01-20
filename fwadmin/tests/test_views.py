@@ -26,6 +26,7 @@ from django_project.settings import (
 def make_new_host_post_data():
     post_data = {"name": "newhost",
                  "ip": "192.168.1.1",
+                "sla": True
     }
     return post_data
 
@@ -285,8 +286,8 @@ class ChangeLogTestCase(BaseLoggedInTestCase):
         post_data = make_new_host_post_data()
         self.client.post(reverse("fwadmin:new_host"), post_data)
         # ensure we have a changelog for the host
-        changelog = ChangeLog.objects.get(host__name=post_data["name"])
-        self.assertEqual(changelog.host.ip, post_data["ip"])
+        changelog = ChangeLog.objects.get(host_name=post_data["name"])
+        self.assertEqual(changelog.host_ip, post_data["ip"])
         # with the rough correct "when"
         self.assertEqual(
             changelog.when.strftime("%Y-%m-%d %H"),

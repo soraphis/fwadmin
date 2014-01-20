@@ -8,10 +8,14 @@ import datetime
 
 class ChangeLog(models.Model):
     """ Store all changes to the hosts in the DB """
-    host = models.ForeignKey('Host')
-    who = models.ForeignKey(User)
+    host_name = models.CharField(max_length=255, default="")
+    host_ip = models.CharField(max_length=255, default="")
+    who = models.CharField(max_length=255, default="")
     what = models.TextField()
     when = models.DateTimeField(auto_now_add=True)
+
+    def __unicode__(self):
+        return "%s: %s" % (self.who, self.what)
 
 
 class StaticRule(models.Model):
