@@ -5,6 +5,7 @@ from django.utils.translation import ugettext_lazy as _
 
 import datetime
 
+
 class ChangeLog(models.Model):
     """ Store all changes to the hosts in the DB """
     host = models.ForeignKey('Host')
@@ -59,7 +60,8 @@ class ComplexRule(models.Model):
 
 class Host(models.Model):
     """ A single host """
-    created_at = models.DateTimeField(auto_now_add=True, default=datetime.datetime.now())
+    created_at = models.DateTimeField(auto_now_add=True,
+                                default=datetime.datetime.now())
     name = models.CharField(_("Name"), max_length=200)
     description = models.TextField(_("Description"), blank=True, null=True)
     # can be ipv4,ipv6

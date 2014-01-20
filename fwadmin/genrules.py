@@ -18,8 +18,12 @@ class BaseRulesWriter:
 
     def get_rules_list(self, host):
         l = []
-        l.append("%s fw rules for %s (%s) owned by %s created_at %s" % (
-                self.COMMENT_CHAR, host.name, host.ip, host.owner, host.created_at))
+        l.append("%s fw rules for %s (%s) owned by %s created at %s" % (
+                self.COMMENT_CHAR,
+                host.name,
+                host.ip,
+                host.owner,
+                host.created_at))
         # complex rules
         list_nr = settings.FWADMIN_ACCESS_LIST_NR
         for complex_rule in ComplexRule.objects.filter(host=host):

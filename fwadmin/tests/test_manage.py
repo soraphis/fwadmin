@@ -162,8 +162,11 @@ class ManagementCommandsTestCase(MyBaseTest):
         self.assertEqual(
             mock_f.getvalue(),
             "\n".join(
-                ["! fw rules for %s (%s) owned by %s" % (
-                    self.host.name, self.host.ip, self.owner.username),
+                ["! fw rules for %s (%s) owned by %s created at %s" % (
+                    self.host.name,
+                    self.host.ip,
+                    self.owner.username,
+                    self.host.created_at),
                  "access-list %s deny UDP 192.168.2.0/24 host 192.168.1.1 "
                  "eq 53" % FWADMIN_ACCESS_LIST_NR,
              ])
@@ -188,8 +191,11 @@ class ManagementCommandsTestCase(MyBaseTest):
             name="complex", from_net="192.168.2.0/24", permit=False,
             ip_protocol="UDP", port=53)
         self.cmd.handle()
-        rule_1_comment = "! fw rules for %s (%s) owned by %s" % (
-            self.host.name, self.host.ip, self.owner.username)
+        rule_1_comment = "! fw rules for %s (%s) owned by %s created at %s" % (
+            self.host.name,
+            self.host.ip,
+            self.owner.username,
+            self.host.created_at)
         rule_1 = "access-list %s deny UDP 192.168.2.0/24 host "\
                  "192.168.1.1 eq 53" % FWADMIN_ACCESS_LIST_NR
         self.assertEqual(
@@ -219,8 +225,11 @@ class GenRulesUfwTestCase(MyBaseTest):
         self.assertEqual(
             mock_f.getvalue(),
             "\n".join(
-                ["# fw rules for %s (%s) owned by %s" % (
-                    self.host.name, self.host.ip, self.owner.username),
+                ["# fw rules for %s (%s) owned by %s created at %s" % (
+                    self.host.name,
+                    self.host.ip,
+                    self.owner.username,
+                    self.host.created_at),
                  "ufw deny proto udp from 192.168.2.0/24 to 192.168.1.1 "
                  "port 53",
              ])

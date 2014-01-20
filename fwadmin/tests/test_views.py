@@ -370,8 +370,10 @@ class ModeratorTestCase(BaseLoggedInTestCase):
         resp = self.client.get(reverse("fwadmin:export", args=("cisco",)))
         self.assertEqual(
             resp.content,
-            "! fw rules for ahost (192.168.0.2) owned by meep\n"
-            "access-list 120 permit TCP any host 192.168.0.2 eq 80")
+            "! fw rules for ahost (192.168.0.2) owned by meep created at %s\n"
+            "access-list 120 permit TCP any host 192.168.0.2 eq 80" % (
+                self.host.created_at
+                ))
 
     def test_moderator_can_edit_other_host(self):
         for action in ["renew_host", "edit_host"]:
