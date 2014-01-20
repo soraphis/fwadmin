@@ -22,8 +22,13 @@ class ComplexRuleAdmin(admin.ModelAdmin):
                      'name',
                      'ip_protocol']
 
+class ChangeLogAdmin(admin.ModelAdmin):
+    search_fields = ['host_name', 'host_ip', 'who']
+    list_display = ['host_name', 'host_ip', 'who', 'what', 'when']
+    ordering = ['when']
+
 admin.site.register(Host, HostAdmin)
 admin.site.register(SamplePort, SamplePortAdmin)
 admin.site.register(ComplexRule, ComplexRuleAdmin)
 admin.site.register(StaticRule)
-admin.site.register(ChangeLog)
+admin.site.register(ChangeLog, ChangeLogAdmin)
