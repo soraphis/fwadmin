@@ -22,6 +22,7 @@ class ComplexRuleAdmin(admin.ModelAdmin):
                      'name',
                      'ip_protocol']
 
+
 class ChangeLogAdmin(admin.ModelAdmin):
     search_fields = ['host_name', 'host_ip', 'who']
     list_display = ['host_name', 'host_ip', 'who', 'what', 'when']
