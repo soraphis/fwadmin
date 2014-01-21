@@ -26,7 +26,16 @@ class StaticRule(models.Model):
         (HEADER, _("Header rule")),
         (FOOTER, _("Footer rule"))
     )
+
+    FW_TYPE_CHOICES = (
+        ("cisco", _("cisco")),
+        ("ufw", _("ufw"))
+    )
+
     type = models.IntegerField(default=HEADER, choices=TYPE_CHOICES)
+    fw_type = models.CharField(default=FW_TYPE_CHOICES[0][0],
+                                choices=FW_TYPE_CHOICES,
+                                max_length=255)
     text = models.TextField()
 
 
