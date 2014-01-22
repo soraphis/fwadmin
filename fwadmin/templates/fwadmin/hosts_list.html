@@ -40,9 +40,9 @@
 	<td>
 	  {% for rule in host.get_rules_for_host %}
             {% if not forloop.last %}
-	      {{ rule.name }},
+	      {{ rule.name }} ({{ rule.port }},
             {% else %}
-              {{ rule.name }}
+              {{ rule.name }} ({{ rule.port }})
             {% endif %}
 	  {% endfor %}
 	</td>
