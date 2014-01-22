@@ -48,11 +48,6 @@ Edit {{ hostname }} ({{ hostip }})
         This host is <strong>not</strong> approved yet.
         {% endblocktrans %}
       {% endif %}
-
-        <form action={% url 'fwadmin:delete_host' host.id %} method="post">
-          {% csrf_token %}
-          <input type="submit" value="{% trans "Delete host" %}" class="btn btn-danger">
-        </form>
     </p>
   </div>
 
@@ -130,6 +125,27 @@ Edit {{ hostname }} ({{ hostip }})
         </div>
       </div>
     </form>
+
+    <hr>
+    <div class="col-md-8 col-md-offset-2">
+      <center class="light">
+        <h2>
+          <i class="glyphicon glyphicon-warning-sign"></i>
+          Dangerous settings
+        </h2>
+      </center>
+      <div class="panel panel-danger">
+        <div class="panel-heading">{% trans "Delete host" %}</div>
+        <div class="panel-body">
+          <strong>{% blocktrans %}This can't be undone!{% endblocktrans %}</strong>
+          <br>
+          <form action={% url 'fwadmin:delete_host' host.id %} method="post">
+            {% csrf_token %}
+            <input type="submit" value="{% trans "Delete" %}" class="btn btn-danger">
+          </form>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 {% endblock %}
