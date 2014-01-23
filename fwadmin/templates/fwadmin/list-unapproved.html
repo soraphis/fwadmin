@@ -7,6 +7,15 @@
 {% endblock %}
 
 {% block content %}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.filter').searchTable('#table_hosts', {
+            searchIn: [1,3,4] // owner, ip, rules
+        });
+    });
+</script>
+
 <h2>{% trans "All unapproved hosts" %}</h2>
 <div class="control-group pull-right col-md-4">
     <input type="text" class="form-control filter" placeholder="filter"/>
@@ -22,7 +31,7 @@
         <th>{% trans "Approve Link" %}</th>
       </tr>
       </thead>
-      <tbody class="searchable">
+      <tbody>
       {% for host in all_hosts  %}
       <tr>
         <td>{{ host.owner }}</td>
@@ -47,7 +56,7 @@
       </tbody>
     </table>
 {% else %}
-    <p>{% trans "No unapproved hosts." %}</p>
+    <p>{% trans "No unjquery.tablesorter.minapproved hosts." %}</p>
 {% endif %}
 
 {% endblock %}
