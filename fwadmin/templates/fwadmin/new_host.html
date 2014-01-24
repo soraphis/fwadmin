@@ -88,11 +88,12 @@
         $(document).ready(function(){
             $("#gethostbyname").toggleClass("hide");
 
-            $("#button_select_ip").on("click", function() {
+            $('#button_select_ip').click(function() {
                 $('#id_ip').val($('#ip_list').find(":selected").text());
                 $('#modalIPSelectionDialog').modal('hide');
+            });
 
-            $('#rulesDialog button.btn-primary').click(function(){
+            $('#rulesDialog button.btn-primary').click(function() {
                 $('#rulesDialog').modal('hide');
                 $('#id_check').prop('checked', true);
             });
