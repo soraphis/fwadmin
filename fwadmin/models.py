@@ -12,7 +12,8 @@ class ModelDiffMixin(object):
     A model mixin that tracks model fields' values and provide some useful api
     to know what fields have been changed.
 
-    Source: http://stackoverflow.com/questions/1355150/django-when-saving-how-can-you-check-if-a-field-has-changed
+    Source: http://stackoverflow.com/questions/1355150/
+            django-when-saving-how-can-you-check-if-a-field-has-changed
     """
 
     def __init__(self, *args, **kwargs):

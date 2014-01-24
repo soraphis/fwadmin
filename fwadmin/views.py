@@ -158,7 +158,9 @@ def edit_host(request, pk):
             # and log
             log(host,
                 request.user,
-                "Edit host %s (%s)\n\nChanges: %r" % (host.name, host.ip, host.diff))
+                "Edit host %s (%s)\n\nChanges: %r" % (host.name,
+                                                    host.ip,
+                                                    host.diff))
 
             form.save()
 
