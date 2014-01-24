@@ -12,6 +12,7 @@ from django.contrib.auth.models import (
     User,
 )
 from fwadmin.models import (
+    ChangeLog,
     ComplexRule,
     Host,
 )
@@ -20,6 +21,14 @@ from django_project.settings import (
     FWADMIN_MODERATORS_USER_GROUP,
     FWADMIN_DEFAULT_ACTIVE_DAYS,
 )
+
+
+def make_new_host_post_data():
+    post_data = {"name": "newhost",
+                 "ip": "192.168.1.1",
+                "sla": True
+    }
+    return post_data
 
 
 def make_new_rule_post_data():
@@ -165,10 +174,7 @@ class LoggedInViewsTestCase(BaseLoggedInTestCase):
              datetime.timedelta(days=FWADMIN_DEFAULT_ACTIVE_DAYS)))
 
     def test_new_host(self):
-        post_data = {"name": "newhost",
-                     "ip": "192.168.1.1",
-                     "sla": True,
-                    }
+        post_data = make_new_host_post_data()
         resp = self.client.post(reverse("fwadmin:new_host"), post_data)
         # check the data
         host = Host.objects.get(name=post_data["name"])
@@ -272,6 +278,25 @@ class LoggedInViewsTestCase(BaseLoggedInTestCase):
     def test_export_protected(self):
         resp = self.client.get(reverse("fwadmin:export", args=("cisco",)))
         self.assertEqual(resp.status_code, 403)
+
+
+class ChangeLogTestCase(BaseLoggedInTestCase):
+
+    def test_changelog_new_host(self):
+        post_data = make_new_host_post_data()
+        self.client.post(reverse("fwadmin:new_host"), post_data)
+        # ensure we have a changelog for the host
+        changelog = ChangeLog.objects.get(host_name=post_data["name"])
+        self.assertEqual(changelog.host_ip, post_data["ip"])
+        # with the rough correct "when"
+        self.assertEqual(
+            changelog.when.strftime("%Y-%m-%d %H"),
+            datetime.datetime.now().strftime("%Y-%m-%d %H"))
+        # and the change
+        self.assertEqual(
+            changelog.what,
+            "New host %s (%s) created" % (post_data["name"],
+                                          post_data["ip"]))
 
 
 class ModeratorTestCase(BaseLoggedInTestCase):

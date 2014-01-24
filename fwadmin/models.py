@@ -6,6 +6,18 @@ from django.utils.translation import ugettext_lazy as _
 import datetime
 
 
+class ChangeLog(models.Model):
+    """ Store all changes to the hosts in the DB """
+    host_name = models.CharField(max_length=255, default="")
+    host_ip = models.CharField(max_length=255, default="")
+    who = models.CharField(max_length=255, default="")
+    what = models.TextField()
+    when = models.DateTimeField(auto_now_add=True)
+
+    def __unicode__(self):
+        return "%s: %s" % (self.who, self.what)
+
+
 class StaticRule(models.Model):
     """A static rule, free form either in the HEADER or FOOTER """
     HEADER = 0
