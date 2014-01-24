@@ -39,7 +39,7 @@
         <td>{{ host.ip }}</td>
         <td>
 	  {% for rule in host.get_rules_for_host %}
-	      <p>name:{{ rule.name }} from:{{ rule.from_net }} permit:{{ rule.permit }} protocol:{{ rule.ip_protocol }} port:{{ rule.port }}
+	      <p>name:{{ rule.name }} from:{{ rule.from_net }} permit:{{ rule.permit }} protocol:{{ rule.ip_protocol }} port:{{ rule.port_range }}
 	      </p>
 	  {% endfor %}
         </td>
