@@ -73,7 +73,7 @@ $(document).ready(function(){
   {% for button in quick_buttons %}
     $("#{{ button.name }}QuickButton").click(function() {
       $("#id_ip_protocol").val("{{ button.ip_protocol }}");
-      $("#id_port").val("{{ button.port }}");
+      $("#id_port_range").val("{{ button.port }}");
       $("#id_name").val("{{ button.name }}");
     });
   {% endfor %}
@@ -86,12 +86,12 @@ $(document).ready(function(){
     var name = regexp[2];
     var port = regexp[3];
     $("#id_ip_protocol").val(ip_protocol);
-    $("#id_port").val(port);
+    $("#id_port_range").val(port);
     $("#id_name").val(name);
   });
 
   // reset id_stock_port when id_port changes
-  $("#id_port").change(function() {
+  $("#id_port_range").change(function() {
      $("#id_stock_port").val(0);
   });
 });
