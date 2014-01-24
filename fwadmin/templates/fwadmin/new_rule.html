@@ -16,7 +16,7 @@
 </p>
 {% endif %}
 
-<form id="new_rule_for_host_form" class="form-horizontal" action="#advanced" method="post">
+<form id="new_rule_for_host_form" class="form-horizontal" action="#advance" method="post">
   {% csrf_token %}
   <div class="form-group panel-group" id="accordion">
     <div class="panel panel-default">
@@ -43,12 +43,12 @@
     <div class="panel panel-default">
       <div class="panel-heading">
         <h4 class="panel-title">
-          <a data-toggle="collapse" data-parent="#accordion" href="#advanced" class="collapsed">
+          <a data-toggle="collapse" data-parent="#accordion" href="#advance" class="collapsed">
             {% trans "Advanced Options" %}
           </a>
         </h4>
       </div>
-      <div id="advanced" class="panel-collapse collapse">
+      <div id="advance" class="panel-collapse collapse">
         <div class="panel-body">
           {{ form|bootstrap_horizontal }}
         </div>
@@ -67,7 +67,7 @@
 
 <script type="text/javascript">
 $(document).ready(function(){
-  $((location.hash || '#simple') + '.collapse').collapse('show');
+  $((location.hash || '#simple' }}') + '.collapse').collapse('show');
 
   $("#quickRuleButtons").removeClass("hide")
 
