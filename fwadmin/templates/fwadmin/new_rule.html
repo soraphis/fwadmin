@@ -16,18 +16,18 @@
 </p>
 {% endif %}
 
-<form id="new_rule_for_host_form" class="form-horizontal" action="" method="post">
+<form id="new_rule_for_host_form" class="form-horizontal" action="#advanced" method="post">
   {% csrf_token %}
   <div class="form-group panel-group" id="accordion">
     <div class="panel panel-default">
       <div class="panel-heading">
         <h4 class="panel-title">
-          <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+          <a data-toggle="collapse" data-parent="#accordion" href="#simple">
             {% trans "Simple Rule" %}
           </a>
         </h4>
       </div>
-      <div id="collapseOne" class="panel-collapse collapse in">
+      <div id="simple" class="panel-collapse collapse">
         <div class="panel-body">
           <div class="form-group">
             <label class="col-md-2 control-label">{% trans "Allow Port" %}</label>
@@ -43,12 +43,12 @@
     <div class="panel panel-default">
       <div class="panel-heading">
         <h4 class="panel-title">
-          <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" class="collapsed">
+          <a data-toggle="collapse" data-parent="#accordion" href="#advanced" class="collapsed">
             {% trans "Advanced Options" %}
           </a>
         </h4>
       </div>
-      <div id="collapseTwo" class="panel-collapse collapse">
+      <div id="advanced" class="panel-collapse collapse">
         <div class="panel-body">
           {{ form|bootstrap_horizontal }}
         </div>
@@ -67,6 +67,8 @@
 
 <script type="text/javascript">
 $(document).ready(function(){
+  $((location.hash || '#simple') + '.collapse').collapse('show');
+
   $("#quickRuleButtons").removeClass("hide")
 
   // callbacks
@@ -95,5 +97,5 @@ $(document).ready(function(){
      $("#id_stock_port").val(0);
   });
 });
-</script>  
+</script>
 {% endblock %}
