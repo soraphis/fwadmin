@@ -155,12 +155,12 @@ def edit_host(request, pk):
     if request.method == 'POST':
         form = EditHostForm(request.POST, instance=host)
         if form.is_valid():
-            form.save()
-
             # and log
             log(host,
                 request.user,
-                "Edit host %s (%s)" % (host.name, host.ip))
+                "Edit host %s (%s)\n\nChanges: %r" % (host.name, host.ip, host.diff))
+
+            form.save()
 
             return HttpResponseRedirect(reverse("fwadmin:index"))
     else:
