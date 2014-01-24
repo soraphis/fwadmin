@@ -279,6 +279,46 @@ class LoggedInViewsTestCase(BaseLoggedInTestCase):
         resp = self.client.get(reverse("fwadmin:export", args=("cisco",)))
         self.assertEqual(resp.status_code, 403)
 
+    def test_create_rules_verifciaton(self):
+        rule_data = make_new_rule_post_data()
+        rule_data["port_range"] = "xxx"
+        resp = self.client.post(reverse("fwadmin:new_rule_for_host",
+                                        args=(self.host.id,)),
+                                rule_data)
+        self.assertTrue("Port must be a number" in resp.content)
+        self.assertEqual(
+            len(ComplexRule.objects.filter(host=self.host)), 1)
+
+    def test_create_rules_verifciaton_end(self):
+        rule_data = make_new_rule_post_data()
+        rule_data["port_range"] = "1-x"
+        resp = self.client.post(reverse("fwadmin:new_rule_for_host",
+                                        args=(self.host.id,)),
+                                rule_data)
+        self.assertEqual(
+            len(ComplexRule.objects.filter(host=self.host)), 1)
+        self.assertTrue("End port must be a number" in resp.content)
+
+    def test_create_rules_verifciaton_max(self):
+        rule_data = make_new_rule_post_data()
+        rule_data["port_range"] = "70000"
+        resp = self.client.post(reverse("fwadmin:new_rule_for_host",
+                                        args=(self.host.id,)),
+                                rule_data)
+        self.assertEqual(
+            len(ComplexRule.objects.filter(host=self.host)), 1)
+        self.assertTrue("Port can not be greater than 65535" in resp.content)
+
+    def test_create_rules_verifciaton_order(self):
+        rule_data = make_new_rule_post_data()
+        rule_data["port_range"] = "20-10"
+        resp = self.client.post(reverse("fwadmin:new_rule_for_host",
+                                        args=(self.host.id,)),
+                                rule_data)
+        self.assertEqual(
+            len(ComplexRule.objects.filter(host=self.host)), 1)
+        self.assertTrue("Port order incorrect" in resp.content)
+
 
 class ChangeLogTestCase(BaseLoggedInTestCase):
 
