@@ -74,7 +74,8 @@ class NewRuleForm(ModelForm):
     def clean(self):
         """ Custom validation """
         cleaned_data = super(NewRuleForm, self).clean()
-        port = cleaned_data.get("port")
+        # FIXME: verify port range
+        port_range = cleaned_data.get("port_range")
         stock_port = cleaned_data.get("stock_port")
         # XXX: no test for this yet
         from_net = cleaned_data.get("from_net")
@@ -84,10 +85,10 @@ class NewRuleForm(ModelForm):
                 net  # pyflakes
             except netaddr.AddrFormatError:
                 raise forms.ValidationError(_("Invalid network address"))
-        if not (port or stock_port):
+        if not (port_range or stock_port):
             raise forms.ValidationError(
                 _("Need a port number or a stock port"))
-        if (port and stock_port and port != stock_port.number):
+        if (port_range and stock_port and port_range != stock_port.number):
             raise forms.ValidationError(_("You port and stock port differ"))
         return cleaned_data
 
@@ -97,7 +98,7 @@ class NewRuleForm(ModelForm):
             'name',
             'permit',
             'ip_protocol',
-            'port',
+            'port_range',
             'from_net',
             )
         model = ComplexRule

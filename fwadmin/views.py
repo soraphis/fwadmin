@@ -247,7 +247,7 @@ def new_rule_for_host(request, hostid):
             stock_port = form.cleaned_data["stock_port"]
             if stock_port:
                 rule.ip_protocol = stock_port.ip_protocol
-                rule.port = stock_port.number
+                rule.port_range = stock_port.number
             rule.save()
 
             log(rule.host,

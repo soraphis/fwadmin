@@ -37,7 +37,7 @@ def make_new_rule_post_data():
                  "permit": False,
                  "ip_protocol": "UDP",
                  "from_net": "any",
-                 "port": 1337,
+                 "port_range": "1337",
     }
     return post_data
 
@@ -111,7 +111,7 @@ class BaseLoggedInTestCase(TestCase):
         self.host.save()
         self.rule = ComplexRule.objects.create(
             host=self.host, name="http", permit=True, ip_protocol="TCP",
-            port=80)
+            port_range="80")
         # create other user with host/rule
         self.other_user = User.objects.create_user("Alice")
         self.other_host_name = "alice host"
@@ -120,7 +120,7 @@ class BaseLoggedInTestCase(TestCase):
             name=self.other_host_name, ip="192.168.1.77",
             owner=self.other_user, active_until=self.other_active_until)
         self.other_rule = ComplexRule.objects.create(
-            host=self.other_host, name="ssh", port=22)
+            host=self.other_host, name="ssh", port_range="22")
 
 
 class LoggedInViewsTestCase(BaseLoggedInTestCase):
@@ -333,7 +333,7 @@ class ModeratorTestCase(BaseLoggedInTestCase):
     def test_delete_rule(self):
         rule = ComplexRule.objects.create(
             host=self.host, name="ssh", permit=True, ip_protocol="TCP",
-            port=22)
+            port_range="22")
         resp = self.client.post(reverse("fwadmin:delete_rule",
                                        args=(rule.pk,)))
         # check that its gone
