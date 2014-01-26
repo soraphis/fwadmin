@@ -285,7 +285,8 @@ class LoggedInViewsTestCase(BaseLoggedInTestCase):
         resp = self.client.post(reverse("fwadmin:new_rule_for_host",
                                         args=(self.host.id,)),
                                 rule_data)
-        self.assertTrue("Port must be a number" in resp.content)
+        self.assertTrue("Port or Range must be a single port or a range."
+            in resp.content)
         self.assertEqual(
             len(ComplexRule.objects.filter(host=self.host)), 1)
 
