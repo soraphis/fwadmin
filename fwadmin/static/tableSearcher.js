@@ -23,7 +23,7 @@ $.fn.searchTable = function (selector, options) {
 
     $(this).on('keyup', function () {
         searchTerm = $(this).val();
-        regexp = new RegExp(searchTerm, i);
+        regexp = new RegExp(searchTerm, 'i');
 
         rows = $(selector).find('tbody > tr');
 
