@@ -5,7 +5,7 @@ $.fn.searchTable = function (selector, options) {
     var searchTerm, regexp, rows, rowText;
 
     $.merge(options, {
-        searchIn: [],
+        searchIn: []
     });
 
     if (typeof options.searchIn == "string") {
@@ -23,7 +23,7 @@ $.fn.searchTable = function (selector, options) {
 
     $(this).on('keyup', function () {
         searchTerm = $(this).val();
-        regexp = new RegExp(searchTerm);
+        regexp = new RegExp(searchTerm, i);
 
         rows = $(selector).find('tbody > tr');
 
