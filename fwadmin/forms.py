@@ -83,7 +83,7 @@ class NewRuleForm(ModelForm):
         port_range = cleaned_data.get("port_range")
         start, sep, end = port_range.partition("-")
         if not start.isdigit():
-            raise forms.ValidationError(_("Port must be a number"))
+            raise forms.ValidationError(_("Port or Range must be a single port or a range."))
         if end and not end.isdigit():
             raise forms.ValidationError(_("End port must be a number"))
         if int(start) > 65635 or (end and int(end) > 65535):
