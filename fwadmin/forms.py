@@ -71,6 +71,10 @@ class NewRuleForm(ModelForm):
         queryset=SamplePort.objects.all(),
         required=False)
 
+    port_range = forms.CharField(
+        label=_("Port or range"),
+        widget=forms.TextInput(attrs={'placeholder': _("22 or 1024-1030")}))
+
     def clean(self):
         """ Custom validation """
         cleaned_data = super(NewRuleForm, self).clean()
