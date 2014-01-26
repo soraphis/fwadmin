@@ -37,7 +37,7 @@ def make_new_rule_post_data():
                  "permit": False,
                  "ip_protocol": "UDP",
                  "from_net": "any",
-                 "port": 1337,
+                 "port_range": "1337",
     }
     return post_data
 
@@ -111,7 +111,7 @@ class BaseLoggedInTestCase(TestCase):
         self.host.save()
         self.rule = ComplexRule.objects.create(
             host=self.host, name="http", permit=True, ip_protocol="TCP",
-            port=80)
+            port_range="80")
         # create other user with host/rule
         self.other_user = User.objects.create_user("Alice")
         self.other_host_name = "alice host"
@@ -120,7 +120,7 @@ class BaseLoggedInTestCase(TestCase):
             name=self.other_host_name, ip="192.168.1.77",
             owner=self.other_user, active_until=self.other_active_until)
         self.other_rule = ComplexRule.objects.create(
-            host=self.other_host, name="ssh", port=22)
+            host=self.other_host, name="ssh", port_range="22")
 
 
 class LoggedInViewsTestCase(BaseLoggedInTestCase):
@@ -279,6 +279,46 @@ class LoggedInViewsTestCase(BaseLoggedInTestCase):
         resp = self.client.get(reverse("fwadmin:export", args=("cisco",)))
         self.assertEqual(resp.status_code, 403)
 
+    def test_create_rules_verifciaton(self):
+        rule_data = make_new_rule_post_data()
+        rule_data["port_range"] = "xxx"
+        resp = self.client.post(reverse("fwadmin:new_rule_for_host",
+                                        args=(self.host.id,)),
+                                rule_data)
+        self.assertTrue("Port must be a number" in resp.content)
+        self.assertEqual(
+            len(ComplexRule.objects.filter(host=self.host)), 1)
+
+    def test_create_rules_verifciaton_end(self):
+        rule_data = make_new_rule_post_data()
+        rule_data["port_range"] = "1-x"
+        resp = self.client.post(reverse("fwadmin:new_rule_for_host",
+                                        args=(self.host.id,)),
+                                rule_data)
+        self.assertEqual(
+            len(ComplexRule.objects.filter(host=self.host)), 1)
+        self.assertTrue("End port must be a number" in resp.content)
+
+    def test_create_rules_verifciaton_max(self):
+        rule_data = make_new_rule_post_data()
+        rule_data["port_range"] = "70000"
+        resp = self.client.post(reverse("fwadmin:new_rule_for_host",
+                                        args=(self.host.id,)),
+                                rule_data)
+        self.assertEqual(
+            len(ComplexRule.objects.filter(host=self.host)), 1)
+        self.assertTrue("Port can not be greater than 65535" in resp.content)
+
+    def test_create_rules_verifciaton_order(self):
+        rule_data = make_new_rule_post_data()
+        rule_data["port_range"] = "20-10"
+        resp = self.client.post(reverse("fwadmin:new_rule_for_host",
+                                        args=(self.host.id,)),
+                                rule_data)
+        self.assertEqual(
+            len(ComplexRule.objects.filter(host=self.host)), 1)
+        self.assertTrue("Port order incorrect" in resp.content)
+
 
 class ChangeLogTestCase(BaseLoggedInTestCase):
 
@@ -333,7 +373,7 @@ class ModeratorTestCase(BaseLoggedInTestCase):
     def test_delete_rule(self):
         rule = ComplexRule.objects.create(
             host=self.host, name="ssh", permit=True, ip_protocol="TCP",
-            port=22)
+            port_range="22")
         resp = self.client.post(reverse("fwadmin:delete_rule",
                                        args=(rule.pk,)))
         # check that its gone

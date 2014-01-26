@@ -157,7 +157,7 @@ class ManagementCommandsTestCase(MyBaseTest):
         ComplexRule.objects.create(
             host=self.host,
             name="complex", from_net="192.168.2.0/24", permit=False,
-            ip_protocol="UDP", port=53)
+            ip_protocol="UDP", port_range=53)
         self.cmd.handle()
         self.assertEqual(
             mock_f.getvalue(),
@@ -169,6 +169,28 @@ class ManagementCommandsTestCase(MyBaseTest):
                     self.host.created_at),
                  "access-list %s deny UDP 192.168.2.0/24 host 192.168.1.1 "
                  "eq 53" % FWADMIN_ACCESS_LIST_NR,
+             ])
+        )
+
+    @patch("fwadmin.management.commands.genrules.Command.OUTPUT",
+           new_callable=StringIO)
+    def test_gen_rules_complex_range(self, mock_f):
+        """ Ensure complex rule with port range is written """
+        ComplexRule.objects.create(
+            host=self.host,
+            name="complex", from_net="192.168.2.0/24", permit=False,
+            ip_protocol="TCP", port_range="6000-6100")
+        self.cmd.handle()
+        self.assertEqual(
+            mock_f.getvalue(),
+            "\n".join(
+                ["! fw rules for %s (%s) owned by %s created at %s" % (
+                    self.host.name,
+                    self.host.ip,
+                    self.owner.username,
+                    self.host.created_at),
+                 "access-list %s deny TCP 192.168.2.0/24 host 192.168.1.1 "
+                 "range 6000 6100" % FWADMIN_ACCESS_LIST_NR,
              ])
         )
 
@@ -189,7 +211,7 @@ class ManagementCommandsTestCase(MyBaseTest):
         ComplexRule.objects.create(
             host=self.host,
             name="complex", from_net="192.168.2.0/24", permit=False,
-            ip_protocol="UDP", port=53)
+            ip_protocol="UDP", port_range=53)
         self.cmd.handle()
         rule_1_comment = "! fw rules for %s (%s) owned by %s created at %s" % (
             self.host.name,
@@ -220,7 +242,7 @@ class GenRulesUfwTestCase(MyBaseTest):
         ComplexRule.objects.create(
             host=self.host,
             name="complex", from_net="192.168.2.0/24", permit=False,
-            ip_protocol="UDP", port=53)
+            ip_protocol="UDP", port_range=53)
         self.cmd.handle("ufw")
         self.assertEqual(
             mock_f.getvalue(),
@@ -232,6 +254,28 @@ class GenRulesUfwTestCase(MyBaseTest):
                     self.host.created_at),
                  "ufw deny proto udp from 192.168.2.0/24 to 192.168.1.1 "
                  "port 53",
+             ])
+        )
+
+    @patch("fwadmin.management.commands.genrules.Command.OUTPUT",
+           new_callable=StringIO)
+    def test_gen_rules_port_range(self, mock_f):
+        """ Test the ufw backend port range """
+        ComplexRule.objects.create(
+            host=self.host,
+            name="complex", from_net="192.168.2.0/24", permit=False,
+            ip_protocol="UDP", port_range="6000-6100")
+        self.cmd.handle("ufw")
+        self.assertEqual(
+            mock_f.getvalue(),
+            "\n".join(
+                ["# fw rules for %s (%s) owned by %s created at %s" % (
+                    self.host.name,
+                    self.host.ip,
+                    self.owner.username,
+                    self.host.created_at),
+                 "ufw deny proto udp from 192.168.2.0/24 to 192.168.1.1 "
+                 "port 6000:6100",
              ])
         )
 

@@ -76,7 +76,7 @@ Edit {{ hostname }} ({{ hostip }})
           <td>{{ rule.name }}</td>
           <td>{{ rule.permit }}</td>
           <td>{{ rule.from_net }}</td>
-          <td>{{ rule.port }}</td>
+          <td>{{ rule.port_range }}</td>
           <td>{{ rule.ip_protocol }}</td>
   	      <td>
             <form	action={% url 'fwadmin:delete_rule' rule.id %} method="post">
