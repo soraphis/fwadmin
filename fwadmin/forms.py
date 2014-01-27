@@ -1,5 +1,3 @@
-import netaddr
-
 import django.forms as forms
 from django.forms import ModelForm
 from django.utils.translation import ugettext_lazy as _
@@ -11,6 +9,10 @@ from .models import (
     Host,
     SamplePort,
 )
+
+from .validators import (
+    validate_port,
+    validate_from_net)
 
 
 class NewHostForm(ModelForm):
@@ -71,33 +73,20 @@ class NewRuleForm(ModelForm):
         queryset=SamplePort.objects.all(),
         required=False)
 
+    port_range = forms.CharField(
+        label=_("Port or range"),
+        validators=[validate_port],
+        widget=forms.TextInput(attrs={'placeholder': _("22 or 1024-1030")}))
+
+    from_net = forms.CharField(
+        validators=[validate_from_net])
+
     def clean(self):
         """ Custom validation """
         cleaned_data = super(NewRuleForm, self).clean()
 
-        # validate port_range
         port_range = cleaned_data.get("port_range")
-        start, sep, end = port_range.partition("-")
-        if not start.isdigit():
-            raise forms.ValidationError(_("Port must be a number"))
-        if end and not end.isdigit():
-            raise forms.ValidationError(_("End port must be a number"))
-        if int(start) > 65635 or (end and int(end) > 65535):
-            raise forms.ValidationError(
-                _("Port can not be greater than 65535"))
-        if end and int(start) >= int(end):
-            raise forms.ValidationError(
-                _("Port order incorrect"))
-
         stock_port = cleaned_data.get("stock_port")
-        # XXX: no test for this yet
-        from_net = cleaned_data.get("from_net")
-        if from_net and from_net != "any":
-            try:
-                net = netaddr.IPNetwork(from_net)
-                net  # pyflakes
-            except netaddr.AddrFormatError:
-                raise forms.ValidationError(_("Invalid network address"))
         if not (port_range or stock_port):
             raise forms.ValidationError(
                 _("Need a port number or a stock port"))
