@@ -79,7 +79,9 @@ class NewRuleForm(ModelForm):
         widget=forms.TextInput(attrs={'placeholder': _("22 or 1024-1030")}))
 
     from_net = forms.CharField(
-        validators=[validate_from_net])
+        validators=[validate_from_net],
+        widget=forms.TextInput(
+            attrs={'placeholder': _("any or 136.199.x.y/24")}))
 
     def clean(self):
         """ Custom validation """
