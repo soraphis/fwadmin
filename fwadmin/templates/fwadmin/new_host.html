@@ -98,6 +98,14 @@
                 $('#id_check').prop('checked', true);
             });
 
+            $("#id_name").on("focusout", function() {
+                if( $("#id_ip").val() === "") {
+                    var name = $("#id_name").val();
+                    $("#id_ip").val(name);
+                    $("#gethostbyname").click();
+                }
+            });
+
             $("#gethostbyname").on("click", function() {
                 var hostname = $("#id_ip").val()
                 var url = "{% url 'fwadmin:gethostbyname' 'xxxyyy' %}".replace("xxxyyy", hostname)
