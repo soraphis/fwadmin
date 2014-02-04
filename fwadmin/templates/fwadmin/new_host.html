@@ -104,7 +104,7 @@
                 $.getJSON(url, function( data ) {
                     if(data.length === 1) {
                         $("#id_ip").val(data[0])
-                    } else {
+                    } else if (data.length > 1) {
                         $('#ip_list').empty()
                         data.forEach(function(item) {
                             $('#ip_list').append($("<option></option>").attr("value", item).text(item));
