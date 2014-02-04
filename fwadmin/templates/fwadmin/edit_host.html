@@ -10,24 +10,6 @@ Edit {{ hostname }} ({{ hostip }})
 {% endblock %}
 
 {% block content %}
-<script>
-  $(function() {
-    $("#table_rules").dataTable({
-      "bPaginate": false,
-      "bFilter": false,
-      "aoColumnDefs": [
-        { "bSortable": false, "aTargets": [ 4 ] }
-      ]
-    });
-
-  // Javascript to enable link to tab
-  var url = document.location.toString();
-  if (url.match('#')) {
-      $('.nav-tabs a[href=#'+url.split('#')[1]+']').tab('show') ;
-  }
-});
-</script>
-
 <ul class="nav nav-tabs">
   <li class="active"><a href="#tab-status" data-toggle="tab">{% trans "Status" %}</a></li>
   <li><a href="#tab-rules" data-toggle="tab">{% trans "Firewall rules" %}</a></li>
@@ -79,7 +61,7 @@ Edit {{ hostname }} ({{ hostip }})
           <td>{{ rule.port_range }}</td>
           <td>{{ rule.ip_protocol }}</td>
   	      <td>
-            <form	action={% url 'fwadmin:delete_rule' rule.id %} method="post">
+            <form	action="{% url 'fwadmin:delete_rule' rule.id %}#tab-rules" method="post">
               {% csrf_token %}
               <input type="submit" value={% trans "Delete" %} class="btn btn-danger">
             </form>
@@ -148,5 +130,15 @@ Edit {{ hostname }} ({{ hostip }})
     </div>
   </div>
 </div>
+
+<script>
+  $(document).ready(function() {
+    // Javascript to enable link to tab
+    var url = document.location.toString();
+    if (url.match('#')) {
+      $('.nav-tabs a[href=#'+url.split('#')[1]+']').tab('show');
+    }
+  });
+</script>
 {% endblock %}
 
