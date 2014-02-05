@@ -1,29 +1,17 @@
 {% load i18n %}
 {% load url from future %}
-<script>
-  $(function() {
-    $("#table_my_hosts").dataTable({
-      "bPaginate": false,
-      "bFilter": false,
-      "bInfo": false,
-      "aoColumnDefs": [
-        { "bSortable": false, "aTargets": [ 6 ] }
-      ]
-    });
-  });
-</script>
 
 <div class="hosts-list">
 {% if all_hosts %}
-    <table class="table table-striped" id="table_my_hosts">
+    <table class="table table-striped" id="table_my_hosts" data-searchTable="hostList">
       <thead>
       <tr>
-        <th>{% trans "Host" %}</th>
-        <th>{% trans "Description" %}</th>
-        <th>{% trans "Owner" %}</th>
-        <th>{% trans "Secondary Owner" %}</th>
-        <th>{% trans "IP" %}</th>
-	<th>{% trans "Active Rules" %}
+        <th class="searchable">{% trans "Host" %}</th>
+        <th class="searchable">{% trans "Description" %}</th>
+        <th class="searchable">{% trans "Owner" %}</th>
+        <th class="searchable">{% trans "Secondary Owner" %}</th>
+        <th class="searchable">{% trans "IP" %}</th>
+        <th class="searchable">{% trans "Active Rules" %}
         <th>{% trans "Approved"  %}</th>
         <th>{% trans "Active Until" %}</th>
         <th>{% trans "Renew Link" %}</th>
@@ -37,15 +25,15 @@
         <th>{{ host.owner.username }}</th>
         <th>{{ host.owner2.username }}</th>
         <td><a href="{% url 'fwadmin:edit_host' host.pk %}">{{ host.ip }}</a></td>
-	<td>
-	  {% for rule in host.get_rules_for_host %}
-            {% if not forloop.last %}
-	      {{ rule.name }} ({{ rule.port_range }}),
-            {% else %}
-              {{ rule.name }} ({{ rule.port_range }})
-            {% endif %}
-	  {% endfor %}
-	</td>
+        <td>
+          {% for rule in host.get_rules_for_host %}
+                  {% if not forloop.last %}
+              {{ rule.name }} ({{ rule.port_range }}),
+                  {% else %}
+                    {{ rule.name }} ({{ rule.port_range }})
+                  {% endif %}
+          {% endfor %}
+        </td>
         {% if host.approved %}
         <td>{% trans "Yes" %}</td>
         {% else %}
@@ -54,15 +42,15 @@
         {% if host.approved %}
           <td>{{ host.active_until }}</td>
           <td>
-	    <form action={% url 'fwadmin:renew_host' host.pk %} 
-		  method="post">
-	      {% csrf_token %}
-	      <input type="submit" value={% trans "Renew" %} class="btn btn-primary">
-	    </form>
-	  </td>
-	{% else %}
-	  <td> - </td>
-	  <td> - </td>
+      <form action={% url 'fwadmin:renew_host' host.pk %}
+      method="post">
+        {% csrf_token %}
+        <input type="submit" value={% trans "Renew" %} class="btn btn-primary">
+      </form>
+    </td>
+  {% else %}
+    <td> - </td>
+    <td> - </td>
         {% endif %}
       </tr>
       {% endfor %}

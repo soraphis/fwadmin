@@ -29,6 +29,10 @@ footer {
     border-top: 1px solid #E5E5E5;
 }
 
+#show-js {
+    display: none!important;
+}
+
 #controls > * {
     margin-bottom: 1em;
     width: 100px;

@@ -33,7 +33,11 @@
             <label class="col-md-2 control-label">{% trans "Allow Port" %}</label>
             <div class="col-md-10">
               {% for button in quick_buttons %}
-                <button id="{{ button.name }}QuickButton" class="btn btn-primary">{{ button.description }}</button>
+                <button class="btn btn-primary"
+                  data-quick-setting-protocol="{{ button.ip_protocol }}"
+                  data-quick-setting-port="{{ button.port }}"
+                  data-quick-setting-name="{{ button.name }}"
+                  data-quick-setting-from="any">{{ button.description }}</button>
               {% endfor %}
             </div>
           </div>
@@ -64,40 +68,4 @@
       </div>
     </div>
 </form>
-
-<script type="text/javascript">
-$(document).ready(function(){
-  $((location.hash || '#simple') + '.collapse').collapse('show');
-
-  $("#quickRuleButtons").removeClass("hide")
-
-  // callbacks
-  {% for button in quick_buttons %}
-    $("#{{ button.name }}QuickButton").click(function() {
-      $("#id_ip_protocol").val("{{ button.ip_protocol }}");
-      $("#id_port_range").val("{{ button.port }}");
-      $("#id_name").val("{{ button.name }}");
-      $("#id_from_net").val("any");
-    });
-  {% endfor %}
-
-  // keep id_stock_port and id_port in sync
-  $("#id_stock_port").change(function() {
-    var selected_str = $("#id_stock_port option:selected").text();
-    var regexp = selected_str.match(/(\w+)(.*)\((.*)\)/);
-    var ip_protocol = regexp[1];
-    var name = regexp[2];
-    var port = regexp[3];
-    $("#id_ip_protocol").val(ip_protocol);
-    $("#id_port_range").val(port);
-    $("#id_name").val(name);
-    $("#id_from_net").val("any");
-  });
-
-  // reset id_stock_port when id_port changes
-  $("#id_port_range").change(function() {
-     $("#id_stock_port").val(0);
-  });
-});
-</script>
 {% endblock %}

@@ -6,12 +6,8 @@
 <head>
   <title>{% block title %}{% trans "Fwadmin" %}{% endblock %}</title>
 
-  <link rel="stylesheet" href="{{ STATIC_URL }}components/bootstrap/dist/css/bootstrap.min.css" />
-  <link rel="stylesheet" href="{{ STATIC_URL }}style.css" />
-
-  <script src="{{ STATIC_URL }}components/jquery/jquery.min.js"></script>
-  <script src="{{ STATIC_URL }}components/bootstrap/dist/js/bootstrap.min.js"></script>
-  <script src="{{ STATIC_URL}}tableSearcher.js"></script>
+  <link rel="stylesheet" href="{{ STATIC_URL }}lib/bootstrap/dist/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="{{ STATIC_URL }}css/style.css" />
 </head>
 
 <body>
@@ -71,5 +67,20 @@
     &copy; ZIMK 2013
   </footer>
 
+  <script src="{{ STATIC_URL }}lib/jquery/jquery.min.js"></script>
+  <script src="{{ STATIC_URL }}lib/bootstrap/dist/js/bootstrap.min.js"></script>
+  <script src="{{ STATIC_URL}}js/plugins/tableSearcher.js"></script>
+
+  <script src="{{ STATIC_URL}}js/settings.js"></script>
+  <script>
+  (function() {
+    window.app.urls.getHostByName = function(name) {
+      return "{% url 'fwadmin:gethostbyname' 'xxxyyy' %}".replace("xxxyyy", name)
+    }
+  })();
+  </script>
+
+  <script src="{{ STATIC_URL}}js/main.js"></script>
+  <script src="{{ STATIC_URL}}js/newRule.js"></script>
 </body>
 </html>

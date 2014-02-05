@@ -51,7 +51,7 @@
                             <div class="input-group">
                                 {{field|addcss:"form-control"}}
                     <span class="input-group-btn">
-                        <button id="gethostbyname" class="btn btn-default hide">{% trans "Resolve" %}</button>
+                        <input type="button" id="gethostbyname" class="btn btn-default show-js" value="{% trans "Resolve" %}">
                     </span>
                             </div>
                         </div>
@@ -59,7 +59,7 @@
                 {% elif field.id_for_label == "id_sla" %}
                     <div class="form-group">
                       <div class="control-label col-sm-2 col-lg-2">
-                          <a class="btn btn-xs btn-block btn-default" data-toggle="modal" data-target="#rulesDialog">{% trans "Rules" %}</a>
+                          <input type="button" class="btn btn-xs btn-block btn-default" data-toggle="modal" data-target="#rulesDialog" value="{% trans "Rules" %}">
                       </div>
 
                       <div class=" col-sm-10 col-lg-10">
@@ -83,52 +83,4 @@
     </form>
 
     {% include "fwadmin/eula.html" %}
-
-    <script type="text/javascript">
-        function gethostbyname(name, callback) {
-            var url = "{% url 'fwadmin:gethostbyname' 'xxxyyy' %}".replace("xxxyyy", name)
-            $.getJSON(url, callback)
-        };
-
-        $(document).ready(function() {
-            $("#gethostbyname").toggleClass("hide");
-
-            $('#button_select_ip').click(function() {
-                $('#id_ip').val($('#ip_list').find(":selected").text());
-                $('#modalIPSelectionDialog').modal('hide');
-            });
-
-            $('#rulesDialog button.btn-primary').click(function() {
-                $('#rulesDialog').modal('hide');
-                $('#id_check').prop('checked', true);
-            });
-
-            $("#id_name").on("focusout", function() {
-                if( $("#id_ip").val() === "") {
-                    gethostbyname($("#id_name").val(), function(data) {
-                        // we only care about unique results
-                        if (data.length === 1) {
-                            $("#id_ip").val(data[0])
-                        }
-                    });
-                }
-            });
-
-            $("#gethostbyname").on("click", function() {
-                gethostbyname($("#id_ip").val(), function( data ) {
-                    if(data.length === 1) {
-                        $("#id_ip").val(data[0])
-                    } else if (data.length > 1) {
-                        $('#ip_list').empty()
-                        data.forEach(function(item) {
-                            $('#ip_list').append($("<option></option>").attr("value", item).text(item));
-                        });
-                        $('#modalIPSelectionDialog').modal({});
-                    }
-                });
-                return false;
-            });
-
-        });
-    </script>
 {% endblock %}
