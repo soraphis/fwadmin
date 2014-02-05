@@ -7,27 +7,18 @@
 {% endblock %}
 
 {% block content %}
-
-<script type="text/javascript">
-    $(document).ready(function () {
-        $('.filter').searchTable('#table_hosts', {
-            searchIn: [1,3,4] // owner, ip, rules
-        });
-    });
-</script>
-
 <h2>{% trans "All unapproved hosts" %}</h2>
 <div class="control-group pull-right col-md-4">
-    <input type="text" class="form-control filter" placeholder="filter"/>
+    <input type="text" class="form-control" placeholder="filter" data-searchTable="unapproved"/>
 </div>
 {% if all_hosts %}
-    <table class="table" id="table_hosts">
+    <table class="table" id="table_hosts" data-searchTable="unapproved">
       <thead>
       <tr>
-        <th>{% trans "Owner" %}</th>
-        <th>{% trans "Host Description" %}</th>
-        <th>{% trans "IP" %}</th>
-        <th>{% trans "Rules" %}</th>
+        <th class="searchable">{% trans "Owner" %}</th>
+        <th class="searchable">{% trans "Host Description" %}</th>
+        <th class="searchable">{% trans "IP" %}</th>
+        <th class="searchable">{% trans "Rules" %}</th>
         <th>{% trans "Approve Link" %}</th>
       </tr>
       </thead>
@@ -43,7 +34,7 @@
 	      </p>
 	  {% endfor %}
         </td>
-        <td> 
+        <td>
 	  <form	action={% url 'fwadmin:moderator_approve_host' host.pk %}
 		method="post">
 	    {% csrf_token %}

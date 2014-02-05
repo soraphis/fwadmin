@@ -4,6 +4,7 @@
 *~
 django_project/ldap-password
 django_project/secret.txt
-fwadmin/static/components/
+fwadmin/static/lib/
 fwadmin.db
 env-fwadmin/
+src/

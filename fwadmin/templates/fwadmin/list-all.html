@@ -7,19 +7,10 @@
 {% endblock %}
 
 {% block content %}
-<script>
-  $(function() {
-    $("#table_hosts").dataTable({
-      "bPaginate": false,
-      "aoColumnDefs": [
-        { "bSortable": false, "aTargets": [ 4 ] }
-      ]
-    });
-  });
-</script>
-
 <h2>{% trans "All hosts" %}</h2>
-
+<div class="control-group pull-right col-md-4">
+    <input type="text" class="form-control" placeholder="filter" data-searchTable="hostList"/>
+</div>
 <div class="col-md-12">
   {% include "fwadmin/hosts_list.html" %}
 </div>
