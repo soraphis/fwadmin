@@ -85,7 +85,12 @@
     {% include "fwadmin/eula.html" %}
 
     <script type="text/javascript">
-        $(document).ready(function(){
+        function gethostbyname(name, callback) {
+            var url = "{% url 'fwadmin:gethostbyname' 'xxxyyy' %}".replace("xxxyyy", name)
+            $.getJSON(url, callback)
+        };
+
+        $(document).ready(function() {
             $("#gethostbyname").toggleClass("hide");
 
             $('#button_select_ip').click(function() {
@@ -100,16 +105,17 @@
 
             $("#id_name").on("focusout", function() {
                 if( $("#id_ip").val() === "") {
-                    var name = $("#id_name").val();
-                    $("#id_ip").val(name);
-                    $("#gethostbyname").click();
+                    gethostbyname($("#id_name").val(), function(data) {
+                        // we only care about unique results
+                        if (data.length === 1) {
+                            $("#id_ip").val(data[0])
+                        }
+                    });
                 }
             });
 
             $("#gethostbyname").on("click", function() {
-                var hostname = $("#id_ip").val()
-                var url = "{% url 'fwadmin:gethostbyname' 'xxxyyy' %}".replace("xxxyyy", hostname)
-                $.getJSON(url, function( data ) {
+                gethostbyname($("#id_ip").val(), function( data ) {
                     if(data.length === 1) {
                         $("#id_ip").val(data[0])
                     } else {
