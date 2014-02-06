@@ -92,7 +92,9 @@ class NewRuleForm(ModelForm):
         if not (port_range or stock_port):
             raise forms.ValidationError(
                 _("Need a port number or a stock port"))
-        if (port_range and stock_port and port_range != stock_port.number):
+        if (port_range and
+            stock_port and
+            int(port_range) != stock_port.number):
             raise forms.ValidationError(_("You port and stock port differ"))
         return cleaned_data
 
