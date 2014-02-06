@@ -15,6 +15,7 @@ from fwadmin.models import (
     ChangeLog,
     ComplexRule,
     Host,
+    SamplePort,
 )
 from django_project.settings import (
     FWADMIN_ALLOWED_USER_GROUP,
@@ -124,6 +125,7 @@ class BaseLoggedInTestCase(TestCase):
 
 
 class LoggedInViewsTestCase(BaseLoggedInTestCase):
+    fixtures = ["initial_data"]
 
     def test_index_has_host(self):
         """Test that the index view has a html table with out test host"""
@@ -319,6 +321,18 @@ class LoggedInViewsTestCase(BaseLoggedInTestCase):
         self.assertEqual(
             len(ComplexRule.objects.filter(host=self.host)), 1)
         self.assertTrue("Port order incorrect" in resp.content)
+
+    def test_create_rules_from_stock(self):
+        old_rules_len = len(ComplexRule.objects.filter(host=self.host))
+        rule_data = make_new_rule_post_data()
+        rule_data["stock_port"] = SamplePort.objects.all()[0].id
+        # port range is a string
+        rule_data["port_range"] = str(SamplePort.objects.all()[0].number)
+        resp = self.client.post(reverse("fwadmin:new_rule_for_host",
+                                        args=(self.host.id,)),
+                                rule_data)
+        self.assertEqual(old_rules_len + 1,
+            len(ComplexRule.objects.filter(host=self.host)))
 
 
 class ChangeLogTestCase(BaseLoggedInTestCase):
