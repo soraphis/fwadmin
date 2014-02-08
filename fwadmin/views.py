@@ -4,7 +4,7 @@ import json
 import StringIO
 import socket
 
-#from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext_lazy as _
 from django.core.urlresolvers import reverse
 
 from .auth import (
@@ -22,6 +22,7 @@ from django.shortcuts import (
     render_to_response,
     redirect,
 )
+from django.contrib import messages
 from django.template import RequestContext
 from django.contrib.auth.decorators import (
     login_required,
@@ -95,6 +96,9 @@ def new_host(request):
                 request.user,
                 "New host %s (%s) created" % (host.name, host.ip))
 
+            messages.success(request,
+                _("Host %s succefully created.") % host.name)
+
             return HttpResponseRedirect(reverse("fwadmin:new_rule_for_host",
                                                 args=(host.id,)))
     else:
@@ -121,10 +125,12 @@ def renew_host(request, pk):
         request.user,
         "Renew host %s (%s)" % (host.name, host.ip))
 
-    return render_to_response('fwadmin/renewed.html',
-                              {'active_until': active_until,
-                              },
-                              context_instance=RequestContext(request))
+    messages.success(request,
+        _('Thanks for renewing, host firewall active until %s.' %
+            active_until))
+
+    return redirect(reverse("fwadmin:index"),
+                        context_instance=RequestContext(request))
 
 
 @login_required
@@ -141,6 +147,7 @@ def delete_host(request, pk):
 
         host.delete()
 
+        messages.success(request, _("Host %s was deleted.") % host.name)
         return redirect(reverse("fwadmin:index"),
                         context_instance=RequestContext(request))
     return HttpResponseBadRequest("Only POST supported here")
@@ -211,6 +218,7 @@ def moderator_approve_host(request, pk):
         request.user,
         "Host %s (%s) approved" % (host.name, host.ip))
 
+    messages.success(request, _("Host %s approved.") % host.name)
     return redirect(reverse("fwadmin:moderator_list_unapproved"),
                     context_instance=RequestContext(request))
 

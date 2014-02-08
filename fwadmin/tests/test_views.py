@@ -165,7 +165,9 @@ class LoggedInViewsTestCase(BaseLoggedInTestCase):
                                    active_until="1789-01-01",
                                    owner=self.loggedin_user)
         # post to renew url
-        resp = self.client.post(reverse("fwadmin:renew_host", args=(host.id,)))
+        resp = self.client.post(
+            reverse("fwadmin:renew_host", args=(host.id,)),
+            follow=True)
         # ensure we get something of the right message
         self.assertTrue("Thanks for renewing" in resp.content)
         # and that it is actually renewed
@@ -432,10 +434,13 @@ class ModeratorTestCase(BaseLoggedInTestCase):
                 ))
 
     def test_moderator_can_edit_other_host(self):
-        for action in ["renew_host", "edit_host"]:
-            resp = self.client.get(reverse("fwadmin:%s" % action,
+        resp = self.client.get(reverse("fwadmin:renew_host",
                                        args=(self.other_host.id,)))
-            self.assertEqual(resp.status_code, 200)
+        self.assertEqual(resp.status_code, 302)
+
+        resp = self.client.get(reverse("fwadmin:edit_host",
+                                       args=(self.other_host.id,)))
+        self.assertEqual(resp.status_code, 200)
 
     def test_moderator_can_delete_other_host(self):
         resp = self.client.post(reverse("fwadmin:delete_host",
