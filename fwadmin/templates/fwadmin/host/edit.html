@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load bootstrap %}
+{% load url from future %}
+
+{% block brand %}
+{% blocktrans with hostname=host.name hostip=host.ip %}
+Edit {{ hostname }} ({{ hostip }})
+{% endblocktrans %}
+{% endblock %}
+
+{% block content %}
+<ul class="nav nav-tabs">
+  <li class="active"><a href="#tab-status" data-toggle="tab">{% trans "Status" %}</a></li>
+  <li><a href="#tab-rules" data-toggle="tab">{% trans "Firewall rules" %}</a></li>
+  <li><a href="#tab-renew" data-toggle="tab">{% trans "Active until" %}</a></li>
+  <li><a href="#tab-settings" data-toggle="tab">{% trans "Settings" %}</a></li>
+</ul>
+
+<div class="tab-content">
+  <div class="tab-pane active" id="tab-status">
+    {% include 'fwadmin/host/partials/status.html' %}
+  </div>
+  <div class="tab-pane" id="tab-rules">
+    {% include 'fwadmin/host/partials/rules.html' %}
+  </div>
+  <div class="tab-pane" id="tab-renew">
+    {% include 'fwadmin/host/partials/renew.html' %}
+  </div>
+  <div class="tab-pane" id="tab-settings">
+    {% include 'fwadmin/host/partials/settings.html' %}
+  </div>
+</div>
+{% endblock %}
+

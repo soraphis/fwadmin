@@ -99,7 +99,7 @@ def new_host(request):
                                                 args=(host.id,)))
     else:
         form = NewHostForm(owner_username=request.user)
-    return render_to_response('fwadmin/new_host.html',
+    return render_to_response('fwadmin/host/new.html',
                               {'form': form,
                               },
                               context_instance=RequestContext(request))
@@ -168,7 +168,7 @@ def edit_host(request, pk):
     else:
         form = EditHostForm(instance=host)
     rules_list = ComplexRule.objects.filter(host=host)
-    return render_to_response('fwadmin/edit_host.html',
+    return render_to_response('fwadmin/host/edit.html',
                               {'form': form,
                                'host': host,
                                'rules_list': rules_list,
@@ -181,7 +181,7 @@ def edit_host(request, pk):
 def moderator_list_unapproved(request):
     all_hosts = Host.objects.filter(approved=False)
     # XXX: add a template for list
-    return render_to_response('fwadmin/list-unapproved.html',
+    return render_to_response('fwadmin/admin/unapproved_hosts.html',
                               {'all_hosts': all_hosts,
                                },
                               context_instance=RequestContext(request))
@@ -192,7 +192,7 @@ def moderator_list_unapproved(request):
 def moderator_list_all(request):
     all_hosts = Host.objects.all()
     # XXX: add a template for list
-    return render_to_response('fwadmin/list-all.html',
+    return render_to_response('fwadmin/admin/all_hosts.html',
                               {'all_hosts': all_hosts,
                                },
                               context_instance=RequestContext(request))
@@ -260,7 +260,7 @@ def new_rule_for_host(request, hostid):
                 reverse("fwadmin:edit_host", args=(host.id,)))
     else:
         form = NewRuleForm()
-    return render_to_response('fwadmin/new_rule.html',
+    return render_to_response('fwadmin/rule/new.html',
                               {'host': host,
                                'form': form,
                                'quick_buttons': get_quick_buttons(),
