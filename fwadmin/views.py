@@ -171,7 +171,8 @@ def edit_host(request, pk):
 
             form.save()
             messages.success(request, _("Host %s updated.") % host.name)
-            return HttpResponseRedirect(reverse("fwadmin:index"))
+            return redirect(reverse("fwadmin:edit_host", args=(host.id,)),
+                        context_instance=RequestContext(request))
     else:
         form = EditHostForm(instance=host)
     rules_list = ComplexRule.objects.filter(host=host)
