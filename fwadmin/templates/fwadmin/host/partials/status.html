@@ -1,0 +1,14 @@
+{% load i18n %}
+
+<h2>{% trans "Status" %}</h2>
+<p>
+  {% if host.approved %}
+    {% blocktrans with host.active_until as host_active_until %}
+    This host is active until {{ host_active_until }}.
+    {% endblocktrans %}
+  {% else %}
+    {% blocktrans %}
+    This host is <strong>not</strong> approved yet.
+    {% endblocktrans %}
+  {% endif %}
+</p>
