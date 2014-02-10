@@ -238,6 +238,8 @@ def delete_rule(request, pk):
             request.user,
             "Delete Rule %s (%s/%s)" % (rule, host.name, host.ip))
 
+        messages.success(request, _("Rule %s was deleted.") % rule.name)
+
         return redirect("%s#tab-rules" %
             reverse("fwadmin:edit_host", args=(host.id,)))
     return HttpResponseBadRequest("Only POST supported here")
