@@ -267,7 +267,8 @@ def new_rule_for_host(request, hostid):
                 request.user,
                 "New rule %s" % rule)
 
-            messages.success(request, _("Rule %s successfully created.") % rule.name)
+            messages.success(request,
+                _("Rule %s successfully created.") % rule.name)
             return HttpResponseRedirect("%s#tab-rules" %
                 reverse("fwadmin:edit_host", args=(host.id,)))
     else:
