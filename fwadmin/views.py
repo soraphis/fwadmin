@@ -170,7 +170,7 @@ def edit_host(request, pk):
                                                     host.diff))
 
             form.save()
-
+            messages.success(request, _("Host %s updated.") % host.name)
             return HttpResponseRedirect(reverse("fwadmin:index"))
     else:
         form = EditHostForm(instance=host)
