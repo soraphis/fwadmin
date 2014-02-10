@@ -6,7 +6,7 @@ from django.utils.translation import ugettext_lazy as _
 
 def validate_port(port_range):
     # validate port_range
-    start, sep, end = port_range.partition("-")
+    start, sep, end = port_range.replace(" ", "").partition("-")
     if not start.isdigit():
         raise ValidationError(
             _("Port or Range must be a single port or a range."))

@@ -83,6 +83,9 @@ class NewRuleForm(ModelForm):
         widget=forms.TextInput(
             attrs={'placeholder': _("any or 136.199.x.y/24")}))
 
+    def clean_port_range(self):
+        return self.cleaned_data['port_range'].replace(" ", "")
+
     def clean(self):
         """ Custom validation """
         cleaned_data = super(NewRuleForm, self).clean()

@@ -294,6 +294,16 @@ class LoggedInViewsTestCase(BaseLoggedInTestCase):
         self.assertEqual(
             len(ComplexRule.objects.filter(host=self.host)), 1)
 
+    def test_create_rules_verifciaton_range_with_space(self):
+        rule_data = make_new_rule_post_data()
+        rule_data["port_range"] = "4 - 42"
+        resp = self.client.post(reverse("fwadmin:new_rule_for_host",
+                                        args=(self.host.id,)),
+                                rule_data)
+        self.assertEqual(
+            len(ComplexRule.objects.filter(port_range="4-42")), 1)
+        self.assertEqual(resp.status_code, 302)
+
     def test_create_rules_verifciaton_end(self):
         rule_data = make_new_rule_post_data()
         rule_data["port_range"] = "1-x"
