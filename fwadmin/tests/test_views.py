@@ -243,7 +243,8 @@ class LoggedInViewsTestCase(BaseLoggedInTestCase):
         # and we redirect back
         self.assertEqual(resp.status_code, 302)
         self.assertEqual(
-            urlsplit(resp["Location"])[2], reverse("fwadmin:index"))
+            urlsplit(resp["Location"])[2], reverse("fwadmin:edit_host",
+                args=(host.id,)))
 
     def test_same_owner_actions(self):
         host = self.other_host

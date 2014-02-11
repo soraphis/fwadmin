@@ -170,8 +170,9 @@ def edit_host(request, pk):
                                                     host.diff))
 
             form.save()
-
-            return HttpResponseRedirect(reverse("fwadmin:index"))
+            messages.success(request, _("Host %s updated.") % host.name)
+            return redirect(reverse("fwadmin:edit_host", args=(host.id,)),
+                        context_instance=RequestContext(request))
     else:
         form = EditHostForm(instance=host)
     rules_list = ComplexRule.objects.filter(host=host)
@@ -238,6 +239,8 @@ def delete_rule(request, pk):
             request.user,
             "Delete Rule %s (%s/%s)" % (rule, host.name, host.ip))
 
+        messages.success(request, _("Rule %s was deleted.") % rule.name)
+
         return redirect("%s#tab-rules" %
             reverse("fwadmin:edit_host", args=(host.id,)))
     return HttpResponseBadRequest("Only POST supported here")
@@ -264,6 +267,8 @@ def new_rule_for_host(request, hostid):
                 request.user,
                 "New rule %s" % rule)
 
+            messages.success(request,
+                _("Rule %s successfully created.") % rule.name)
             return HttpResponseRedirect("%s#tab-rules" %
                 reverse("fwadmin:edit_host", args=(host.id,)))
     else:
