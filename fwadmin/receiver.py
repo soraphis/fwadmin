@@ -11,10 +11,7 @@ def on_user_logged_out(sender, request, **kwargs):
 
 
 @receiver(user_logged_in)
-def on_user_logged_in(sender, request, **kwargs):
-    user = ""
-    # if user in request:
-    #     user = request.user
+def on_user_logged_in(sender, request, user, **kwargs):
     messages.success(request,
         _("You're logged in as %s. Welcome!") % user,
         fail_silently=True)
