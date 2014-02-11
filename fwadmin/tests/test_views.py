@@ -86,6 +86,18 @@ class AnonymousTestCase(TestCase):
         self.assertEqual(resp.status_code, 200)
         self.assertEqual(json.loads(resp.content), [])
 
+    def test_login_welcome_msg(self):
+        """Test if the user sees a personal welcome message after login"""
+        allowed_group = Group.objects.get(name=FWADMIN_ALLOWED_USER_GROUP)
+        user = User.objects.create_user("Nick", password="lala")
+        user.groups.add(allowed_group)
+        self.client.post(reverse("login"), {
+            "username": user.username,
+            "password": "lala",
+        })
+        resp = self.client.get(reverse("fwadmin:index"))
+        self.assertTrue("logged in as Nick" in resp.content)
+
 
 class BaseLoggedInTestCase(TestCase):
 
@@ -478,7 +490,7 @@ class ModeratorTestCase(BaseLoggedInTestCase):
 
 
 # note that it inherits from the LoggedInView, so all the tests for
-# "owner" are run again for "owner2"
+# "owner" are run again for "owner2" (which is what we want!)
 class Owner2TestCase(LoggedInViewsTestCase):
 
     def setUp(self):
