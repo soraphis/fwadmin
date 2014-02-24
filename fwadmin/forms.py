@@ -1,5 +1,3 @@
-import netaddr
-
 import django.forms as forms
 from django.forms import ModelForm
 from django.utils.translation import ugettext_lazy as _
@@ -12,10 +10,16 @@ from .models import (
     SamplePort,
 )
 
+from .validators import (
+    validate_port,
+    validate_from_net)
+
 
 class NewHostForm(ModelForm):
 
     owner_username = None
+
+    sla = forms.BooleanField(label=_("SLA"), required=True)
 
     def __init__(self, *args, **kwargs):
         self.owner_username = kwargs.pop('owner_username', None)
@@ -69,23 +73,31 @@ class NewRuleForm(ModelForm):
         queryset=SamplePort.objects.all(),
         required=False)
 
+    port_range = forms.CharField(
+        label=_("Port or range"),
+        validators=[validate_port],
+        widget=forms.TextInput(attrs={'placeholder': _("22 or 1024-1030")}))
+
+    from_net = forms.CharField(
+        validators=[validate_from_net],
+        widget=forms.TextInput(
+            attrs={'placeholder': _("any or 136.199.x.y/24")}))
+
+    def clean_port_range(self):
+        return self.cleaned_data['port_range'].replace(" ", "")
+
     def clean(self):
         """ Custom validation """
         cleaned_data = super(NewRuleForm, self).clean()
-        port = cleaned_data.get("port")
+
+        port_range = cleaned_data.get("port_range")
         stock_port = cleaned_data.get("stock_port")
-        # XXX: no test for this yet
-        from_net = cleaned_data.get("from_net")
-        if from_net and from_net != "any":
-            try:
-                net = netaddr.IPNetwork(from_net)
-                net  # pyflakes
-            except netaddr.AddrFormatError:
-                raise forms.ValidationError(_("Invalid network address"))
-        if not (port or stock_port):
+        if not (port_range or stock_port):
             raise forms.ValidationError(
                 _("Need a port number or a stock port"))
-        if (port and stock_port and port != stock_port.number):
+        if (port_range and
+            stock_port and
+            int(port_range) != stock_port.number):
             raise forms.ValidationError(_("You port and stock port differ"))
         return cleaned_data
 
@@ -95,7 +107,7 @@ class NewRuleForm(ModelForm):
             'name',
             'permit',
             'ip_protocol',
-            'port',
+            'port_range',
             'from_net',
             )
         model = ComplexRule

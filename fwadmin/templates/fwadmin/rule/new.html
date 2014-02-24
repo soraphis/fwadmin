@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% load url from future %}
+{% load i18n %}
+{% load bootstrap %}
+{% load url from future %}
+
+{% block brand %}
+{% blocktrans with hostname=host.name %}New rule for {{ hostname }}{% endblocktrans %}
+{% endblock %}
+
+{% block content %}
+
+{% if form.errors %}
+<p style="color: red;">
+ {% blocktrans %} Please correct the error{{ form.errors|pluralize }} below. {% endblocktrans %}
+</p>
+{% endif %}
+
+<form id="new_rule_for_host_form" class="form-horizontal" action="#advance" method="post">
+  {% csrf_token %}
+  <div class="form-group panel-group" id="accordion">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h4 class="panel-title">
+          <a data-toggle="collapse" data-parent="#accordion" href="#simple">
+            {% trans "Simple Rule" %}
+          </a>
+        </h4>
+      </div>
+      <div id="simple" class="panel-collapse collapse">
+        <div class="panel-body">
+          <div class="form-group">
+            <label class="col-md-2 control-label">{% trans "Allow Port" %}</label>
+            <div class="col-md-10">
+              {% for button in quick_buttons %}
+                <button class="btn btn-primary"
+                  data-quick-setting-protocol="{{ button.ip_protocol }}"
+                  data-quick-setting-port="{{ button.port }}"
+                  data-quick-setting-name="{{ button.name }}"
+                  data-quick-setting-from="any">{{ button.description }}</button>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h4 class="panel-title">
+          <a data-toggle="collapse" data-parent="#accordion" href="#advance" class="collapsed">
+            {% trans "Advanced Options" %}
+          </a>
+        </h4>
+      </div>
+      <div id="advance" class="panel-collapse collapse">
+        <div class="panel-body">
+          {{ form|bootstrap_horizontal }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+    <div class="form-group">
+      <div class="pull-right">
+        <a class="btn btn-danger" href="{% url 'fwadmin:edit_host' host.id %}">
+          {% trans "Cancel" %}</a>
+        <input class="btn btn-primary" type="submit" value={% trans "Add" %}>
+      </div>
+    </div>
+</form>
+{% endblock %}

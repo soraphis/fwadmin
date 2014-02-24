@@ -11,12 +11,18 @@ urlpatterns = patterns('',
     # url(r'^django_project/', include('django_project.foo.urls')),
 
     url(r'^$', RedirectView.as_view(url='/fwadmin/')),
-    url(r'^fwadmin/', 
+    url(r'^fwadmin/',
         include('fwadmin.urls', namespace="fwadmin")),
 
     # login handling
-    (r'^accounts/login/$', 'django.contrib.auth.views.login'),
-    (r'^accounts/logout/$', 'django.contrib.auth.views.logout'),
+    url(r'^accounts/login/$', 'django.contrib.auth.views.login',
+        {'template_name': 'fwadmin/login.html'},
+        name='login'),
+
+    url(r'^accounts/logout/$',
+        'django.contrib.auth.views.logout',
+        {'next_page': '/'},
+        name='logout'),
 
     # Uncomment the admin/doc line below to enable admin documentation:
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),

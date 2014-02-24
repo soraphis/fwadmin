@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-12-18 10:11+0100\n"
-"PO-Revision-Date: 2013-12-18 10:24+0100\n"
+"POT-Creation-Date: 2013-12-20 08:22+0100\n"
+"PO-Revision-Date: 2013-12-20 08:34+0100\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
@@ -234,7 +234,9 @@ msgstr "Keine Regeln vorhanden."
 msgid ""
 "\n"
 "Edit %(hostname)s (%(hostip)s)\n"
-msgstr "\n%(hostname)s (%(hostip)s) editieren\n"
+msgstr ""
+"\n"
+"%(hostname)s (%(hostip)s) editieren\n"
 
 #: templates/fwadmin/edit_host.html:32 templates/fwadmin/edit_host.html:40
 msgid "Status"
@@ -260,9 +262,10 @@ msgid ""
 "\n"
 "        This host is <strong>not</strong> approved yet.\n"
 "        "
-msgstr "\nDieser Host ist bisher <strong>nicht</strong> freigeschaltet.\n"
+msgstr ""
+"\n"
+"Dieser Host ist bisher <strong>nicht</strong> freigeschaltet.\n"
 "        "
-
 
 #: templates/fwadmin/edit_host.html:54
 msgid "Delete host"
@@ -384,11 +387,11 @@ msgstr "Regeln"
 msgid "Approve Link"
 msgstr "Link zulassen"
 
-#: templates/fwadmin/list-unapproved.html:51
+#: templates/fwadmin/list-unapproved.html:50
 msgid "Approve"
 msgstr "Zulassen"
 
-#: templates/fwadmin/list-unapproved.html:59
+#: templates/fwadmin/list-unapproved.html:58
 msgid "No unapproved hosts."
 msgstr "Es sind keine nicht zugelassenen Hosts vorhanden."
 
@@ -422,6 +425,18 @@ msgstr "Neue Regel für %(hostname)s"
 msgid " Please correct the error%(form.errors|pluralize)s below. "
 msgstr ""
 "Bitte korrigieren Sie den untenstehenden Fehler %(form.errors|pluralize)s."
+
+#: templates/fwadmin/new_rule.html:26
+msgid "Simple Rule"
+msgstr "Einfache Regel"
+
+#: templates/fwadmin/new_rule.html:33
+msgid "Allow Port"
+msgstr "Port erlauben"
+
+#: templates/fwadmin/new_rule.html:47
+msgid "Advanced Options"
+msgstr "Erweiterte Optionen"
 
 #: templates/fwadmin/new_rule.html:62
 msgid "Cancel"

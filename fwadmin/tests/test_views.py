@@ -12,8 +12,10 @@ from django.contrib.auth.models import (
     User,
 )
 from fwadmin.models import (
+    ChangeLog,
     ComplexRule,
     Host,
+    SamplePort,
 )
 from django_project.settings import (
     FWADMIN_ALLOWED_USER_GROUP,
@@ -22,13 +24,21 @@ from django_project.settings import (
 )
 
 
+def make_new_host_post_data():
+    post_data = {"name": "newhost",
+                 "ip": "192.168.1.1",
+                "sla": True
+    }
+    return post_data
+
+
 def make_new_rule_post_data():
     rule_name = "random rule name"
     post_data = {"name": rule_name,
                  "permit": False,
                  "ip_protocol": "UDP",
                  "from_net": "any",
-                 "port": 1337,
+                 "port_range": "1337",
     }
     return post_data
 
@@ -57,22 +67,36 @@ class AnonymousTestCase(TestCase):
         url = reverse("fwadmin:gethostbyname", args=("localhost",))
         resp = self.client.get(url)
         self.assertEqual(resp.status_code, 200)
-        self.assertEqual(json.loads(resp.content), "127.0.0.1")
+        # travis is a bit strange and returns ["127.0.0.1", "127.0.0.1"]
+        self.assertEqual(set(json.loads(resp.content)), set(["127.0.0.1"]))
 
-    @patch("socket.gethostbyname")
-    def test_gethostbyname_inet(self, mock_gethostbyname):
-        mock_gethostbyname.return_value = "8.8.8.8"
+    @patch("socket.gethostbyname_ex")
+    def test_gethostbyname_inet(self, mock_gethostbyname_ex):
+        mock_gethostbyname_ex.return_value = (
+            "www", [], ["8.8.8.8", "9.9.9.9"])
         url = reverse("fwadmin:gethostbyname",
                       args=("www.vielen_dank-peter.de",))
         resp = self.client.get(url)
         self.assertEqual(resp.status_code, 200)
-        self.assertEqual(json.loads(resp.content), "8.8.8.8")
+        self.assertEqual(json.loads(resp.content), ["8.8.8.8", "9.9.9.9"])
 
     def test_gethostbyname_invalid(self):
         url = reverse("fwadmin:gethostbyname", args=("dsakfjdfjsadfdsaf",))
         resp = self.client.get(url)
         self.assertEqual(resp.status_code, 200)
-        self.assertEqual(json.loads(resp.content), "")
+        self.assertEqual(json.loads(resp.content), [])
+
+    def test_login_welcome_msg(self):
+        """Test if the user sees a personal welcome message after login"""
+        allowed_group = Group.objects.get(name=FWADMIN_ALLOWED_USER_GROUP)
+        user = User.objects.create_user("Nick", password="lala")
+        user.groups.add(allowed_group)
+        self.client.post(reverse("login"), {
+            "username": user.username,
+            "password": "lala",
+        })
+        resp = self.client.get(reverse("fwadmin:index"))
+        self.assertTrue("logged in as Nick" in resp.content)
 
 
 class BaseLoggedInTestCase(TestCase):
@@ -100,7 +124,7 @@ class BaseLoggedInTestCase(TestCase):
         self.host.save()
         self.rule = ComplexRule.objects.create(
             host=self.host, name="http", permit=True, ip_protocol="TCP",
-            port=80)
+            port_range="80")
         # create other user with host/rule
         self.other_user = User.objects.create_user("Alice")
         self.other_host_name = "alice host"
@@ -109,10 +133,11 @@ class BaseLoggedInTestCase(TestCase):
             name=self.other_host_name, ip="192.168.1.77",
             owner=self.other_user, active_until=self.other_active_until)
         self.other_rule = ComplexRule.objects.create(
-            host=self.other_host, name="ssh", port=22)
+            host=self.other_host, name="ssh", port_range="22")
 
 
 class LoggedInViewsTestCase(BaseLoggedInTestCase):
+    fixtures = ["initial_data"]
 
     def test_index_has_host(self):
         """Test that the index view has a html table with out test host"""
@@ -152,7 +177,9 @@ class LoggedInViewsTestCase(BaseLoggedInTestCase):
                                    active_until="1789-01-01",
                                    owner=self.loggedin_user)
         # post to renew url
-        resp = self.client.post(reverse("fwadmin:renew_host", args=(host.id,)))
+        resp = self.client.post(
+            reverse("fwadmin:renew_host", args=(host.id,)),
+            follow=True)
         # ensure we get something of the right message
         self.assertTrue("Thanks for renewing" in resp.content)
         # and that it is actually renewed
@@ -163,9 +190,7 @@ class LoggedInViewsTestCase(BaseLoggedInTestCase):
              datetime.timedelta(days=FWADMIN_DEFAULT_ACTIVE_DAYS)))
 
     def test_new_host(self):
-        post_data = {"name": "newhost",
-                     "ip": "192.168.1.1",
-                    }
+        post_data = make_new_host_post_data()
         resp = self.client.post(reverse("fwadmin:new_host"), post_data)
         # check the data
         host = Host.objects.get(name=post_data["name"])
@@ -209,6 +234,7 @@ class LoggedInViewsTestCase(BaseLoggedInTestCase):
         initial_hostname = "My initial hostname"
         new_post_data = {"name": initial_hostname,
                          "ip": "192.168.1.1",
+                         "sla": True,
                          }
         resp = self.client.post(reverse("fwadmin:new_host"), new_post_data)
         pk = Host.objects.get(name=initial_hostname).pk
@@ -229,7 +255,8 @@ class LoggedInViewsTestCase(BaseLoggedInTestCase):
         # and we redirect back
         self.assertEqual(resp.status_code, 302)
         self.assertEqual(
-            urlsplit(resp["Location"])[2], reverse("fwadmin:index"))
+            urlsplit(resp["Location"])[2], reverse("fwadmin:edit_host",
+                args=(host.id,)))
 
     def test_same_owner_actions(self):
         host = self.other_host
@@ -269,6 +296,88 @@ class LoggedInViewsTestCase(BaseLoggedInTestCase):
         resp = self.client.get(reverse("fwadmin:export", args=("cisco",)))
         self.assertEqual(resp.status_code, 403)
 
+    def test_create_rules_verifciaton(self):
+        rule_data = make_new_rule_post_data()
+        rule_data["port_range"] = "xxx"
+        resp = self.client.post(reverse("fwadmin:new_rule_for_host",
+                                        args=(self.host.id,)),
+                                rule_data)
+        self.assertTrue("Port or Range must be a single port or a range."
+            in resp.content)
+        self.assertEqual(
+            len(ComplexRule.objects.filter(host=self.host)), 1)
+
+    def test_create_rules_verifciaton_range_with_space(self):
+        rule_data = make_new_rule_post_data()
+        rule_data["port_range"] = "4 - 42"
+        resp = self.client.post(reverse("fwadmin:new_rule_for_host",
+                                        args=(self.host.id,)),
+                                rule_data)
+        self.assertEqual(
+            len(ComplexRule.objects.filter(port_range="4-42")), 1)
+        self.assertEqual(resp.status_code, 302)
+
+    def test_create_rules_verifciaton_end(self):
+        rule_data = make_new_rule_post_data()
+        rule_data["port_range"] = "1-x"
+        resp = self.client.post(reverse("fwadmin:new_rule_for_host",
+                                        args=(self.host.id,)),
+                                rule_data)
+        self.assertEqual(
+            len(ComplexRule.objects.filter(host=self.host)), 1)
+        self.assertTrue("End port must be a number" in resp.content)
+
+    def test_create_rules_verifciaton_max(self):
+        rule_data = make_new_rule_post_data()
+        rule_data["port_range"] = "70000"
+        resp = self.client.post(reverse("fwadmin:new_rule_for_host",
+                                        args=(self.host.id,)),
+                                rule_data)
+        self.assertEqual(
+            len(ComplexRule.objects.filter(host=self.host)), 1)
+        self.assertTrue("Port can not be greater than 65535" in resp.content)
+
+    def test_create_rules_verifciaton_order(self):
+        rule_data = make_new_rule_post_data()
+        rule_data["port_range"] = "20-10"
+        resp = self.client.post(reverse("fwadmin:new_rule_for_host",
+                                        args=(self.host.id,)),
+                                rule_data)
+        self.assertEqual(
+            len(ComplexRule.objects.filter(host=self.host)), 1)
+        self.assertTrue("Port order incorrect" in resp.content)
+
+    def test_create_rules_from_stock(self):
+        old_rules_len = len(ComplexRule.objects.filter(host=self.host))
+        rule_data = make_new_rule_post_data()
+        rule_data["stock_port"] = SamplePort.objects.all()[0].id
+        # port range is a string
+        rule_data["port_range"] = str(SamplePort.objects.all()[0].number)
+        resp = self.client.post(reverse("fwadmin:new_rule_for_host",
+                                        args=(self.host.id,)),
+                                rule_data)
+        self.assertEqual(old_rules_len + 1,
+            len(ComplexRule.objects.filter(host=self.host)))
+
+
+class ChangeLogTestCase(BaseLoggedInTestCase):
+
+    def test_changelog_new_host(self):
+        post_data = make_new_host_post_data()
+        self.client.post(reverse("fwadmin:new_host"), post_data)
+        # ensure we have a changelog for the host
+        changelog = ChangeLog.objects.get(host_name=post_data["name"])
+        self.assertEqual(changelog.host_ip, post_data["ip"])
+        # with the rough correct "when"
+        self.assertEqual(
+            changelog.when.strftime("%Y-%m-%d %H"),
+            datetime.datetime.now().strftime("%Y-%m-%d %H"))
+        # and the change
+        self.assertEqual(
+            changelog.what,
+            "New host %s (%s) created" % (post_data["name"],
+                                          post_data["ip"]))
+
 
 class ModeratorTestCase(BaseLoggedInTestCase):
 
@@ -304,7 +413,7 @@ class ModeratorTestCase(BaseLoggedInTestCase):
     def test_delete_rule(self):
         rule = ComplexRule.objects.create(
             host=self.host, name="ssh", permit=True, ip_protocol="TCP",
-            port=22)
+            port_range="22")
         resp = self.client.post(reverse("fwadmin:delete_rule",
                                        args=(rule.pk,)))
         # check that its gone
@@ -342,14 +451,19 @@ class ModeratorTestCase(BaseLoggedInTestCase):
         resp = self.client.get(reverse("fwadmin:export", args=("cisco",)))
         self.assertEqual(
             resp.content,
-            "! fw rules for ahost (192.168.0.2) owned by meep\n"
-            "access-list 120 permit TCP any host 192.168.0.2 eq 80")
+            "! fw rules for ahost (192.168.0.2) owned by meep created at %s\n"
+            "access-list 120 permit TCP any host 192.168.0.2 eq 80" % (
+                self.host.created_at
+                ))
 
     def test_moderator_can_edit_other_host(self):
-        for action in ["renew_host", "edit_host"]:
-            resp = self.client.get(reverse("fwadmin:%s" % action,
+        resp = self.client.get(reverse("fwadmin:renew_host",
                                        args=(self.other_host.id,)))
-            self.assertEqual(resp.status_code, 200)
+        self.assertEqual(resp.status_code, 302)
+
+        resp = self.client.get(reverse("fwadmin:edit_host",
+                                       args=(self.other_host.id,)))
+        self.assertEqual(resp.status_code, 200)
 
     def test_moderator_can_delete_other_host(self):
         resp = self.client.post(reverse("fwadmin:delete_host",
@@ -376,7 +490,7 @@ class ModeratorTestCase(BaseLoggedInTestCase):
 
 
 # note that it inherits from the LoggedInView, so all the tests for
-# "owner" are run again for "owner2"
+# "owner" are run again for "owner2" (which is what we want!)
 class Owner2TestCase(LoggedInViewsTestCase):
 
     def setUp(self):

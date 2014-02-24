@@ -1,0 +1,42 @@
+{% load i18n %}
+
+<div class="col-md-12"><h2>{% trans "Firewall rules" %}
+<div class="pull-right">
+  <a href="{% url 'fwadmin:new_rule_for_host' host.id %}" class="btn btn-primary">{% trans "New Rule" %}</a>
+</div>
+</h2></div>
+<div class="rules-list col-md-12">
+  {% if rules_list %}
+  <table class="table table-condensed" id="table_rules">
+    <thead>
+    <tr>
+      <th>{% trans "Name"  %}</th>
+      <th>{% trans "Permit"  %}</th>
+      <th>{% trans "From network" %}</th>
+      <th>{% trans "Port" %}</th>
+      <th>{% trans "Protocol" %}</th>
+      <th>{% trans "Action" %}</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for rule in rules_list  %}
+    <tr>
+      <td>{{ rule.name }}</td>
+      <td>{{ rule.permit }}</td>
+      <td>{{ rule.from_net }}</td>
+      <td>{{ rule.port_range }}</td>
+      <td>{{ rule.ip_protocol }}</td>
+      <td>
+        <form action="{% url 'fwadmin:delete_rule' rule.id %}#tab-rules" method="post">
+          {% csrf_token %}
+          <input type="submit" value={% trans "Delete" %} class="btn btn-danger">
+        </form>
+      </td>
+    </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p>{% trans "No rules."  %}</p>
+  {% endif %}
+</div>

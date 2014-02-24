@@ -7,27 +7,18 @@
 {% endblock %}
 
 {% block content %}
-<script>
-  $(function() {
-    $("#table_hosts").dataTable({
-      "bPaginate": false,
-      "aoColumnDefs": [
-        { "bSortable": false, "aTargets": [ 4 ] }
-      ]
-    });
-  });
-</script>
-
 <h2>{% trans "All unapproved hosts" %}</h2>
-
+<div class="control-group pull-right col-md-4">
+    <input type="text" class="form-control" placeholder="filter" data-searchTable="unapproved"/>
+</div>
 {% if all_hosts %}
-    <table class="table" id="table_hosts">
+    <table class="table" id="table_hosts" data-searchTable="unapproved">
       <thead>
       <tr>
-        <th>{% trans "Owner" %}</th>
-        <th>{% trans "Host Description" %}</th>
-        <th>{% trans "IP" %}</th>
-        <th>{% trans "Rules" %}</th>
+        <th class="searchable">{% trans "Owner" %}</th>
+        <th class="searchable">{% trans "Host Description" %}</th>
+        <th class="searchable">{% trans "IP" %}</th>
+        <th class="searchable">{% trans "Rules" %}</th>
         <th>{% trans "Approve Link" %}</th>
       </tr>
       </thead>
@@ -38,13 +29,12 @@
         <td>{{ host.name }}</td>
         <td>{{ host.ip }}</td>
         <td>
-	  {# XXX: meeeeh, is there a better way to do this than to loop here N-times ? #}
 	  {% for rule in host.get_rules_for_host %}
-	      <p>name:{{ rule.name }} from:{{ rule.from_net }} permit:{{ rule.permit }} protocol:{{ rule.ip_protocol }} port:{{ rule.port }}
+	      <p>name:{{ rule.name }} from:{{ rule.from_net }} permit:{{ rule.permit }} protocol:{{ rule.ip_protocol }} port:{{ rule.port_range }}
 	      </p>
 	  {% endfor %}
         </td>
-        <td> 
+        <td>
 	  <form	action={% url 'fwadmin:moderator_approve_host' host.pk %}
 		method="post">
 	    {% csrf_token %}

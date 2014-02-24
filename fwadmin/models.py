@@ -1,7 +1,69 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+from django.forms.models import model_to_dict
 from django.utils.translation import ugettext_lazy as _
+
+import datetime
+
+
+class ModelDiffMixin(object):
+    """
+    A model mixin that tracks model fields' values and provide some useful api
+    to know what fields have been changed.
+
+    Source: http://stackoverflow.com/questions/1355150/
+            django-when-saving-how-can-you-check-if-a-field-has-changed
+    """
+
+    def __init__(self, *args, **kwargs):
+        super(ModelDiffMixin, self).__init__(*args, **kwargs)
+        self.__initial = self._dict
+
+    @property
+    def diff(self):
+        d1 = self.__initial
+        d2 = self._dict
+        diffs = [(k, (v, d2[k])) for k, v in d1.items() if v != d2[k]]
+        return dict(diffs)
+
+    @property
+    def has_changed(self):
+        return bool(self.diff)
+
+    @property
+    def changed_fields(self):
+        return self.diff.keys()
+
+    def get_field_diff(self, field_name):
+        """
+        Returns a diff for field if it's changed and None otherwise.
+        """
+        return self.diff.get(field_name, None)
+
+    def save(self, *args, **kwargs):
+        """
+        Saves model and set initial state.
+        """
+        super(ModelDiffMixin, self).save(*args, **kwargs)
+        self.__initial = self._dict
+
+    @property
+    def _dict(self):
+        return model_to_dict(self, fields=[field.name for field in
+                             self._meta.fields])
+
+
+class ChangeLog(models.Model):
+    """ Store all changes to the hosts in the DB """
+    host_name = models.CharField(max_length=255, default="")
+    host_ip = models.CharField(max_length=255, default="")
+    who = models.CharField(max_length=255, default="")
+    what = models.TextField()
+    when = models.DateTimeField(auto_now_add=True)
+
+    def __unicode__(self):
+        return "%s: %s" % (self.who, self.what)
 
 
 class StaticRule(models.Model):
@@ -12,7 +74,16 @@ class StaticRule(models.Model):
         (HEADER, _("Header rule")),
         (FOOTER, _("Footer rule"))
     )
+
+    FW_TYPE_CHOICES = (
+        ("cisco", _("cisco")),
+        ("ufw", _("ufw"))
+    )
+
     type = models.IntegerField(default=HEADER, choices=TYPE_CHOICES)
+    fw_type = models.CharField(default=FW_TYPE_CHOICES[0][0],
+                                choices=FW_TYPE_CHOICES,
+                                max_length=255)
     text = models.TextField()
 
 
@@ -42,14 +113,17 @@ class ComplexRule(models.Model):
     ip_protocol = models.CharField(
         _("IP Protocol"), default="TCP", max_length=10)
     # just the integer
-    port = models.IntegerField(_("Port"), blank=True, null=True)
+    port_range = models.CharField(
+        _("Port or range"), blank=False, null=False, max_length=50)
 
     def __unicode__(self):
         return "complex rule: %s " % self.name
 
 
-class Host(models.Model):
+class Host(ModelDiffMixin, models.Model):
     """ A single host """
+    created_at = models.DateTimeField(auto_now_add=True,
+                                default=datetime.datetime.now())
     name = models.CharField(_("Name"), max_length=200)
     description = models.TextField(_("Description"), blank=True, null=True)
     # can be ipv4,ipv6
