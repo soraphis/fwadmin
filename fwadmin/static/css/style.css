@@ -56,3 +56,19 @@ footer {
     content: "▸";
     margin-right: 0px;
 }
+
+table[sortable] th{
+    cursor: pointer;
+}
+
+table[sortable] th.headerSortUp:after{
+    font-family: 'Glyphicons Halflings';
+    content: "\e156";
+    vertical-align: middle;
+}
+
+table[sortable] th.headerSortDown:after{
+    font-family: 'Glyphicons Halflings';
+    content: "\e155";
+    vertical-align: middle;
+}
