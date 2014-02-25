@@ -8,6 +8,8 @@ urlpatterns = patterns('fwadmin.views',
 
     # special
     url(r'^export/(?P<fwtype>\w+)/$', 'export', name='export'),
+    url(r'^export_via_token/(?P<fwtype>\w+)/(?P<export_token>[-\w]+)/$',
+        'export_via_token', name='export_via_token'),
 
     # hosts
     url(r'^host/new/$', 'new_host', name='new_host'),

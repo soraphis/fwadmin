@@ -114,7 +114,7 @@ class ComplexRule(models.Model):
         _("IP Protocol"), default="TCP", max_length=10)
     # just the integer
     port_range = models.CharField(
-        _("Port or range"), blank=False, null=False, max_length=50)
+        _("Port or range"), blank=False, null=False, default="", max_length=50)
 
     def __unicode__(self):
         return "complex rule: %s " % self.name
@@ -147,3 +147,12 @@ class Host(ModelDiffMixin, models.Model):
     def __unicode__(self):
         return "%s (%s): %s: %s" % (self.name, self.ip, self.active_until,
                                     self.owner)
+
+
+class RulesExportToken(models.Model):
+    """ A single token that allows exporting the rules without login """
+    name = models.CharField(_("Name"), max_length=240)
+    secret = models.CharField(_("Secret"), max_length=32)
+
+    def __unicode__(self):
+        return "token '%s' %s****" % (self.name, self.secret[0:3])
