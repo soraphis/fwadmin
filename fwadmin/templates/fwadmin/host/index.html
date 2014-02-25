@@ -3,6 +3,11 @@
 
 <div class="hosts-list">
 {% if all_hosts %}
+    <div class="control-group pull-right col-md-4">
+        <input type="text" class="form-control" placeholder="filter" data-searchTable="hostList"/>
+    </div>
+    <div class="col-md-12">
+
     <table class="table table-striped" id="table_my_hosts" data-searchTable="hostList" sortable="true">
       <thead>
       <tr>
@@ -56,6 +61,7 @@
       {% endfor %}
       </tbody>
     </table>
+    </div>
 {% else %}
     <p>{% trans "No hosts yet."  %}</p>
 {% endif %}

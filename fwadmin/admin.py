@@ -5,7 +5,7 @@ from fwadmin.models import (
     Host,
     SamplePort,
     StaticRule,
-    RulesExportToken,
+    ExportRulesToken,
 )
 
 
@@ -34,4 +34,4 @@ admin.site.register(SamplePort, SamplePortAdmin)
 admin.site.register(ComplexRule, ComplexRuleAdmin)
 admin.site.register(StaticRule)
 admin.site.register(ChangeLog, ChangeLogAdmin)
-admin.site.register(RulesExportToken)
+admin.site.register(ExportRulesToken)

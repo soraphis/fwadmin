@@ -149,7 +149,7 @@ class Host(ModelDiffMixin, models.Model):
                                     self.owner)
 
 
-class RulesExportToken(models.Model):
+class ExportRulesToken(models.Model):
     """ A single token that allows exporting the rules without login """
     name = models.CharField(_("Name"), max_length=240)
     secret = models.CharField(_("Secret"), max_length=32)

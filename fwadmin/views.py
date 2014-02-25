@@ -31,7 +31,7 @@ from django.contrib.auth.decorators import (
 from fwadmin.models import (
     ComplexRule,
     Host,
-    RulesExportToken,
+    ExportRulesToken,
 )
 from fwadmin.forms import (
     NewHostForm,
@@ -78,8 +78,8 @@ def export(request, fwtype):
 
 def export_via_token(request, fwtype, export_token):
     try:
-        RulesExportToken.objects.get(secret=export_token)
-    except RulesExportToken.DoesNotExist:
+        ExportRulesToken.objects.get(secret=export_token)
+    except ExportRulesToken.DoesNotExist:
         return HttpResponseForbidden("invalid token")
     outs = StringIO.StringIO()
     gen_firewall_rules(outs, fwtype)

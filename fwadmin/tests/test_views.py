@@ -16,7 +16,7 @@ from fwadmin.models import (
     ComplexRule,
     Host,
     SamplePort,
-    RulesExportToken,
+    ExportRulesToken,
 )
 from django_project.settings import (
     FWADMIN_ALLOWED_USER_GROUP,
@@ -101,7 +101,7 @@ class AnonymousTestCase(TestCase):
 
     def test_export_token_works(self):
         """Test that firewall exports via access tokens work """
-        token = RulesExportToken.objects.create(
+        token = ExportRulesToken.objects.create(
             name="test token", secret="12345678901234567890123456789012")
         url = reverse("fwadmin:export_via_token", args=("cisco", token.secret))
         resp = self.client.get(url)
