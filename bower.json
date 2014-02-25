@@ -3,7 +3,8 @@
   "version": "0.0.1",
   "dependencies": {
     "bootstrap": "3.x",
-    "jquery": "1.x"
+    "jquery": "1.x",
+    "jquery.tablesorter": "2.7.x"
   },
   "devDependencies": {}
 }
