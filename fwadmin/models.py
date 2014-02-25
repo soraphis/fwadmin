@@ -114,7 +114,7 @@ class ComplexRule(models.Model):
         _("IP Protocol"), default="TCP", max_length=10)
     # just the integer
     port_range = models.CharField(
-        _("Port or range"), blank=False, null=False, max_length=50)
+        _("Port or range"), blank=False, null=False, default="", max_length=50)
 
     def __unicode__(self):
         return "complex rule: %s " % self.name
