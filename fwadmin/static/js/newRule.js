@@ -34,7 +34,7 @@
     });
 
 
-    $("#id_name").change(function() {
+    $("#id_name").focusout(function() {
       var $ip = $("#id_ip");
       var name = $("#id_name").val();
       if( $ip.val() === "") {
