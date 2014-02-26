@@ -31,3 +31,8 @@ urlpatterns = i18n_patterns('',
     # enable the admin:
     url(r'^admin/', include(admin.site.urls)),
 )
+
+# enable change lang link
+urlpatterns += patterns("",
+    url(r'^i18n/', include('django.conf.urls.i18n'))
+)

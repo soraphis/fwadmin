@@ -125,11 +125,10 @@ TEMPLATE_LOADERS = (
 from django.conf import global_settings
 TEMPLATE_CONTEXT_PROCESSORS = global_settings.TEMPLATE_CONTEXT_PROCESSORS + (
     'fwadmin.ctxprocessor.user_auth',
+    'django.core.context_processors.i18n'
 )
 
 MIDDLEWARE_CLASSES = (
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.locale.LocaleMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -263,3 +262,8 @@ logger = logging.getLogger('django_auth_ldap')
 logger.addHandler(logging.StreamHandler())
 logger.setLevel(logging.DEBUG)
 
+from django.utils.translation import ugettext_lazy as _
+LANGUAGES = (
+    ('de', _('German')),
+    ('en', _('English')),
+)
