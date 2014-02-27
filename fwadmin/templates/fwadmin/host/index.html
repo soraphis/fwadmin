@@ -3,6 +3,11 @@
 
 <div class="hosts-list">
 {% if all_hosts %}
+    <div class="control-group pull-right col-md-4">
+        <input type="text" class="form-control" placeholder="filter" data-searchTable="hostList"/>
+    </div>
+    <div class="col-md-12">
+
     <table class="table table-striped" id="table_my_hosts" data-searchTable="hostList" sortable="true">
       <thead>
       <tr>
@@ -11,7 +16,7 @@
         <th class="searchable">{% trans "Owner" %}</th>
         <th class="searchable">{% trans "Secondary Owner" %}</th>
         <th class="searchable">{% trans "IP" %}</th>
-        <th class="searchable">{% trans "Active Rules" %}
+        <th class="searchable">{% trans "Active Rules" %}</th>
         <th>{% trans "Approved"  %}</th>
         <th>{% trans "Active Until" %}</th>
         <th>{% trans "Renew Link" %}</th>
@@ -22,8 +27,8 @@
       <tr>
         <td>{{ host.name }}</td>
         <td>{{ host.description|truncatechars:60 }}</td>
-        <th>{{ host.owner.username }}</th>
-        <th>{{ host.owner2.username }}</th>
+        <td>{{ host.owner.username }}</td>
+        <td>{{ host.owner2.username }}</td>
         <td><a href="{% url 'fwadmin:edit_host' host.pk %}">{{ host.ip }}</a></td>
         <td>
           {% for rule in host.get_rules_for_host %}
@@ -56,6 +61,7 @@
       {% endfor %}
       </tbody>
     </table>
+    </div>
 {% else %}
     <p>{% trans "No hosts yet."  %}</p>
 {% endif %}

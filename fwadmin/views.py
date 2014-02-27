@@ -16,6 +16,7 @@ from .auth import (
 from django.http import (
     HttpResponseBadRequest,
     HttpResponseRedirect,
+    HttpResponseForbidden,
     HttpResponse,
 )
 from django.shortcuts import (
@@ -30,6 +31,7 @@ from django.contrib.auth.decorators import (
 from fwadmin.models import (
     ComplexRule,
     Host,
+    ExportRulesToken,
 )
 from fwadmin.forms import (
     NewHostForm,
@@ -69,6 +71,16 @@ def index(request):
 @login_required
 @group_required(settings.FWADMIN_MODERATORS_USER_GROUP)
 def export(request, fwtype):
+    outs = StringIO.StringIO()
+    gen_firewall_rules(outs, fwtype)
+    return HttpResponse(outs.getvalue(), content_type="text/plain")
+
+
+def export_via_token(request, fwtype, export_token):
+    try:
+        ExportRulesToken.objects.get(secret=export_token)
+    except ExportRulesToken.DoesNotExist:
+        return HttpResponseForbidden("invalid token")
     outs = StringIO.StringIO()
     gen_firewall_rules(outs, fwtype)
     return HttpResponse(outs.getvalue(), content_type="text/plain")
