@@ -54,7 +54,20 @@
       </div>
       <div id="advance" class="panel-collapse collapse">
         <div class="panel-body">
-          {{ form|bootstrap_horizontal }}
+          {# {{ form|bootstrap_horizontal }} #}
+            {{ form.stock_port|bootstrap_horizontal }}
+            {{ form.name|bootstrap_horizontal }}
+            {{ form.permit|bootstrap_horizontal }}
+            {{ form.ip_protocol|bootstrap_horizontal }}
+            {{ form.port_range|bootstrap_horizontal }}
+
+            <div class="form-group has-feedback">
+                <label class="control-label col-sm-2 col-lg-2 " for="id_from_net">{{ form.from_net.label }}</label>
+                <div class=" col-sm-10 col-lg-10 ">
+                    {{ form.from_net }}
+                    <span class="glyphicon glyphicon-question-sign form-control-feedback"></span>
+                </div>
+            </div>
         </div>
       </div>
     </div>

@@ -81,7 +81,12 @@ class NewRuleForm(ModelForm):
     from_net = forms.CharField(
         validators=[validate_from_net],
         widget=forms.TextInput(
-            attrs={'placeholder': _("any or 136.199.x.y/24")}))
+            attrs={'class': _("form-control"), 'placeholder': _("any or 136.199.x.y/24"),
+                   'data-container': _("body"), 'data-toggle': _("popover"), 'data-trigger': _("focus"),
+                   'data-placement': _("bottom"), 'data-content': _("CIDR und netmask form m&oumlglich")}
+
+        ))
+
 
     def clean_port_range(self):
         return self.cleaned_data['port_range'].replace(" ", "")
