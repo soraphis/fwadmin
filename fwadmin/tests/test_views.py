@@ -142,8 +142,9 @@ class LoggedInViewsTestCase(BaseLoggedInTestCase):
     def test_index_has_host(self):
         """Test that the index view has a html table with out test host"""
         resp = self.client.get(reverse("fwadmin:index"))
-        needle = r'<a href="/fwadmin/host/%s/edit/">%s</a>' % (
-                      self.host.id, self.host.ip)
+        edit_url = reverse("fwadmin:edit_host", args=(self.host.id,))
+        needle = r'<a href="%s">%s</a>' % (
+                      edit_url, self.host.ip)
         self.assertEqual(resp.status_code, 200)
         self.assertTrue(re.search(needle, resp.content))
 
