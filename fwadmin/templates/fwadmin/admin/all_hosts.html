@@ -6,7 +6,12 @@
 {% trans "All hosts" %}
 {% endblock %}
 
+{% block heading %}
+    <div class="page-header">
+        <h3>{% trans "All hosts" %}</h3>
+    </div>
+{% endblock %}
+
 {% block content %}
-<h2>{% trans "All hosts" %}</h2>
   {% include "fwadmin/host/index.html" %}
 {% endblock %}
