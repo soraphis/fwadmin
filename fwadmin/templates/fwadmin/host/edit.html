@@ -3,10 +3,12 @@
 {% load bootstrap %}
 {% load url from future %}
 
-{% block brand %}
-{% blocktrans with hostname=host.name hostip=host.ip %}
-Edit {{ hostname }} ({{ hostip }})
-{% endblocktrans %}
+{% block heading %}
+    <div class="page-header">
+        {% blocktrans with hostname=host.name hostip=host.ip %}
+        <h3>Edit: {{ hostname }} <small>({{ hostip }})</small></h3>
+        {% endblocktrans %}
+    </div>
 {% endblock %}
 
 {% block content %}
