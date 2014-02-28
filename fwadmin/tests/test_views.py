@@ -16,6 +16,7 @@ from fwadmin.models import (
     ComplexRule,
     Host,
     SamplePort,
+    ExportRulesToken,
 )
 from django_project.settings import (
     FWADMIN_ALLOWED_USER_GROUP,
@@ -98,6 +99,21 @@ class AnonymousTestCase(TestCase):
         resp = self.client.get(reverse("fwadmin:index"))
         self.assertTrue("logged in as Nick" in resp.content)
 
+    def test_export_token_works(self):
+        """Test that firewall exports via access tokens work """
+        token = ExportRulesToken.objects.create(
+            name="test token", secret="12345678901234567890123456789012")
+        url = reverse("fwadmin:export_via_token", args=("cisco", token.secret))
+        resp = self.client.get(url)
+        self.assertEqual(resp.status_code, 200)
+
+    def test_export_token_for_invalid_token_fails(self):
+        """Test that firewall exports via access tokens work """
+        url = reverse(
+            "fwadmin:export_via_token", args=("cisco", "i-am-a-guess"))
+        resp = self.client.get(url)
+        self.assertEqual(resp.status_code, 403)
+
 
 class BaseLoggedInTestCase(TestCase):
 
@@ -142,8 +158,9 @@ class LoggedInViewsTestCase(BaseLoggedInTestCase):
     def test_index_has_host(self):
         """Test that the index view has a html table with out test host"""
         resp = self.client.get(reverse("fwadmin:index"))
-        needle = r'<a href="/fwadmin/host/%s/edit/">%s</a>' % (
-                      self.host.id, self.host.ip)
+        edit_url = reverse("fwadmin:edit_host", args=(self.host.id,))
+        needle = r'<a href="%s">%s</a>' % (
+                      edit_url, self.host.ip)
         self.assertEqual(resp.status_code, 200)
         self.assertTrue(re.search(needle, resp.content))
 
