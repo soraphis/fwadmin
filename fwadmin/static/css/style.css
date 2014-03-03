@@ -2,8 +2,8 @@ body {
 }
 
 .page-header {
-    padding: 3em;
-    margin: 0;
+    padding: 2em;
+    margin: 0 0 20px;
     background-color: #005E9C;
     color: #ffffff;
 }
