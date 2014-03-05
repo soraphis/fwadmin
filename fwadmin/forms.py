@@ -78,12 +78,12 @@ class NewRuleForm(ModelForm):
         validators=[validate_port],
         widget=forms.TextInput(attrs={'placeholder': _("22 or 1024-1030")}))
 
-    popover = {'data-container': _("body"), 'data-toggle': _("popover"),
-                'data-trigger': _("focus"), 'data-placement': _("bottom"),
-                'data-content': _("CIDR und netmask form m&oumlglich")}
+    popover = {'data-container': ("body"), 'data-toggle': ("popover"),
+                'data-trigger': ("focus"), 'data-placement': ("bottom"),
+                'data-content': _("CIDR and netmask form possible")}
 
-    attributes = {'class': _("form-control"),
-                  'placeholder': _("any or 136.199.x.y/24"), }
+    attributes = { 'class': "form-control",
+                  'placeholder': _("any or 136.199.x.y/24")}
     attributes.update(popover)
 
     from_net = forms.CharField(
