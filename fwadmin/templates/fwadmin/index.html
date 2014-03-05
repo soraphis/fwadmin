@@ -2,22 +2,14 @@
 {% load i18n %}
 {% load url from future %}
 
-{% block brand %}
-{% trans "Dashboard" %}
+{% block heading %}
+    <div class="page-header">
+        <h3>{% trans "My Hosts" %}</h3>
+    </div>
 {% endblock %}
 
-{% block content %}
-<div class="col-md-8">
-{% if user_is_moderator %}
-  <h2>{% blocktrans %}Welcome Moderator {{ user }}{% endblocktrans %}</h2>
-{% else %}
-  <h2>{% blocktrans %}Welcome {{ user }}{% endblocktrans %}</h2>
-{% endif %}
-</div>
-<div class="col-md-4">
-  <h3 class="pull-right">{% trans "My Hosts" %}</h3>
-</div>
 
+{% block content %}
 <div class="col-md-12">
   {% include "fwadmin/host/index.html" %}
 </div>

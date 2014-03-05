@@ -2,12 +2,13 @@
 {% load i18n %}
 {% load url from future %}
 
-{% block brand %}
-{% trans "Unapproved Hosts" %}
+{% block heading %}
+    <div class="page-header">
+        <h3>{% trans "All unapproved hosts" %} </h3>
+    </div>
 {% endblock %}
 
 {% block content %}
-<h2>{% trans "All unapproved hosts" %}</h2>
 <div class="control-group pull-right col-md-4">
     <input type="text" class="form-control" placeholder="filter" data-searchTable="unapproved"/>
 </div>
