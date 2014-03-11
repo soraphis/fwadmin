@@ -82,7 +82,7 @@ class NewRuleForm(ModelForm):
                 'data-trigger': ("focus"), 'data-placement': ("bottom"),
                 'data-content': _("CIDR and netmask form possible")}
 
-    attributes = { 'class': "form-control",
+    attributes = {'class': "form-control",
                   'placeholder': _("any or 136.199.x.y/24")}
     attributes.update(popover)
 
